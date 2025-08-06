@@ -29,10 +29,10 @@ class AzureAuthRemoteDataSource {
         ),
       );
 
-      _refreshToken = result.refreshToken;
-      _idToken = result.idToken;
+      _refreshToken = result?.refreshToken;
+      _idToken = result?.idToken;
 
-      final accessToken = result.accessToken;
+      final accessToken = result?.accessToken;
       if (accessToken == null) {
         throw AzureAuthException('Failed to login: no access token');
       }
@@ -78,9 +78,9 @@ class AzureAuthRemoteDataSource {
         ),
       );
 
-      _refreshToken = result.refreshToken ?? _refreshToken;
+      _refreshToken = result?.refreshToken ?? _refreshToken;
 
-      final accessToken = result.accessToken;
+      final accessToken = result?.accessToken;
       if (accessToken == null) {
         throw AzureAuthException('Failed to refresh token: no access token');
       }

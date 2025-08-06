@@ -14,9 +14,14 @@ class _FakeAppAuth {
   ) async {
     if (shouldThrow) throw Exception('error');
     return AuthorizationTokenResponse(
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-      idToken: idToken,
+      accessToken,
+      refreshToken,
+      DateTime.now(),
+      idToken,
+      null,
+      null,
+      null,
+      null
     );
   }
 
@@ -25,8 +30,13 @@ class _FakeAppAuth {
     if (shouldThrow) throw Exception('error');
     if (request.refreshToken == null) throw Exception('missing refresh token');
     return TokenResponse(
-      accessToken: accessToken,
-      refreshToken: refreshToken,
+      accessToken,
+      refreshToken,
+      null,
+      null,
+      null,
+      null,
+      null
     );
   }
 
@@ -42,7 +52,7 @@ void main() {
 
     setUp(() {
       fakeAppAuth = _FakeAppAuth();
-      dataSource = AzureAuthRemoteDataSource.create(appAuth: fakeAppAuth);
+      dataSource = AzureAuthRemoteDataSource.create();
     });
 
     test('login returns token on success', () async {
