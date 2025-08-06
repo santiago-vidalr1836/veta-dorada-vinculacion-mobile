@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'features/autenticacion/presentacion/paginas/login_page.dart';
 
 void main() {
-  runApp(const MineCheckApp());
+  runApp(const VinculacionApp());
 }
 
-class MineCheckApp extends StatelessWidget {
-  const MineCheckApp({super.key});
+class VinculacionApp extends StatelessWidget {
+  const VinculacionApp({super.key});
 
   @override
   Widget build(BuildContext context) {
