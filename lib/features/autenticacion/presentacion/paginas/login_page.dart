@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:msal_flutter/msal_flutter.dart';
+import 'package:veta_dorada_vinculacion_mobile/core/config/environment_config.dart';
 
 /// Pantalla de inicio de sesión basada en Microsoft Entra.
 class LoginPage extends StatefulWidget {
@@ -15,9 +16,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    // TODO: Reemplazar con el clientId real de la aplicación.
+    // Inicializa la aplicación cliente pública utilizando el CLIENT_ID de la
+    // configuración de entorno. Si no se proporciona, se utilizará una cadena
+    // vacía para evitar errores en tiempo de ejecución.
     _pca = PublicClientApplication(
-      'REEMPLAZAR_CON_CLIENT_ID',
+      EnvironmentConfig.clientId,
       authority: 'https://login.microsoftonline.com/common',
     );
   }
