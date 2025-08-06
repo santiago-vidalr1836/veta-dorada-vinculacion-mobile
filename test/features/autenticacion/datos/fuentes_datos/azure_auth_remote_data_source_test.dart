@@ -25,9 +25,9 @@ void main() {
     late _FakePca fakePca;
     late AzureAuthRemoteDataSource dataSource;
 
-    setUp(() {
+    setUp(() async {
       fakePca = _FakePca();
-      dataSource = AzureAuthRemoteDataSource(pca: fakePca);
+      dataSource = await AzureAuthRemoteDataSource.create(pca: fakePca);
     });
 
     test('login returns token on success', () async {

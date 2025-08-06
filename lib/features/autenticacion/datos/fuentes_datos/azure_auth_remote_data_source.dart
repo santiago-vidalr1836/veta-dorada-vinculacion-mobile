@@ -3,13 +3,18 @@ import 'package:veta_dorada_vinculacion_mobile/core/config/environment_config.da
 
 /// Remote data source that interacts with Azure AD through `msal_flutter`.
 class AzureAuthRemoteDataSource {
-  AzureAuthRemoteDataSource({dynamic pca})
-      : _pca = pca ??
-            PublicClientApplication(
-              EnvironmentConfig.clientId,
-              authority:
-                  'https://login.microsoftonline.com/${EnvironmentConfig.tenantId}',
-            );
+  AzureAuthRemoteDataSource._(this._pca);
+
+  static Future<AzureAuthRemoteDataSource> create({dynamic pca}) async {
+    final config = PublicClientApplicationConfiguration(
+      clientId: EnvironmentConfig.clientId,
+      authority:
+          'https://login.microsoftonline.com/${EnvironmentConfig.tenantId}',
+    );
+    final instance =
+        pca ?? await PublicClientApplication.createPublicClientApplication(config);
+    return AzureAuthRemoteDataSource._(instance);
+  }
 
   final dynamic _pca;
 
