@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:msal_flutter/msal_flutter.dart';
-import 'package:veta_dorada_vinculacion_mobile/core/config/environment_config.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/autenticacion/datos/fuentes_datos/azure_auth_remote_data_source.dart';
 
 /// Pantalla de inicio de sesión basada en Microsoft Entra.
 class LoginPage extends StatefulWidget {
@@ -11,23 +10,23 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  late final PublicClientApplication _pca;
-
-  @override
-  void initState() {
-    super.initState();
-    _initPca();
-  }
-
-  Future<void> _initPca() async {
-    _pca = await PublicClientApplication.createPublicClientApplication(EnvironmentConfig.clientId,authority: 'https://login.microsoftonline.com/${EnvironmentConfig.tenantId}');
-  }
+  final AzureAuthRemoteDataSource _authRemoteDataSource =
+      AzureAuthRemoteDataSource.create();
 
   Future<void> _signIn() async {
     try {
-      await _pca.acquireTokenSilent(EnvironmentConfig.defaultScopes);
+      await _authRemoteDataSource.login();
+      if (!mounted) return;
+      const snackBar = SnackBar(content: Text('Autenticación exitosa'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } on AzureAuthException catch (e) {
+      if (!mounted) return;
+      final snackBar = SnackBar(content: Text(e.message));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } catch (e) {
-      // Manejar errores o cancelaciones del flujo de autenticación.
+      if (!mounted) return;
+      final snackBar = SnackBar(content: Text('Error inesperado: $e'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
