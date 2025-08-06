@@ -16,14 +16,16 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    // Inicializa la aplicación cliente pública utilizando el CLIENT_ID de la
-    // configuración de entorno. Si no se proporciona, se utilizará una cadena
-    // vacía para evitar errores en tiempo de ejecución.
-    _pca = PublicClientApplication(
-      EnvironmentConfig.clientId,
+    _initPca();
+  }
+
+  Future<void> _initPca() async {
+    final config = PublicClientApplicationConfiguration(
+      clientId: EnvironmentConfig.clientId,
       authority:
           'https://login.microsoftonline.com/${EnvironmentConfig.tenantId}',
     );
+    _pca = await PublicClientApplication.createPublicClientApplication(config);
   }
 
   Future<void> _signIn() async {
