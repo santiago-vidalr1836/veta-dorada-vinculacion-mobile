@@ -14,3 +14,24 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Environment Configuration
+
+The application expects several compile‑time environment variables for Azure
+AD authentication. Provide them when running or building the app using
+`--dart-define`:
+
+| Variable | Description |
+|----------|-------------|
+| `CLIENT_ID` | Azure application (client) identifier. |
+| `TENANT_ID` | Azure AD tenant identifier. |
+| `DEFAULT_SCOPES` | Space- or comma-separated list of scopes, e.g. `User.Read`. |
+
+Example:
+
+```bash
+flutter run \
+  --dart-define=CLIENT_ID=your_client_id \
+  --dart-define=TENANT_ID=your_tenant_id \
+  --dart-define=DEFAULT_SCOPES="User.Read"
+```

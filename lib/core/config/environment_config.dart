@@ -2,32 +2,27 @@ import 'package:flutter/foundation.dart';
 
 /// Provides access to compile-time environment variables.
 class EnvironmentConfig {
-  static String get clientId {
-    const clientId = String.fromEnvironment('CLIENT_ID');
-    if (clientId.isEmpty && kDebugMode) {
-      debugPrint('CLIENT_ID is not set');
-    }
-    return clientId;
-  }
+  static const _clientIdKey = 'CLIENT_ID';
+  static const _tenantIdKey = 'TENANT_ID';
+  static const _defaultScopesKey = 'DEFAULT_SCOPES';
+
+  static String get clientId => _read(_clientIdKey);
 
   /// Tenant identifier for Azure AD authentication.
-  static String get tenantId {
-    const tenantId = String.fromEnvironment('TENANT_ID');
-    if (tenantId.isEmpty && kDebugMode) {
-      debugPrint('TENANT_ID is not set');
-    }
-    return tenantId;
-  }
+  static String get tenantId => _read(_tenantIdKey);
 
   /// Default scopes requested during authentication.
-  static List<String> get defaultScopes {
-    const scopes = String.fromEnvironment('DEFAULT_SCOPES');
-    if (scopes.isEmpty && kDebugMode) {
-      debugPrint('DEFAULT_SCOPES is not set');
+  static List<String> get defaultScopes =>
+      _read(_defaultScopesKey)
+          .split(RegExp(r'[ ,]+'))
+          .where((scope) => scope.isNotEmpty)
+          .toList();
+
+  static String _read(String key) {
+    final value = const String.fromEnvironment(key);
+    if (value.isEmpty && kDebugMode) {
+      debugPrint('$key is not set');
     }
-    return scopes
-        .split(RegExp(r'[ ,]+'))
-        .where((scope) => scope.isNotEmpty)
-        .toList();
+    return value;
   }
 }

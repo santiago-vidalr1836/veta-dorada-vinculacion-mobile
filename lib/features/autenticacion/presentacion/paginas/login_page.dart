@@ -21,13 +21,16 @@ class _LoginPageState extends State<LoginPage> {
     // vacía para evitar errores en tiempo de ejecución.
     _pca = PublicClientApplication(
       EnvironmentConfig.clientId,
-      authority: 'https://login.microsoftonline.com/common',
+      authority:
+          'https://login.microsoftonline.com/${EnvironmentConfig.tenantId}',
     );
   }
 
   Future<void> _signIn() async {
     try {
-      await _pca.acquireTokenInteractive(scopes: const ['User.Read']);
+      await _pca.acquireTokenInteractive(
+        scopes: EnvironmentConfig.defaultScopes,
+      );
     } catch (e) {
       // Manejar errores o cancelaciones del flujo de autenticación.
     }
