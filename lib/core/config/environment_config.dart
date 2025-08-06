@@ -9,4 +9,25 @@ class EnvironmentConfig {
     }
     return clientId;
   }
+
+  /// Tenant identifier for Azure AD authentication.
+  static String get tenantId {
+    const tenantId = String.fromEnvironment('TENANT_ID');
+    if (tenantId.isEmpty && kDebugMode) {
+      debugPrint('TENANT_ID is not set');
+    }
+    return tenantId;
+  }
+
+  /// Default scopes requested during authentication.
+  static List<String> get defaultScopes {
+    const scopes = String.fromEnvironment('DEFAULT_SCOPES');
+    if (scopes.isEmpty && kDebugMode) {
+      debugPrint('DEFAULT_SCOPES is not set');
+    }
+    return scopes
+        .split(RegExp(r'[ ,]+'))
+        .where((scope) => scope.isNotEmpty)
+        .toList();
+  }
 }
