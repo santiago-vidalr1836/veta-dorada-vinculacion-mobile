@@ -20,19 +20,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _initPca() async {
-    final config = MsalConfiguration(
-      clientId: EnvironmentConfig.clientId,
-      authority:
-          'https://login.microsoftonline.com/${EnvironmentConfig.tenantId}',
-    );
-    _pca = await PublicClientApplication.createPublicClientApplication(config);
+    _pca = await PublicClientApplication.createPublicClientApplication(EnvironmentConfig.clientId,authority: 'https://login.microsoftonline.com/${EnvironmentConfig.tenantId}');
   }
 
   Future<void> _signIn() async {
     try {
-      await _pca.acquireTokenInteractive(
-        scopes: EnvironmentConfig.defaultScopes,
-      );
+      await _pca.acquireTokenSilent(EnvironmentConfig.defaultScopes);
     } catch (e) {
       // Manejar errores o cancelaciones del flujo de autenticación.
     }

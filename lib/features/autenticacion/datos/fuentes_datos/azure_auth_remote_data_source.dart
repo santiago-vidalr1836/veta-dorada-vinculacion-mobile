@@ -6,13 +6,8 @@ class AzureAuthRemoteDataSource {
   AzureAuthRemoteDataSource._(this._pca);
 
   static Future<AzureAuthRemoteDataSource> create({dynamic pca}) async {
-    final config = MsalConfiguration(
-      clientId: EnvironmentConfig.clientId,
-      authority:
-          'https://login.microsoftonline.com/${EnvironmentConfig.tenantId}',
-    );
     final instance =
-        pca ?? await PublicClientApplication.createPublicClientApplication(config);
+        pca ?? await PublicClientApplication.createPublicClientApplication(EnvironmentConfig.clientId,authority: 'https://login.microsoftonline.com/${EnvironmentConfig.tenantId}');
     return AzureAuthRemoteDataSource._(instance);
   }
 
