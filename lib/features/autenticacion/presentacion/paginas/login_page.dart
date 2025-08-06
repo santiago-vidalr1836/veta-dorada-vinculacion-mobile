@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _initPca() async {
-    final config = PublicClientApplicationConfiguration(
+    final config = MsalConfiguration(
       clientId: EnvironmentConfig.clientId,
       authority:
           'https://login.microsoftonline.com/${EnvironmentConfig.tenantId}',
