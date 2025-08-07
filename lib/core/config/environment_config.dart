@@ -25,6 +25,9 @@ class EnvironmentConfig {
   static const String endSessionRedirectUri =
       String.fromEnvironment('END_SESSION_REDIRECT_URI');
 
+  /// Base URL for backend API requests.
+  static const String apiBaseUrl = String.fromEnvironment('API_BASE_URL');
+
   /// Comma or space separated list of scopes requested during authentication.
   static const String _defaultScopes =
       String.fromEnvironment('DEFAULT_SCOPES');

@@ -26,14 +26,16 @@ AD authentication. Provide them when running or building the app using
 | `CLIENT_ID` | Azure application (client) identifier. |
 | `TENANT_ID` | Azure AD tenant identifier. |
 | `DEFAULT_SCOPES` | Space- or comma-separated list of scopes, e.g. `User.Read`. |
+| `API_BASE_URL` | Base URL for backend API requests. |
 
 Example:
 
 ```bash
-flutter run \
-  --dart-define=CLIENT_ID=your_client_id \
-  --dart-define=TENANT_ID=your_tenant_id \
-  --dart-define=DEFAULT_SCOPES="User.Read"
+  flutter run \
+    --dart-define=CLIENT_ID=your_client_id \
+    --dart-define=TENANT_ID=your_tenant_id \
+    --dart-define=DEFAULT_SCOPES="User.Read" \
+    --dart-define=API_BASE_URL=http://localhost:44377
 ```
 
 ## Run on Android Emulator
@@ -45,10 +47,11 @@ Launch the app on a specific emulator, supplying the same compile-time
 environment variables:
 
 ```bash
-flutter run -d emulator-5554 \
-  --dart-define=CLIENT_ID=your_client_id \
-  --dart-define=TENANT_ID=your_tenant_id \
-  --dart-define=DEFAULT_SCOPES="User.Read"
+  flutter run -d emulator-5554 \
+    --dart-define=CLIENT_ID=your_client_id \
+    --dart-define=TENANT_ID=your_tenant_id \
+    --dart-define=DEFAULT_SCOPES="User.Read" \
+    --dart-define=API_BASE_URL=http://localhost:44377
 ```
 
 These `--dart-define` parameters are required when running on the emulator as
