@@ -35,3 +35,21 @@ flutter run \
   --dart-define=TENANT_ID=your_tenant_id \
   --dart-define=DEFAULT_SCOPES="User.Read"
 ```
+
+## Run on Android Emulator
+
+List available emulators with `flutter devices` or `flutter emulators` to find
+their identifiers.
+
+Launch the app on a specific emulator, supplying the same compile-time
+environment variables:
+
+```bash
+flutter run -d emulator-5554 \
+  --dart-define=CLIENT_ID=your_client_id \
+  --dart-define=TENANT_ID=your_tenant_id \
+  --dart-define=DEFAULT_SCOPES="User.Read"
+```
+
+These `--dart-define` parameters are required when running on the emulator as
+well.
