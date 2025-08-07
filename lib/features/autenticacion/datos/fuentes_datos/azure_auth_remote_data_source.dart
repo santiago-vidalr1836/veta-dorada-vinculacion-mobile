@@ -22,13 +22,11 @@ class AzureAuthRemoteDataSource {
           EnvironmentConfig.clientId,
           EnvironmentConfig.redirectUri,
           scopes: EnvironmentConfig.defaultScopes,
-          issuer: EnvironmentConfig.issuer,
           discoveryUrl: EnvironmentConfig.discoveryUrl.isNotEmpty
               ? EnvironmentConfig.discoveryUrl
               : null,
         ),
       );
-
       _refreshToken = result?.refreshToken;
       _idToken = result?.idToken;
 
