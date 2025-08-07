@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+
+import 'package:veta_dorada_vinculacion_mobile/core/auth/auth_provider.dart';
+import 'package:veta_dorada_vinculacion_mobile/core/red/cliente_http.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/autenticacion/datos/fuentes_datos/azure_auth_remote_data_source.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/perfil/datos/fuentes_datos/perfil_remote_data_source.dart';
 
 /// Pantalla de inicio de sesión basada en Microsoft Entra.
 class LoginPage extends StatefulWidget {
@@ -17,16 +21,25 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _signIn() async {
     try {
-      await _authRemoteDataSource.login();
+      final token = await _authRemoteDataSource.login();
+      final client = ClienteHttp(token: token);
+      final perfilDataSource = PerfilRemoteDataSource(client);
+      final usuario = await perfilDataSource.obtenerPerfil();
       if (!mounted) return;
+      AuthProvider.of(context)
+          .setAuthData(usuario: usuario, token: token);
       context.go('/visitas');
     } on AzureAuthException catch (e) {
       if (!mounted) return;
       final snackBar = SnackBar(content: Text(e.message));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } on PerfilRemoteException catch (e) {
+      if (!mounted) return;
+      final snackBar = SnackBar(content: Text(e.message));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } on PlatformException catch (e) {
       debugPrint('code=${e.code} message=${e.message} details=${e.details}');
-    }catch (e) {
+    } catch (e) {
       if (!mounted) return;
       final snackBar = SnackBar(content: Text('Error inesperado: $e'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
@@ -76,4 +89,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
