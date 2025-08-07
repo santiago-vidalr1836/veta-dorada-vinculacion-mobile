@@ -1,16 +1,22 @@
 import 'package:flutter_appauth/flutter_appauth.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:veta_dorada_vinculacion_mobile/core/config/environment_config.dart';
 
 /// Remote data source that interacts with Azure AD through `flutter_appauth`.
 class AzureAuthRemoteDataSource {
-  AzureAuthRemoteDataSource._(this._appAuth);
+  AzureAuthRemoteDataSource._(this._appAuth, this._secureStorage);
 
-  static AzureAuthRemoteDataSource create({FlutterAppAuth? appAuth}) {
+  static AzureAuthRemoteDataSource create({
+    FlutterAppAuth? appAuth,
+    FlutterSecureStorage? secureStorage,
+  }) {
     final instance = appAuth ?? FlutterAppAuth();
-    return AzureAuthRemoteDataSource._(instance);
+    final storage = secureStorage ?? const FlutterSecureStorage();
+    return AzureAuthRemoteDataSource._(instance, storage);
   }
 
   final FlutterAppAuth _appAuth;
+  final FlutterSecureStorage _secureStorage;
   String? _refreshToken;
   String? _idToken;
 
@@ -34,6 +40,10 @@ class AzureAuthRemoteDataSource {
       if (accessToken == null) {
         throw AzureAuthException('Failed to login: no access token');
       }
+      await _secureStorage.write(key: 'accessToken', value: accessToken);
+      if (_refreshToken != null) {
+        await _secureStorage.write(key: 'refreshToken', value: _refreshToken);
+      }
       return accessToken;
     } on Exception catch (e) {
       throw AzureAuthException('Failed to login: $e');
@@ -55,6 +65,8 @@ class AzureAuthRemoteDataSource {
       );
       _refreshToken = null;
       _idToken = null;
+      await _secureStorage.delete(key: 'accessToken');
+      await _secureStorage.delete(key: 'refreshToken');
     } on Exception catch (e) {
       throw AzureAuthException('Failed to logout: $e');
     }
@@ -81,6 +93,10 @@ class AzureAuthRemoteDataSource {
       final accessToken = result?.accessToken;
       if (accessToken == null) {
         throw AzureAuthException('Failed to refresh token: no access token');
+      }
+      await _secureStorage.write(key: 'accessToken', value: accessToken);
+      if (result?.refreshToken != null) {
+        await _secureStorage.write(key: 'refreshToken', value: _refreshToken);
       }
       return accessToken;
     } on Exception catch (e) {
