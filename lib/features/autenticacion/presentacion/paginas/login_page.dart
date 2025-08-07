@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/autenticacion/datos/fuentes_datos/azure_auth_remote_data_source.dart';
 
 /// Pantalla de inicio de sesión basada en Microsoft Entra.
@@ -23,7 +24,9 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) return;
       final snackBar = SnackBar(content: Text(e.message));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    } catch (e) {
+    } on PlatformException catch (e) {
+      debugPrint('code=${e.code} message=${e.message} details=${e.details}');
+    }catch (e) {
       if (!mounted) return;
       final snackBar = SnackBar(content: Text('Error inesperado: $e'));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);

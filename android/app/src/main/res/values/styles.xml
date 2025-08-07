@@ -15,4 +15,7 @@
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>
     </style>
+    <style name="AppAuthRedirectTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- aquí podrías personalizar colores de fondo si quieres -->
+    </style>
 </resources>
