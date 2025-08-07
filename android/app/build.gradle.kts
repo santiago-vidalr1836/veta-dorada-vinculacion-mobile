@@ -29,6 +29,11 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        val redirectUri: String? = System.getenv("REDIRECT_URI")
+        val redirectScheme = redirectUri?.substringBefore("://") ?: ""
+        manifestPlaceholders += mapOf(
+            "appAuthRedirectScheme" to redirectScheme
+        )
     }
 
     buildTypes {
