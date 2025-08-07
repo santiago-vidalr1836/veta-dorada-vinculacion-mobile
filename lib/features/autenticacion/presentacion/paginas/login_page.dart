@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/autenticacion/datos/fuentes_datos/azure_auth_remote_data_source.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/visitas/presentacion/paginas/visitas_tabs_page.dart';
 
 /// Pantalla de inicio de sesión basada en Microsoft Entra.
 class LoginPage extends StatefulWidget {
@@ -18,8 +19,9 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await _authRemoteDataSource.login();
       if (!mounted) return;
-      const snackBar = SnackBar(content: Text('Autenticación exitosa'));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const VisitasTabsPage()),
+      );
     } on AzureAuthException catch (e) {
       if (!mounted) return;
       final snackBar = SnackBar(content: Text(e.message));
