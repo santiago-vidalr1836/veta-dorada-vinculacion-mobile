@@ -20,6 +20,12 @@ class AzureAuthRemoteDataSource {
   String? _refreshToken;
   String? _idToken;
 
+  /// Loads tokens stored in the secure storage into memory.
+  Future<void> loadFromStorage() async {
+    _refreshToken = await _secureStorage.read(key: 'refreshToken');
+    _idToken = await _secureStorage.read(key: 'idToken');
+  }
+
   /// Initiates the interactive login flow and returns the access token.
   Future<String> login() async {
     try {
@@ -44,6 +50,9 @@ class AzureAuthRemoteDataSource {
       if (_refreshToken != null) {
         await _secureStorage.write(key: 'refreshToken', value: _refreshToken);
       }
+      if (_idToken != null) {
+        await _secureStorage.write(key: 'idToken', value: _idToken);
+      }
       return accessToken;
     } on Exception catch (e) {
       throw AzureAuthException('Failed to login: $e');
@@ -67,6 +76,7 @@ class AzureAuthRemoteDataSource {
       _idToken = null;
       await _secureStorage.delete(key: 'accessToken');
       await _secureStorage.delete(key: 'refreshToken');
+      await _secureStorage.delete(key: 'idToken');
     } on Exception catch (e) {
       throw AzureAuthException('Failed to logout: $e');
     }
@@ -75,6 +85,12 @@ class AzureAuthRemoteDataSource {
   /// Attempts to silently acquire a new access token using the refresh token.
   Future<String> refreshToken() async {
     try {
+      if (_refreshToken == null) {
+        await loadFromStorage();
+      }
+      if (_refreshToken == null) {
+        throw AzureAuthException('No refresh token available');
+      }
       final result = await _appAuth.token(
         TokenRequest(
           EnvironmentConfig.clientId,
