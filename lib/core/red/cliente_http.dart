@@ -1,3 +1,5 @@
+export 'respuesta_base.dart';
+
 import 'package:http/http.dart' as http;
 
 /// A simple HTTP client that injects an Azure AD bearer token into every
