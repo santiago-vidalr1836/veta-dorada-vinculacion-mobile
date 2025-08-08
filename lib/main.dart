@@ -27,10 +27,7 @@ Future<void> _initAuth(AuthNotifier authNotifier) async {
   if (expiry == null ||
       expiry.isBefore(DateTime.now().add(const Duration(minutes: 1)))) {
     if (refreshToken == null) {
-      await storage.delete(key: 'accessToken');
-      await storage.delete(key: 'refreshToken');
-      await storage.delete(key: 'accessTokenExpiry');
-      authNotifier.clear();
+      await _clearSession(storage, authNotifier);
       return;
     }
     final authRemoteDataSource =
@@ -39,10 +36,7 @@ Future<void> _initAuth(AuthNotifier authNotifier) async {
     try {
       currentToken = await authRemoteDataSource.refreshToken();
     } catch (_) {
-      await storage.delete(key: 'accessToken');
-      await storage.delete(key: 'refreshToken');
-      await storage.delete(key: 'accessTokenExpiry');
-      authNotifier.clear();
+      await _clearSession(storage, authNotifier);
       return;
     }
   }
@@ -54,15 +48,14 @@ Future<void> _initAuth(AuthNotifier authNotifier) async {
         respuesta.respuesta != null) {
       authNotifier.setAuthData(
           usuario: respuesta.respuesta!, token: currentToken);
+      return;
     } else {
-      throw Exception(respuesta.mensajeError);
+      await _clearSession(storage, authNotifier);
+      return;
     }
   } catch (_) {
     if (refreshToken == null) {
-      await storage.delete(key: 'accessToken');
-      await storage.delete(key: 'refreshToken');
-      await storage.delete(key: 'accessTokenExpiry');
-      authNotifier.clear();
+      await _clearSession(storage, authNotifier);
       return;
     }
     final authRemoteDataSource =
@@ -73,21 +66,25 @@ Future<void> _initAuth(AuthNotifier authNotifier) async {
       client = ClienteHttp(token: newToken);
       perfilDataSource = PerfilRemoteDataSource(client);
       final respuesta = await perfilDataSource.obtenerPerfil();
-      if (respuesta.codigoRespuesta ==
-              RespuestaBase.RESPUESTA_CORRECTA &&
+      if (respuesta.codigoRespuesta == RespuestaBase.RESPUESTA_CORRECTA &&
           respuesta.respuesta != null) {
         authNotifier.setAuthData(
             usuario: respuesta.respuesta!, token: newToken);
       } else {
-        throw Exception(respuesta.mensajeError);
+        await _clearSession(storage, authNotifier);
       }
     } catch (_) {
-      await storage.delete(key: 'accessToken');
-      await storage.delete(key: 'refreshToken');
-      await storage.delete(key: 'accessTokenExpiry');
-      authNotifier.clear();
+      await _clearSession(storage, authNotifier);
     }
   }
+}
+
+Future<void> _clearSession(
+    FlutterSecureStorage storage, AuthNotifier authNotifier) async {
+  await storage.delete(key: 'accessToken');
+  await storage.delete(key: 'refreshToken');
+  await storage.delete(key: 'accessTokenExpiry');
+  authNotifier.clear();
 }
 
 class VinculacionApp extends StatelessWidget {
