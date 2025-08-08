@@ -24,11 +24,20 @@ class VisitsRemoteDataSource {
     final response = await _client.get(uri);
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body) as List<dynamic>;
-      final visitas = data
-          .map((json) => VisitaModel.fromJson(json as Map<String, dynamic>))
-          .toList();
-      return RespuestaBase.respuestaCorrecta(visitas);
+      final Map<String, dynamic> data =
+          jsonDecode(response.body) as Map<String, dynamic>;
+      final codigo = data['codigoRespuesta'] as int?;
+      if (codigo == RespuestaBase.RESPUESTA_CORRECTA &&
+          data['respuesta'] is List) {
+        final visitas = (data['respuesta'] as List<dynamic>)
+            .map((json) => VisitaModel.fromJson(json as Map<String, dynamic>))
+            .toList();
+        return RespuestaBase.respuestaCorrecta(visitas);
+      } else {
+        return RespuestaBase.respuestaError(
+          data['mensaje']?.toString() ?? 'Error al obtener visitas',
+        );
+      }
     } else {
       return RespuestaBase.respuestaError(
         'Error al obtener visitas: ${response.statusCode}',
