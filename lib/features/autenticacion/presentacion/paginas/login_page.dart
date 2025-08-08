@@ -7,6 +7,7 @@ import 'package:veta_dorada_vinculacion_mobile/core/red/cliente_http.dart';
 import 'package:veta_dorada_vinculacion_mobile/core/red/respuesta_base.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/autenticacion/datos/fuentes_datos/azure_auth_remote_data_source.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/perfil/datos/fuentes_datos/perfil_remote_data_source.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/perfil/datos/modelos/usuario.dart';
 
 /// Pantalla de inicio de sesión basada en Microsoft Entra.
 class LoginPage extends StatefulWidget {
@@ -26,13 +27,13 @@ class _LoginPageState extends State<LoginPage> {
       debugPrint(token);
       final client = ClienteHttp(token: token);
       final perfilDataSource = PerfilRemoteDataSource(client);
-      final respuesta = await perfilDataSource.obtenerPerfil();
+      final RespuestaBase<Usuario> respuesta =
+          await perfilDataSource.obtenerPerfil();
       if (!mounted) return;
-      if (respuesta.codigoRespuesta ==
-              RespuestaBase.RESPUESTA_CORRECTA &&
+      if (respuesta.codigoRespuesta == RespuestaBase.RESPUESTA_CORRECTA &&
           respuesta.respuesta != null) {
-        AuthProvider.of(context)
-            .setAuthData(usuario: respuesta.respuesta!, token: token);
+        final usuario = respuesta.respuesta!;
+        AuthProvider.of(context).setAuthData(usuario: usuario, token: token);
         context.go('/visitas');
       } else {
         final snackBar = SnackBar(
