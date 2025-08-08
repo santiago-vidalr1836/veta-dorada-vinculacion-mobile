@@ -19,16 +19,42 @@ Future<void> _initAuth(AuthNotifier authNotifier) async {
   const storage = FlutterSecureStorage();
   final token = await storage.read(key: 'accessToken');
   final refreshToken = await storage.read(key: 'refreshToken');
+  final expiryStr = await storage.read(key: 'accessTokenExpiry');
   if (token == null) return;
-  var client = ClienteHttp(token: token);
+  var currentToken = token;
+  final expiry = expiryStr != null ? DateTime.tryParse(expiryStr) : null;
+  if (expiry == null ||
+      expiry.isBefore(DateTime.now().add(const Duration(minutes: 1)))) {
+    if (refreshToken == null) {
+      await storage.delete(key: 'accessToken');
+      await storage.delete(key: 'refreshToken');
+      await storage.delete(key: 'accessTokenExpiry');
+      authNotifier.clear();
+      return;
+    }
+    final authRemoteDataSource =
+        AzureAuthRemoteDataSource.create(secureStorage: storage);
+    await authRemoteDataSource.loadFromStorage();
+    try {
+      currentToken = await authRemoteDataSource.refreshToken();
+    } catch (_) {
+      await storage.delete(key: 'accessToken');
+      await storage.delete(key: 'refreshToken');
+      await storage.delete(key: 'accessTokenExpiry');
+      authNotifier.clear();
+      return;
+    }
+  }
+  var client = ClienteHttp(token: currentToken);
   var perfilDataSource = PerfilRemoteDataSource(client);
   try {
     final usuario = await perfilDataSource.obtenerPerfil();
-    authNotifier.setAuthData(usuario: usuario, token: token);
+    authNotifier.setAuthData(usuario: usuario, token: currentToken);
   } catch (_) {
     if (refreshToken == null) {
       await storage.delete(key: 'accessToken');
       await storage.delete(key: 'refreshToken');
+      await storage.delete(key: 'accessTokenExpiry');
       authNotifier.clear();
       return;
     }
@@ -44,6 +70,7 @@ Future<void> _initAuth(AuthNotifier authNotifier) async {
     } catch (_) {
       await storage.delete(key: 'accessToken');
       await storage.delete(key: 'refreshToken');
+      await storage.delete(key: 'accessTokenExpiry');
       authNotifier.clear();
     }
   }
