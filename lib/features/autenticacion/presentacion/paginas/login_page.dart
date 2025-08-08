@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:veta_dorada_vinculacion_mobile/core/auth/auth_provider.dart';
 import 'package:veta_dorada_vinculacion_mobile/core/red/cliente_http.dart';
+import 'package:veta_dorada_vinculacion_mobile/core/red/respuesta_base.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/autenticacion/datos/fuentes_datos/azure_auth_remote_data_source.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/perfil/datos/fuentes_datos/perfil_remote_data_source.dart';
 
@@ -25,16 +26,23 @@ class _LoginPageState extends State<LoginPage> {
       debugPrint(token);
       final client = ClienteHttp(token: token);
       final perfilDataSource = PerfilRemoteDataSource(client);
-      final usuario = await perfilDataSource.obtenerPerfil();
+      final respuesta = await perfilDataSource.obtenerPerfil();
       if (!mounted) return;
-      AuthProvider.of(context)
-          .setAuthData(usuario: usuario, token: token);
-      context.go('/visitas');
+      if (respuesta.codigoRespuesta ==
+              RespuestaBase.RESPUESTA_CORRECTA &&
+          respuesta.respuesta != null) {
+        AuthProvider.of(context)
+            .setAuthData(usuario: respuesta.respuesta!, token: token);
+        context.go('/visitas');
+      } else {
+        final snackBar = SnackBar(
+          content: Text(
+            respuesta.mensajeError ?? 'Error al obtener el perfil',
+          ),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      }
     } on AzureAuthException catch (e) {
-      if (!mounted) return;
-      final snackBar = SnackBar(content: Text(e.message));
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    } on PerfilRemoteException catch (e) {
       if (!mounted) return;
       final snackBar = SnackBar(content: Text(e.message));
       ScaffoldMessenger.of(context).showSnackBar(snackBar);

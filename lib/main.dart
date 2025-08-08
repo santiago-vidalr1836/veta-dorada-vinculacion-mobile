@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'core/auth/auth_notifier.dart';
 import 'core/auth/auth_provider.dart';
 import 'core/red/cliente_http.dart';
+import 'core/red/respuesta_base.dart';
 import 'features/autenticacion/datos/fuentes_datos/azure_auth_remote_data_source.dart';
 import 'features/perfil/datos/fuentes_datos/perfil_remote_data_source.dart';
 import 'router/app_router.dart';
@@ -48,8 +49,14 @@ Future<void> _initAuth(AuthNotifier authNotifier) async {
   var client = ClienteHttp(token: currentToken);
   var perfilDataSource = PerfilRemoteDataSource(client);
   try {
-    final usuario = await perfilDataSource.obtenerPerfil();
-    authNotifier.setAuthData(usuario: usuario, token: currentToken);
+    final respuesta = await perfilDataSource.obtenerPerfil();
+    if (respuesta.codigoRespuesta == RespuestaBase.RESPUESTA_CORRECTA &&
+        respuesta.respuesta != null) {
+      authNotifier.setAuthData(
+          usuario: respuesta.respuesta!, token: currentToken);
+    } else {
+      throw Exception(respuesta.mensajeError);
+    }
   } catch (_) {
     if (refreshToken == null) {
       await storage.delete(key: 'accessToken');
@@ -65,8 +72,15 @@ Future<void> _initAuth(AuthNotifier authNotifier) async {
       final newToken = await authRemoteDataSource.refreshToken();
       client = ClienteHttp(token: newToken);
       perfilDataSource = PerfilRemoteDataSource(client);
-      final usuario = await perfilDataSource.obtenerPerfil();
-      authNotifier.setAuthData(usuario: usuario, token: newToken);
+      final respuesta = await perfilDataSource.obtenerPerfil();
+      if (respuesta.codigoRespuesta ==
+              RespuestaBase.RESPUESTA_CORRECTA &&
+          respuesta.respuesta != null) {
+        authNotifier.setAuthData(
+            usuario: respuesta.respuesta!, token: newToken);
+      } else {
+        throw Exception(respuesta.mensajeError);
+      }
     } catch (_) {
       await storage.delete(key: 'accessToken');
       await storage.delete(key: 'refreshToken');

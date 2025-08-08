@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:veta_dorada_vinculacion_mobile/core/config/environment_config.dart';
 import 'package:veta_dorada_vinculacion_mobile/core/red/cliente_http.dart';
+import 'package:veta_dorada_vinculacion_mobile/core/red/respuesta_base.dart';
 
 import '../modelos/usuario.dart';
 
@@ -12,31 +13,23 @@ class PerfilRemoteDataSource {
 
   final ClienteHttp _client;
 
-  /// Realiza una solicitud GET a `/api/perfil` y devuelve un [Usuario].
-  Future<Usuario> obtenerPerfil() async {
+  /// Realiza una solicitud GET a `/api/perfil` y devuelve una [RespuestaBase]
+  /// con un [Usuario].
+  Future<RespuestaBase<Usuario>> obtenerPerfil() async {
     debugPrint('${EnvironmentConfig.apiBaseUrl}/api/perfil');
     final uri = Uri.parse('${EnvironmentConfig.apiBaseUrl}/api/perfil');
     final response = await _client.get(uri);
     debugPrint(response.body);
-    if (response.statusCode != 200) {
-      throw PerfilRemoteException(
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data =
+          jsonDecode(response.body) as Map<String, dynamic>;
+      final usuario = Usuario.fromJson(data);
+      return RespuestaBase.respuestaCorrecta(usuario);
+    } else {
+      return RespuestaBase.respuestaError(
         'Error al obtener el perfil: ${response.statusCode}',
       );
     }
-
-    final Map<String, dynamic> data =
-        jsonDecode(response.body) as Map<String, dynamic>;
-    return Usuario.fromJson(data);
   }
-}
-
-/// Excepción que se lanza cuando ocurre un error al obtener el perfil.
-class PerfilRemoteException implements Exception {
-  PerfilRemoteException(this.message);
-
-  final String message;
-
-  @override
-  String toString() => 'PerfilRemoteException: $message';
 }
 
