@@ -18,17 +18,17 @@ class Usuario {
   /// Crea una instancia de [Usuario] a partir de un mapa JSON.
   factory Usuario.fromJson(Map<String, dynamic> json) {
     return Usuario(
-      id: json['id'] as String,
-      nombre: json['nombre'] as String,
-      correo: json['correo'] as String,
+      id: json['Id'] as String,
+      nombre: json['Nombre'] as String,
+      correo: json['Correo'] as String,
     );
   }
 
   /// Convierte el [Usuario] a un mapa JSON.
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'nombre': nombre,
-        'correo': correo,
+        'Id': id,
+        'Nombre': nombre,
+        'Correo': correo,
       };
 }
 

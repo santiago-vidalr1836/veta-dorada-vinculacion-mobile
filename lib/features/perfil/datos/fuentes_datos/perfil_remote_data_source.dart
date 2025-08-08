@@ -23,15 +23,15 @@ class PerfilRemoteDataSource {
     if (response.statusCode == 200) {
       final Map<String, dynamic> data =
           jsonDecode(response.body) as Map<String, dynamic>;
-      final codigo = data['codigoRespuesta'] as int?;
+      final codigo = data['CodigoRespuesta'] as int?;
       if (codigo == RespuestaBase.RESPUESTA_CORRECTA &&
-          data['respuesta'] != null) {
+          data['Respuesta'] != null) {
         final usuario =
-            Usuario.fromJson(data['respuesta'] as Map<String, dynamic>);
+            Usuario.fromJson(data['Respuesta'] as Map<String, dynamic>);
         return RespuestaBase.respuestaCorrecta(usuario);
       } else {
         return RespuestaBase.respuestaError(
-          data['mensaje']?.toString() ?? 'Error al obtener el perfil',
+          data['MensajeError']?.toString() ?? 'Error al obtener el perfil',
         );
       }
     } else {

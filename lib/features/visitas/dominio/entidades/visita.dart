@@ -8,8 +8,8 @@ class Visita {
   /// Identificador único de la visita.
   final String id;
 
-  /// Información general de la visita.
-  final General general;
+  /// Información general Ede la visita.
+  final General estado;
 
   /// Proveedor encargado de realizar la visita.
   final Proveedor proveedor;
@@ -23,7 +23,7 @@ class Visita {
   /// Crea una instancia de [Visita].
   const Visita({
     required this.id,
-    required this.general,
+    required this.estado,
     required this.proveedor,
     required this.tipoVisita,
     required this.derechoMinero,
@@ -31,22 +31,22 @@ class Visita {
 
   /// Crea una [Visita] a partir de un mapa JSON.
   factory Visita.fromJson(Map<String, dynamic> json) => Visita(
-        id: json['id'] as String,
-        general: General.fromJson(json['general'] as Map<String, dynamic>),
+        id: json['Id'] as String,
+        estado: General.fromJson(json['Estado'] as Map<String, dynamic>),
         proveedor:
-            Proveedor.fromJson(json['proveedor'] as Map<String, dynamic>),
+            Proveedor.fromJson(json['Proveedor'] as Map<String, dynamic>),
         tipoVisita:
-            TipoVisita.fromJson(json['tipoVisita'] as Map<String, dynamic>),
+            TipoVisita.fromJson(json['TipoVisita'] as Map<String, dynamic>),
         derechoMinero: DerechoMinero.fromJson(
-            json['derechoMinero'] as Map<String, dynamic>),
+            json['DerechoMinero'] as Map<String, dynamic>),
       );
 
   /// Convierte la visita en un mapa JSON.
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'general': general.toJson(),
-        'proveedor': proveedor.toJson(),
-        'tipoVisita': tipoVisita.toJson(),
-        'derechoMinero': derechoMinero.toJson(),
+        'Id': id,
+        'General': estado.toJson(),
+        'Proveedor': proveedor.toJson(),
+        'TipoVisita': tipoVisita.toJson(),
+        'DerechoMinero': derechoMinero.toJson(),
       };
 }

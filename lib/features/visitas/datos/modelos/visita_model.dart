@@ -20,25 +20,25 @@ class VisitaModel extends Visita {
 
   /// Crea un [VisitaModel] a partir de un mapa JSON.
   factory VisitaModel.fromJson(Map<String, dynamic> json) => VisitaModel(
-        id: json['id'] as String,
-        general: General.fromJson(json['general'] as Map<String, dynamic>),
+        id: json['Id'] as String,
+        general: General.fromJson(json['Estado'] as Map<String, dynamic>),
         proveedor:
-            Proveedor.fromJson(json['proveedor'] as Map<String, dynamic>),
+            Proveedor.fromJson(json['Proveedor'] as Map<String, dynamic>),
         tipoVisita:
-            TipoVisita.fromJson(json['tipoVisita'] as Map<String, dynamic>),
+            TipoVisita.fromJson(json['TipoVisita'] as Map<String, dynamic>),
         derechoMinero: DerechoMinero.fromJson(
-          json['derechoMinero'] as Map<String, dynamic>,
+          json['DerechoMinero'] as Map<String, dynamic>,
         ),
       );
 
   /// Convierte el modelo en un mapa JSON compatible con la API.
   @override
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'general': general.toJson(),
-        'proveedor': proveedor.toJson(),
-        'tipoVisita': tipoVisita.toJson(),
-        'derechoMinero': derechoMinero.toJson(),
+        'Id': id,
+        'General': general.toJson(),
+        'Proveedor': proveedor.toJson(),
+        'TipoVisita': tipoVisita.toJson(),
+        'DerechoMinero': derechoMinero.toJson(),
       };
 }
 

@@ -31,19 +31,19 @@ class General {
 
   /// Crea [General] a partir de un mapa JSON.
   factory General.fromJson(Map<String, dynamic> json) => General(
-        estado: json['estado'] as String,
-        fechaProgramada: DateTime.parse(json['fechaProgramada'] as String),
-        fechaEjecucion: json['fechaEjecucion'] != null
-            ? DateTime.parse(json['fechaEjecucion'] as String)
+        estado: json['Estado'] as String,
+        fechaProgramada: DateTime.parse(json['FechaProgramada'] as String),
+        fechaEjecucion: json['FechaEjecucion'] != null
+            ? DateTime.parse(json['FechaEjecucion'] as String)
             : null,
-        observaciones: json['observaciones'] as String?,
+        observaciones: json['Observaciones'] as String?,
       );
 
   /// Convierte la información general en un mapa JSON.
   Map<String, dynamic> toJson() => {
-        'estado': estado,
-        'fechaProgramada': fechaProgramada.toIso8601String(),
-        'fechaEjecucion': fechaEjecucion?.toIso8601String(),
-        'observaciones': observaciones,
+        'Estado': estado,
+        'FechaProgramada': fechaProgramada.toIso8601String(),
+        'FechaEjecucion': fechaEjecucion?.toIso8601String(),
+        'Observaciones': observaciones,
       };
 }
