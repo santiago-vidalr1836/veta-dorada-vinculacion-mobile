@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/auth/auth_provider.dart';
-import '../../../core/red/cliente_http.dart';
-import '../../../core/servicios/servicio_bd_local.dart';
+import '../../../../core/auth/auth_provider.dart';
+import '../../../../core/red/cliente_http.dart';
+import '../../../../core/servicios/servicio_bd_local.dart';
 import '../../datos/fuentes_datos/visits_local_data_source.dart';
 import '../../datos/fuentes_datos/visits_remote_data_source.dart';
 import '../../datos/repositorios/visits_repository_impl.dart';

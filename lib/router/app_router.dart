@@ -12,7 +12,7 @@ GoRouter createRouter(AuthNotifier authNotifier) {
     initialLocation: '/visitas',
     redirect: (context, state) {
       final loggedIn = authNotifier.isAuthenticated;
-      final loggingIn = state.location == '/login';
+      final loggingIn = state.uri.toString() == '/login';
       if (!loggedIn && !loggingIn) return '/login';
       if (loggedIn && loggingIn) return '/visitas';
       return null;
