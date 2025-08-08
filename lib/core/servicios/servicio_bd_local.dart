@@ -1,0 +1,101 @@
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+
+/// Servicio encargado de gestionar la base de datos local mediante
+/// [sqflite].
+///
+/// Abre la base de datos y expone operaciones básicas de inserción,
+/// actualización y consulta. Implementado como un *singleton* para
+/// reutilizar la misma instancia de [Database] durante toda la vida de la
+/// aplicación.
+class ServicioBdLocal {
+  ServicioBdLocal._internal();
+
+  static final ServicioBdLocal _instancia = ServicioBdLocal._internal();
+
+  /// Obtiene la instancia única del servicio.
+  factory ServicioBdLocal() => _instancia;
+
+  static const String nombreTablaVisitas = 'visitas';
+
+  static const _nombreBd = 'vinculacion.db';
+  static const _versionBd = 1;
+
+  Database? _db;
+
+  /// Obtiene la base de datos abierta o la crea si aún no existe.
+  Future<Database> get database async {
+    if (_db != null) return _db!;
+
+    final path = join(await getDatabasesPath(), _nombreBd);
+    _db = await openDatabase(
+      path,
+      version: _versionBd,
+      onCreate: (db, version) async {
+        await db.execute('''
+          CREATE TABLE $nombreTablaVisitas(
+            id TEXT PRIMARY KEY,
+            estado TEXT,
+            data TEXT
+          );
+        ''');
+      },
+    );
+    return _db!;
+  }
+
+  /// Inserta [values] en [table].
+  Future<int> insert(
+    String table,
+    Map<String, Object?> values, {
+    ConflictAlgorithm conflictAlgorithm = ConflictAlgorithm.replace,
+  }) async {
+    final db = await database;
+    return db.insert(
+      table,
+      values,
+      conflictAlgorithm: conflictAlgorithm,
+    );
+  }
+
+  /// Actualiza registros en [table].
+  Future<int> update(
+    String table,
+    Map<String, Object?> values, {
+    String? where,
+    List<Object?>? whereArgs,
+  }) async {
+    final db = await database;
+    return db.update(
+      table,
+      values,
+      where: where,
+      whereArgs: whereArgs,
+    );
+  }
+
+  /// Realiza una consulta a [table].
+  Future<List<Map<String, Object?>>> query(
+    String table, {
+    String? where,
+    List<Object?>? whereArgs,
+    List<String>? columns,
+  }) async {
+    final db = await database;
+    return db.query(
+      table,
+      columns: columns,
+      where: where,
+      whereArgs: whereArgs,
+    );
+  }
+
+  /// Ejecuta una consulta SQL sin procesar.
+  Future<List<Map<String, Object?>>> rawQuery(
+    String sql, [
+    List<Object?>? arguments,
+  ]) async {
+    final db = await database;
+    return db.rawQuery(sql, arguments);
+  }
+}
