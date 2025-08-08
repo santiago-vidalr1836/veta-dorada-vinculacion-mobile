@@ -34,6 +34,7 @@ Future<void> _initAuth(AuthNotifier authNotifier) async {
     }
     final authRemoteDataSource =
         AzureAuthRemoteDataSource.create(secureStorage: storage);
+    await authRemoteDataSource.loadFromStorage();
     try {
       final newToken = await authRemoteDataSource.refreshToken();
       client = ClienteHttp(token: newToken);

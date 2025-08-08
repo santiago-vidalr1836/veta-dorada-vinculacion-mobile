@@ -80,6 +80,10 @@ void main() {
         await secureStorage.read(key: 'refreshToken'),
         fakeAppAuth.refreshToken,
       );
+      expect(
+        await secureStorage.read(key: 'idToken'),
+        fakeAppAuth.idToken,
+      );
     });
 
     test('login throws AzureAuthException on failure', () async {
@@ -115,12 +119,23 @@ void main() {
       await dataSource.logout();
       expect(await secureStorage.read(key: 'accessToken'), isNull);
       expect(await secureStorage.read(key: 'refreshToken'), isNull);
+      expect(await secureStorage.read(key: 'idToken'), isNull);
     });
 
     test('logout throws AzureAuthException when endSession fails', () async {
       await dataSource.login();
       fakeAppAuth.shouldThrow = true;
       expect(dataSource.logout, throwsA(isA<AzureAuthException>()));
+    });
+
+    test('refreshToken uses stored token when not loaded', () async {
+      await secureStorage.write(key: 'refreshToken', value: 'storedRefresh');
+      await secureStorage.write(key: 'idToken', value: 'storedId');
+      fakeAppAuth.accessToken = 'newAccess';
+      fakeAppAuth.refreshToken = 'newRefresh';
+      final token = await dataSource.refreshToken();
+      expect(token, 'newAccess');
+      expect(fakeAppAuth.lastRefreshToken, 'storedRefresh');
     });
   });
 }
