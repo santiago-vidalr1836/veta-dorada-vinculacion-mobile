@@ -15,31 +15,17 @@ class VisitsRepositoryImpl implements VisitsRepository {
   @override
   Future<({Map<String, List<Visita>> visitas, String? advertencia})>
       obtenerVisitasPorGeologo(String id) async {
-    try {
-      final resultadoRemoto = await _remoteDataSource.obtenerVisitas(id);
-      if (resultadoRemoto.codigoRespuesta ==
-              RespuestaBase.RESPUESTA_CORRECTA &&
-          resultadoRemoto.respuesta != null) {
-        final remotas = resultadoRemoto.respuesta!;
-        await _localDataSource.insertVisits(remotas);
-        final Map<String, List<Visita>> agrupadas = {};
-        for (final visita in remotas) {
-          agrupadas.putIfAbsent(visita.general.estado, () => []).add(visita);
-        }
-        return (visitas: agrupadas, advertencia: null);
-      } else {
-        final locales = await _localDataSource.getVisitsGroupedByState();
-        final Map<String, List<Visita>> agrupadas = {};
-        locales.forEach((estado, visitas) {
-          agrupadas[estado] = visitas.cast<Visita>();
-        });
-        return (
-          visitas: agrupadas,
-          advertencia:
-              resultadoRemoto.mensajeError ?? 'No se pudieron sincronizar las visitas',
-        );
+    final respuesta = await _remoteDataSource.obtenerVisitas(id);
+    if (respuesta.codigoRespuesta == RespuestaBase.RESPUESTA_CORRECTA &&
+        respuesta.respuesta != null) {
+      final remotas = respuesta.respuesta!;
+      await _localDataSource.insertVisits(remotas);
+      final Map<String, List<Visita>> agrupadas = {};
+      for (final visita in remotas) {
+        agrupadas.putIfAbsent(visita.general.estado, () => []).add(visita);
       }
-    } catch (e) {
+      return (visitas: agrupadas, advertencia: null);
+    } else {
       final locales = await _localDataSource.getVisitsGroupedByState();
       final Map<String, List<Visita>> agrupadas = {};
       locales.forEach((estado, visitas) {
@@ -47,7 +33,7 @@ class VisitsRepositoryImpl implements VisitsRepository {
       });
       return (
         visitas: agrupadas,
-        advertencia: 'No se pudieron sincronizar las visitas: $e',
+        advertencia: respuesta.mensajeError,
       );
     }
   }
