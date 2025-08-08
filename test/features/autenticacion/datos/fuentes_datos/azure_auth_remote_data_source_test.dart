@@ -44,11 +44,6 @@ class _FakeAppAuth extends FlutterAppAuth {
       null,
     );
   }
-
-  @override
-  Future<void> endSession(EndSessionRequest request) async {
-    if (shouldThrow) throw Exception('error');
-  }
 }
 
 void main() {

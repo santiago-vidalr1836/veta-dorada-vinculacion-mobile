@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:veta_dorada_vinculacion_mobile/core/config/environment_config.dart';
 import 'package:veta_dorada_vinculacion_mobile/core/red/cliente_http.dart';
 
@@ -13,9 +14,10 @@ class PerfilRemoteDataSource {
 
   /// Realiza una solicitud GET a `/api/perfil` y devuelve un [Usuario].
   Future<Usuario> obtenerPerfil() async {
+    debugPrint('${EnvironmentConfig.apiBaseUrl}/api/perfil');
     final uri = Uri.parse('${EnvironmentConfig.apiBaseUrl}/api/perfil');
     final response = await _client.get(uri);
-
+    debugPrint(response.body);
     if (response.statusCode != 200) {
       throw PerfilRemoteException(
         'Error al obtener el perfil: ${response.statusCode}',

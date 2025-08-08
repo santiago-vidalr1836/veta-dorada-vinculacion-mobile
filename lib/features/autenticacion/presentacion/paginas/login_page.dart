@@ -22,6 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _signIn() async {
     try {
       final token = await _authRemoteDataSource.login();
+      debugPrint(token);
       final client = ClienteHttp(token: token);
       final perfilDataSource = PerfilRemoteDataSource(client);
       final usuario = await perfilDataSource.obtenerPerfil();
