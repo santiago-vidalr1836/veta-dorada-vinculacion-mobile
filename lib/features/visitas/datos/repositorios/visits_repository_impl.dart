@@ -1,3 +1,5 @@
+import 'package:veta_dorada_vinculacion_mobile/core/red/respuesta_base.dart';
+
 import '../../dominio/entidades/visita.dart';
 import '../../dominio/repositorios/visits_repository.dart';
 import '../fuentes_datos/visits_local_data_source.dart';
@@ -14,13 +16,29 @@ class VisitsRepositoryImpl implements VisitsRepository {
   Future<({Map<String, List<Visita>> visitas, String? advertencia})>
       obtenerVisitasPorGeologo(String id) async {
     try {
-      final remotas = await _remoteDataSource.obtenerVisitas(id);
-      await _localDataSource.insertVisits(remotas);
-      final Map<String, List<Visita>> agrupadas = {};
-      for (final visita in remotas) {
-        agrupadas.putIfAbsent(visita.general.estado, () => []).add(visita);
+      final resultadoRemoto = await _remoteDataSource.obtenerVisitas(id);
+      if (resultadoRemoto.codigoRespuesta ==
+              RespuestaBase.RESPUESTA_CORRECTA &&
+          resultadoRemoto.respuesta != null) {
+        final remotas = resultadoRemoto.respuesta!;
+        await _localDataSource.insertVisits(remotas);
+        final Map<String, List<Visita>> agrupadas = {};
+        for (final visita in remotas) {
+          agrupadas.putIfAbsent(visita.general.estado, () => []).add(visita);
+        }
+        return (visitas: agrupadas, advertencia: null);
+      } else {
+        final locales = await _localDataSource.getVisitsGroupedByState();
+        final Map<String, List<Visita>> agrupadas = {};
+        locales.forEach((estado, visitas) {
+          agrupadas[estado] = visitas.cast<Visita>();
+        });
+        return (
+          visitas: agrupadas,
+          advertencia:
+              resultadoRemoto.mensajeError ?? 'No se pudieron sincronizar las visitas',
+        );
       }
-      return (visitas: agrupadas, advertencia: null);
     } catch (e) {
       final locales = await _localDataSource.getVisitsGroupedByState();
       final Map<String, List<Visita>> agrupadas = {};
