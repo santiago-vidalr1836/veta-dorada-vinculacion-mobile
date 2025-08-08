@@ -98,4 +98,17 @@ class ServicioBdLocal {
     final db = await database;
     return db.rawQuery(sql, arguments);
   }
+
+  /// Cierra la base de datos abierta.
+  ///
+  /// Este método se utiliza principalmente para liberar recursos durante
+  /// procesos de prueba. En la aplicación normal no suele ser necesario
+  /// cerrarla manualmente.
+  Future<void> close() async {
+    final db = _db;
+    if (db != null) {
+      await db.close();
+      _db = null;
+    }
+  }
 }
