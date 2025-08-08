@@ -13,24 +13,27 @@ void main() {
     test('obtenerVisitas retorna lista en exito', () async {
       final mockClient = MockClient((request) async {
         return http.Response(
-          jsonEncode([
-            {
-              'id': 'v1',
-              'general': {
-                'estado': 'PROGRAMADA',
-                'fechaProgramada': '2023-01-01T00:00:00.000Z',
-                'fechaEjecucion': null,
-                'observaciones': null,
-              },
-              'proveedor': {'id': 'p1', 'nombre': 'Proveedor 1'},
-              'tipoVisita': {'id': 't1', 'descripcion': 'Tipo'},
-              'derechoMinero': {
-                'id': 'd1',
-                'codigo': 'DM1',
-                'nombre': 'Derecho 1',
-              },
-            }
-          ]),
+          jsonEncode({
+            'codigoRespuesta': 1,
+            'respuesta': [
+              {
+                'id': 'v1',
+                'general': {
+                  'estado': 'PROGRAMADA',
+                  'fechaProgramada': '2023-01-01T00:00:00.000Z',
+                  'fechaEjecucion': null,
+                  'observaciones': null,
+                },
+                'proveedor': {'id': 'p1', 'nombre': 'Proveedor 1'},
+                'tipoVisita': {'id': 't1', 'descripcion': 'Tipo'},
+                'derechoMinero': {
+                  'id': 'd1',
+                  'codigo': 'DM1',
+                  'nombre': 'Derecho 1',
+                },
+              }
+            ]
+          }),
           200,
           headers: {'content-type': 'application/json'},
         );
@@ -50,7 +53,14 @@ void main() {
 
     test('obtenerVisitas retorna error en fallo', () async {
       final mockClient = MockClient((request) async {
-        return http.Response('Server error', 500);
+        return http.Response(
+          jsonEncode({
+            'codigoRespuesta': -1,
+            'mensaje': 'No se pudo obtener visitas',
+          }),
+          200,
+          headers: {'content-type': 'application/json'},
+        );
       });
       final client = ClienteHttp(token: 'token', inner: mockClient);
       final dataSource = VisitsRemoteDataSource(client);
@@ -59,7 +69,7 @@ void main() {
 
       expect(result.codigoRespuesta, RespuestaBase.RESPUESTA_ERROR);
       expect(result.respuesta, isNull);
-      expect(result.mensajeError, 'Error al obtener visitas: 500');
+      expect(result.mensajeError, 'No se pudo obtener visitas');
     });
   });
 }

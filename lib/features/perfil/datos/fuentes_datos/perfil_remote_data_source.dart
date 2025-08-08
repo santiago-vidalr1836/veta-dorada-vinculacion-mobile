@@ -23,8 +23,17 @@ class PerfilRemoteDataSource {
     if (response.statusCode == 200) {
       final Map<String, dynamic> data =
           jsonDecode(response.body) as Map<String, dynamic>;
-      final usuario = Usuario.fromJson(data);
-      return RespuestaBase.respuestaCorrecta(usuario);
+      final codigo = data['codigoRespuesta'] as int?;
+      if (codigo == RespuestaBase.RESPUESTA_CORRECTA &&
+          data['respuesta'] != null) {
+        final usuario =
+            Usuario.fromJson(data['respuesta'] as Map<String, dynamic>);
+        return RespuestaBase.respuestaCorrecta(usuario);
+      } else {
+        return RespuestaBase.respuestaError(
+          data['mensaje']?.toString() ?? 'Error al obtener el perfil',
+        );
+      }
     } else {
       return RespuestaBase.respuestaError(
         'Error al obtener el perfil: ${response.statusCode}',

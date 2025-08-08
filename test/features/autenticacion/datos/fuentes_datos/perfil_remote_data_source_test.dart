@@ -14,9 +14,12 @@ void main() {
       final mockClient = MockClient((request) async {
         return http.Response(
           jsonEncode({
-            'id': '1',
-            'nombre': 'Juan',
-            'correo': 'juan@example.com',
+            'codigoRespuesta': 1,
+            'respuesta': {
+              'id': '1',
+              'nombre': 'Juan',
+              'correo': 'juan@example.com',
+            }
           }),
           200,
           headers: {'content-type': 'application/json'},
@@ -37,7 +40,14 @@ void main() {
 
     test('obtenerPerfil retorna error en fallo', () async {
       final mockClient = MockClient((request) async {
-        return http.Response('Not Found', 404);
+        return http.Response(
+          jsonEncode({
+            'codigoRespuesta': -1,
+            'mensaje': 'Perfil no encontrado',
+          }),
+          200,
+          headers: {'content-type': 'application/json'},
+        );
       });
       final client = ClienteHttp(token: 'token', inner: mockClient);
       final dataSource = PerfilRemoteDataSource(client);
@@ -46,7 +56,7 @@ void main() {
 
       expect(result.codigoRespuesta, RespuestaBase.RESPUESTA_ERROR);
       expect(result.respuesta, isNull);
-      expect(result.mensajeError, 'Error al obtener el perfil: 404');
+      expect(result.mensajeError, 'Perfil no encontrado');
     });
   });
 }
