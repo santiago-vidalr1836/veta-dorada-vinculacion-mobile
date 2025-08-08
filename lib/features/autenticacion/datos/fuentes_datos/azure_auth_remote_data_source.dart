@@ -47,6 +47,13 @@ class AzureAuthRemoteDataSource {
         throw AzureAuthException('Failed to login: no access token');
       }
       await _secureStorage.write(key: 'accessToken', value: accessToken);
+      final expiry = result?.accessTokenExpirationDateTime;
+      if (expiry != null) {
+        await _secureStorage.write(
+          key: 'accessTokenExpiry',
+          value: expiry.toIso8601String(),
+        );
+      }
       if (_refreshToken != null) {
         await _secureStorage.write(key: 'refreshToken', value: _refreshToken);
       }
@@ -77,6 +84,7 @@ class AzureAuthRemoteDataSource {
       await _secureStorage.delete(key: 'accessToken');
       await _secureStorage.delete(key: 'refreshToken');
       await _secureStorage.delete(key: 'idToken');
+      await _secureStorage.delete(key: 'accessTokenExpiry');
     } on Exception catch (e) {
       throw AzureAuthException('Failed to logout: $e');
     }
@@ -111,6 +119,13 @@ class AzureAuthRemoteDataSource {
         throw AzureAuthException('Failed to refresh token: no access token');
       }
       await _secureStorage.write(key: 'accessToken', value: accessToken);
+      final expiry = result?.accessTokenExpirationDateTime;
+      if (expiry != null) {
+        await _secureStorage.write(
+          key: 'accessTokenExpiry',
+          value: expiry.toIso8601String(),
+        );
+      }
       if (result?.refreshToken != null) {
         await _secureStorage.write(key: 'refreshToken', value: _refreshToken);
       }

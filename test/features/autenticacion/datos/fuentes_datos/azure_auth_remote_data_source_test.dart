@@ -9,6 +9,7 @@ class _FakeAppAuth extends FlutterAppAuth {
   String refreshToken = 'refreshToken';
   String idToken = 'idToken';
   String? lastRefreshToken;
+  DateTime accessTokenExpiry = DateTime(2023, 1, 1);
 
   @override
   Future<AuthorizationTokenResponse?> authorizeAndExchangeCode(
@@ -18,7 +19,7 @@ class _FakeAppAuth extends FlutterAppAuth {
     return AuthorizationTokenResponse(
       accessToken,
       refreshToken,
-      DateTime.now(),
+      accessTokenExpiry,
       idToken,
       null,
       null,
@@ -37,7 +38,7 @@ class _FakeAppAuth extends FlutterAppAuth {
     return TokenResponse(
       accessToken,
       refreshToken,
-      null,
+      accessTokenExpiry,
       null,
       null,
       null,
@@ -84,6 +85,10 @@ void main() {
         await secureStorage.read(key: 'idToken'),
         fakeAppAuth.idToken,
       );
+      expect(
+        await secureStorage.read(key: 'accessTokenExpiry'),
+        fakeAppAuth.accessTokenExpiry.toIso8601String(),
+      );
     });
 
     test('login throws AzureAuthException on failure', () async {
@@ -95,6 +100,7 @@ void main() {
       await dataSource.login();
       fakeAppAuth.accessToken = 'newAccess';
       fakeAppAuth.refreshToken = 'newRefresh';
+      fakeAppAuth.accessTokenExpiry = DateTime(2023, 1, 2);
       final token = await dataSource.refreshToken();
       expect(token, 'newAccess');
       expect(fakeAppAuth.lastRefreshToken, 'refreshToken');
@@ -105,6 +111,10 @@ void main() {
       expect(
         await secureStorage.read(key: 'refreshToken'),
         'newRefresh',
+      );
+      expect(
+        await secureStorage.read(key: 'accessTokenExpiry'),
+        fakeAppAuth.accessTokenExpiry.toIso8601String(),
       );
     });
 
@@ -120,6 +130,7 @@ void main() {
       expect(await secureStorage.read(key: 'accessToken'), isNull);
       expect(await secureStorage.read(key: 'refreshToken'), isNull);
       expect(await secureStorage.read(key: 'idToken'), isNull);
+      expect(await secureStorage.read(key: 'accessTokenExpiry'), isNull);
     });
 
     test('logout throws AzureAuthException when endSession fails', () async {
