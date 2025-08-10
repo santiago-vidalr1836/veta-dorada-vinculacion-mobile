@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 
 import '../../../visitas/dominio/entidades/proveedor.dart';
 
-/// Página del paso 1 del flujo de visita.
+/// Página para registrar los datos del proveedor de mineral.
 ///
 /// Muestra un formulario para registrar la información del proveedor.
-class Paso1Page extends StatefulWidget {
-  const Paso1Page({super.key, required this.proveedor});
+class DatosProveedorMineralPagina extends StatefulWidget {
+  const DatosProveedorMineralPagina({super.key, required this.proveedor});
 
   final Proveedor proveedor;
 
   @override
-  State<Paso1Page> createState() => _Paso1PageState();
+  State<DatosProveedorMineralPagina> createState() =>
+      _DatosProveedorMineralPaginaState();
 }
 
-class _Paso1PageState extends State<Paso1Page> {
+class _DatosProveedorMineralPaginaState
+    extends State<DatosProveedorMineralPagina> {
   static const String TIPO_PERSONA_NATURAL = 'NATURAL';
   static const String TIPO_PERSONA_JURIDICA = 'JURIDICA';
 
@@ -71,7 +73,7 @@ class _Paso1PageState extends State<Paso1Page> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Paso 1')),
+      appBar: AppBar(title: const Text('Datos de proveedor de mineral')),
       body: Form(
         key: _formKey,
         onChanged: () => setState(() {}),
