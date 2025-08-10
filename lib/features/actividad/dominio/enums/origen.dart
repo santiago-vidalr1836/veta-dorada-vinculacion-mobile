@@ -1,5 +1,5 @@
 /// Enumeración que describe el origen de una actividad.
-enum Reinfo {
+enum Origen {
   /// Actividad registrada en REINFO.
   reinfo,
 
@@ -13,18 +13,18 @@ enum Reinfo {
   desconocido,
 }
 
-/// Extensiones utilitarias para [Reinfo].
-extension ReinfoApi on Reinfo {
+/// Extensiones utilitarias para [Origen].
+extension OrigenApi on Origen {
   /// Representación numérica utilizada por la API.
   int toApi() {
     switch (this) {
-      case Reinfo.reinfo:
+      case Origen.reinfo:
         return 1;
-      case Reinfo.igafom:
+      case Origen.igafom:
         return 2;
-      case Reinfo.verificada:
+      case Origen.verificada:
         return 3;
-      case Reinfo.desconocido:
+      case Origen.desconocido:
         return 0;
     }
   }
@@ -32,29 +32,29 @@ extension ReinfoApi on Reinfo {
   /// Etiqueta legible asociada al origen.
   String get label {
     switch (this) {
-      case Reinfo.reinfo:
+      case Origen.reinfo:
         return 'Reinfo';
-      case Reinfo.igafom:
+      case Origen.igafom:
         return 'IGAFOM';
-      case Reinfo.verificada:
+      case Origen.verificada:
         return 'Verificada';
-      case Reinfo.desconocido:
+      case Origen.desconocido:
         return 'Desconocido';
     }
   }
 }
 
-/// Convierte el código proporcionado por la API en un [Reinfo].
-Reinfo reinfoFromApi(int? code) {
+/// Convierte el código proporcionado por la API en un [Origen].
+Origen origenFromApi(int? code) {
   switch (code) {
     case 1:
-      return Reinfo.reinfo;
+      return Origen.reinfo;
     case 2:
-      return Reinfo.igafom;
+      return Origen.igafom;
     case 3:
-      return Reinfo.verificada;
+      return Origen.verificada;
     default:
-      return Reinfo.desconocido;
+      return Origen.desconocido;
   }
 }
 

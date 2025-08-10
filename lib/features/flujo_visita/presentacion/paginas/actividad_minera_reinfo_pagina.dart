@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../actividad/datos/repositorios/actividad_repository_impl.dart';
 import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../../actividad/dominio/entidades/tipo_actividad.dart';
-import '../../../actividad/dominio/enums/reinfo.dart';
+import '../../../actividad/dominio/enums/origen.dart';
 
 /// Página para registrar una actividad minera de origen REINFO.
 ///
@@ -110,7 +110,7 @@ class _ActividadMineraReinfoPaginaState
     }
     final actividad = Actividad(
       id: '',
-      origen: Reinfo.reinfo,
+      origen: Origen.reinfo,
       idTipoActividad: _tipoSeleccionado!.id,
       idSubTipoActividad:
           _subTiposDisponibles.indexOf(_subTipoSeleccionado!) + 1,

@@ -5,9 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../actividad/datos/repositorios/actividad_repository_impl.dart';
 import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../../actividad/dominio/entidades/tipo_actividad.dart';
-import '../../../actividad/dominio/enums/reinfo.dart';
-
-typedef Origen = Reinfo;
+import '../../../actividad/dominio/enums/origen.dart';
 
 /// Página para registrar una actividad minera de origen IGAFOM.
 ///
