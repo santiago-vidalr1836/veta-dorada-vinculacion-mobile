@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../../visitas/dominio/entidades/proveedor.dart';
+import '../../../actividad/dominio/entidades/actividad.dart';
 
 /// Página para registrar los datos del proveedor de mineral.
 ///
 /// Muestra un formulario para registrar la información del proveedor.
 class DatosProveedorMineralPagina extends StatefulWidget {
-  const DatosProveedorMineralPagina({super.key, required this.proveedor});
+  const DatosProveedorMineralPagina({super.key, required this.actividad});
 
-  final Proveedor proveedor;
+  final Actividad actividad;
 
   @override
   State<DatosProveedorMineralPagina> createState() =>
@@ -33,11 +33,6 @@ class _DatosProveedorMineralPaginaState
   @override
   void initState() {
     super.initState();
-    _tipoPersona = widget.proveedor.tipo.estado;
-    _nombreController.text = widget.proveedor.nombre;
-    _rucController.text = widget.proveedor.ruc;
-    _razonSocialController.text = widget.proveedor.razonSocial ?? '';
-    _representanteController.text = widget.proveedor.representanteNombre ?? '';
   }
 
   @override
@@ -66,6 +61,8 @@ class _DatosProveedorMineralPaginaState
 
   void _siguiente() {
     if (_formKey.currentState!.validate()) {
+      // ignore: avoid_print
+      print('Actividad recibida: ${widget.actividad.toJson()}');
       // Navegar al siguiente paso o guardar la información.
     }
   }
