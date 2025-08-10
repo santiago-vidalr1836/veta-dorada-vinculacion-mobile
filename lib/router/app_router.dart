@@ -2,8 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/auth/auth_notifier.dart';
+import '../core/auth/auth_provider.dart';
+import '../core/red/cliente_http.dart';
+import '../core/servicios/servicio_bd_local.dart';
 import '../core/widgets/protected_scaffold.dart';
+import '../features/actividad/datos/fuentes_datos/tipo_actividad_local_data_source.dart';
+import '../features/actividad/datos/fuentes_datos/tipo_actividad_remote_data_source.dart';
+import '../features/actividad/datos/repositorios/actividad_repository_impl.dart';
+import '../features/actividad/dominio/entidades/actividad.dart';
 import '../features/autenticacion/presentacion/paginas/login_page.dart';
+import '../features/flujo_visita/presentacion/paginas/actividad_minera_reinfo_pagina.dart';
+import '../features/flujo_visita/presentacion/paginas/datos_proveedor_mineral_pagina.dart';
 import '../features/visitas/presentacion/paginas/visitas_tabs_page.dart';
 
 /// Crea la configuración del enrutador principal de la aplicación.
@@ -21,6 +30,24 @@ GoRouter createRouter(AuthNotifier authNotifier) {
       GoRoute(
         path: '/login',
         builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: '/flujo-visita/actividad-reinfo',
+        builder: (context, state) {
+          final auth = AuthProvider.of(context);
+          final repo = ActividadRepositoryImpl(
+            TipoActividadRemoteDataSource(ClienteHttp(token: auth.token!)),
+            TipoActividadLocalDataSource(ServicioBdLocal()),
+          );
+          return ActividadMineraReinfoPagina(repository: repo);
+        },
+      ),
+      GoRoute(
+        path: '/flujo-visita/datos-proveedor',
+        builder: (context, state) {
+          final actividad = state.extra! as Actividad;
+          return DatosProveedorMineralPagina(actividad: actividad);
+        },
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {

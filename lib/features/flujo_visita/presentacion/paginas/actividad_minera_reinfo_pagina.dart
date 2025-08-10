@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:go_router/go_router.dart';
+
 import '../../../actividad/datos/repositorios/actividad_repository_impl.dart';
 import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../../actividad/dominio/entidades/tipo_actividad.dart';
@@ -118,8 +120,7 @@ class _ActividadMineraReinfoPaginaState
       zonaUTM: int.tryParse(_zonaController.text),
       descripcion: null,
     );
-    // ignore: avoid_print
-    print('Actividad creada: ${actividad.toJson()}');
+    context.push('/flujo-visita/datos-proveedor', extra: actividad);
   }
 
   @override
