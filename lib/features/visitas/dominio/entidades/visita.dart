@@ -9,7 +9,7 @@ class Visita {
   /// Identificador único de la visita.
   final String id;
 
-  /// Información general Ede la visita.
+  /// Información general de la visita.
   final General estado;
 
   /// Proveedor encargado de realizar la visita.
@@ -97,7 +97,7 @@ class Visita {
   /// Convierte la visita en un mapa JSON.
   Map<String, dynamic> toJson() => {
         'Id': id,
-        'General': estado.toJson(),
+        'Estado': estado.toJson(),
         'Proveedor': proveedor.toJson(),
         'TipoVisita': tipoVisita.toJson(),
         'DerechoMinero': derechoMinero.toJson(),

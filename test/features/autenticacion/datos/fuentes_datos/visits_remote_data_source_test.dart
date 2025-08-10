@@ -24,7 +24,13 @@ void main() {
                   'fechaEjecucion': null,
                   'observaciones': null,
                 },
-                'proveedor': {'id': 'p1', 'nombre': 'Proveedor 1'},
+                'proveedor': {
+                  'id': 'p1',
+                  'nombre': 'Proveedor 1',
+                  'tipo': {'codigo': 'TP', 'descripcion': 'Tipo'},
+                  'ruc': '12345678901',
+                  'estado': {'codigo': 'ACT', 'descripcion': 'Activo'}
+                },
                 'tipoVisita': {'id': 't1', 'descripcion': 'Tipo'},
                 'derechoMinero': {
                   'id': 'd1',
