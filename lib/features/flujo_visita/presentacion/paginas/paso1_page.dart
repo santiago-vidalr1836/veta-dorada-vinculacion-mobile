@@ -1,0 +1,182 @@
+import 'package:flutter/material.dart';
+
+import '../../../visitas/dominio/entidades/proveedor.dart';
+
+/// Página del paso 1 del flujo de visita.
+///
+/// Muestra un formulario para registrar la información del proveedor.
+class Paso1Page extends StatefulWidget {
+  const Paso1Page({super.key, required this.proveedor});
+
+  final Proveedor proveedor;
+
+  @override
+  State<Paso1Page> createState() => _Paso1PageState();
+}
+
+class _Paso1PageState extends State<Paso1Page> {
+  static const String TIPO_PERSONA_NATURAL = 'NATURAL';
+  static const String TIPO_PERSONA_JURIDICA = 'JURIDICA';
+
+  final _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _nombreController = TextEditingController();
+  final TextEditingController _rucController = TextEditingController();
+  final TextEditingController _razonSocialController = TextEditingController();
+  final TextEditingController _representanteController = TextEditingController();
+
+  String? _tipoPersona;
+  String? _inicioFormalizacion;
+
+  @override
+  void initState() {
+    super.initState();
+    _tipoPersona = widget.proveedor.tipo.estado;
+    _nombreController.text = widget.proveedor.nombre;
+    _rucController.text = widget.proveedor.ruc;
+    _razonSocialController.text = widget.proveedor.razonSocial ?? '';
+    _representanteController.text = widget.proveedor.representanteNombre ?? '';
+  }
+
+  @override
+  void dispose() {
+    _nombreController.dispose();
+    _rucController.dispose();
+    _razonSocialController.dispose();
+    _representanteController.dispose();
+    super.dispose();
+  }
+
+  bool get _isFormValid {
+    if (_tipoPersona == null || _inicioFormalizacion == null) {
+      return false;
+    }
+    if (_tipoPersona == TIPO_PERSONA_NATURAL) {
+      return _nombreController.text.isNotEmpty;
+    }
+    if (_tipoPersona == TIPO_PERSONA_JURIDICA) {
+      return _rucController.text.isNotEmpty &&
+          _razonSocialController.text.isNotEmpty &&
+          _representanteController.text.isNotEmpty;
+    }
+    return false;
+  }
+
+  void _siguiente() {
+    if (_formKey.currentState!.validate()) {
+      // Navegar al siguiente paso o guardar la información.
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Paso 1')),
+      body: Form(
+        key: _formKey,
+        onChanged: () => setState(() {}),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DropdownButtonFormField<String>(
+                value: _tipoPersona,
+                decoration: const InputDecoration(labelText: 'Tipo de persona'),
+                items: const [
+                  DropdownMenuItem(
+                    value: TIPO_PERSONA_NATURAL,
+                    child: Text('Persona Natural'),
+                  ),
+                  DropdownMenuItem(
+                    value: TIPO_PERSONA_JURIDICA,
+                    child: Text('Persona Jurídica'),
+                  ),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _tipoPersona = value;
+                  });
+                },
+                validator: (value) =>
+                    value == null ? 'Seleccione el tipo de persona' : null,
+              ),
+              const SizedBox(height: 16),
+              if (_tipoPersona == TIPO_PERSONA_NATURAL) ...[
+                TextFormField(
+                  controller: _nombreController,
+                  decoration: const InputDecoration(labelText: 'Nombre'),
+                  onChanged: (_) => setState(() {}),
+                  validator: (value) =>
+                      (value == null || value.isEmpty)
+                          ? 'Ingrese el nombre'
+                          : null,
+                ),
+                const SizedBox(height: 16),
+              ],
+              if (_tipoPersona == TIPO_PERSONA_JURIDICA) ...[
+                TextFormField(
+                  controller: _rucController,
+                  decoration: const InputDecoration(labelText: 'RUC'),
+                  onChanged: (_) => setState(() {}),
+                  validator: (value) =>
+                      (value == null || value.isEmpty)
+                          ? 'Ingrese el RUC'
+                          : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _razonSocialController,
+                  decoration:
+                      const InputDecoration(labelText: 'Razón Social'),
+                  onChanged: (_) => setState(() {}),
+                  validator: (value) =>
+                      (value == null || value.isEmpty)
+                          ? 'Ingrese la razón social'
+                          : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _representanteController,
+                  decoration: const InputDecoration(
+                      labelText: 'Nombre completo del representante legal'),
+                  onChanged: (_) => setState(() {}),
+                  validator: (value) =>
+                      (value == null || value.isEmpty)
+                          ? 'Ingrese el nombre del representante'
+                          : null,
+                ),
+                const SizedBox(height: 16),
+              ],
+              DropdownButtonFormField<String>(
+                value: _inicioFormalizacion,
+                decoration: const InputDecoration(
+                    labelText: 'Inicio de Proceso de Formalización'),
+                items: const [
+                  DropdownMenuItem(value: 'SI', child: Text('Sí')),
+                  DropdownMenuItem(value: 'NO', child: Text('No')),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _inicioFormalizacion = value;
+                  });
+                },
+                validator: (value) =>
+                    value == null ? 'Seleccione una opción' : null,
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _isFormValid ? _siguiente : null,
+                  child: const Text('Siguiente'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
