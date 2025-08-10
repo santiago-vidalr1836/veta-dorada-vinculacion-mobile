@@ -16,6 +16,7 @@ import '../features/flujo_visita/presentacion/paginas/actividad_minera_igafom_pa
 import '../features/flujo_visita/presentacion/paginas/actividad_minera_verificada_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/descripcion_actividad_minera_verificada_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/datos_proveedor_mineral_pagina.dart';
+import '../features/flujo_visita/presentacion/paginas/registro_fotografico_verificacion_pagina.dart';
 import '../features/visitas/presentacion/paginas/visitas_tabs_page.dart';
 
 /// Crea la configuración del enrutador principal de la aplicación.
@@ -74,6 +75,13 @@ GoRouter createRouter(AuthNotifier authNotifier) {
             TipoActividadLocalDataSource(ServicioBdLocal()),
           );
           return ActividadMineraIgafomPagina(repository: repo);
+        },
+      ),
+      GoRoute(
+        path: '/flujo-visita/registro-fotografico-verificacion',
+        builder: (context, state) {
+          final actividad = state.extra! as Actividad;
+          return RegistroFotograficoVerificacionPagina(actividad: actividad);
         },
       ),
       GoRoute(
