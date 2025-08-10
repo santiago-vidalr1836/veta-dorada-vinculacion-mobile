@@ -11,32 +11,15 @@ class GeneralLocalDataSource {
 
   final ServicioBdLocal _bdLocal;
 
-  static const String _tablaTiposProveedor = 'tipos_proveedor';
+  static const String _tablaTiposProveedor =
+      ServicioBdLocal.nombreTablaTipoProveedor;
   static const String _tablaIniciosFormalizacion =
-      'inicios_proceso_formalizacion';
-
-  Future<void> _crearTablasSiNoExisten() async {
-    final db = await _bdLocal.database;
-    await db.execute('''
-      CREATE TABLE IF NOT EXISTS $_tablaTiposProveedor(
-        id TEXT PRIMARY KEY,
-        descripcion TEXT
-      );
-    ''');
-    await db.execute('''
-      CREATE TABLE IF NOT EXISTS $_tablaIniciosFormalizacion(
-        id TEXT PRIMARY KEY,
-        descripcion TEXT
-      );
-    ''');
-  }
+      ServicioBdLocal.nombreTablaInicioProcesoFormalizacion;
 
   /// Reemplaza los tipos de proveedor almacenados.
   Future<void> reemplazarTiposProveedor(List<TipoProveedor> tipos) async {
     try {
-      await _crearTablasSiNoExisten();
-      final db = await _bdLocal.database;
-      await db.delete(_tablaTiposProveedor);
+      await _bdLocal.delete(_tablaTiposProveedor);
       for (final tipo in tipos) {
         await _bdLocal.insert(_tablaTiposProveedor, {
           'id': tipo.id,
@@ -51,7 +34,6 @@ class GeneralLocalDataSource {
   /// Obtiene los tipos de proveedor almacenados localmente.
   Future<List<TipoProveedor>> obtenerTiposProveedor() async {
     try {
-      await _crearTablasSiNoExisten();
       final rows = await _bdLocal.query(_tablaTiposProveedor);
       return rows
           .map((row) =>
@@ -66,9 +48,7 @@ class GeneralLocalDataSource {
   Future<void> reemplazarIniciosFormalizacion(
       List<InicioProcesoFormalizacion> inicios) async {
     try {
-      await _crearTablasSiNoExisten();
-      final db = await _bdLocal.database;
-      await db.delete(_tablaIniciosFormalizacion);
+      await _bdLocal.delete(_tablaIniciosFormalizacion);
       for (final inicio in inicios) {
         await _bdLocal.insert(_tablaIniciosFormalizacion, {
           'id': inicio.id,
@@ -83,7 +63,6 @@ class GeneralLocalDataSource {
   /// Obtiene los inicios de proceso de formalización almacenados.
   Future<List<InicioProcesoFormalizacion>> obtenerIniciosFormalizacion() async {
     try {
-      await _crearTablasSiNoExisten();
       final rows = await _bdLocal.query(_tablaIniciosFormalizacion);
       return rows
           .map((row) => InicioProcesoFormalizacion(
