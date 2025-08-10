@@ -46,4 +46,31 @@ class GeneralRepository {
       return (inicios: locales, advertencia: respuesta.mensajeError);
     }
   }
+
+  /// Sincroniza los catálogos generales al inicio de la aplicación.
+  ///
+  /// Borra los datos existentes y descarga los registros más recientes desde
+  /// el repositorio remoto para almacenarlos localmente.
+  Future<void> sincronizarDatosGenerales() async {
+    final tiposRespuesta = await _remoteDataSource.obtenerTiposProveedor();
+    if (tiposRespuesta.codigoRespuesta ==
+            RespuestaBase.RESPUESTA_CORRECTA &&
+        tiposRespuesta.respuesta != null) {
+      await _localDataSource.reemplazarTiposProveedor(
+          tiposRespuesta.respuesta!);
+    } else {
+      await _localDataSource.reemplazarTiposProveedor(const []);
+    }
+
+    final iniciosRespuesta =
+        await _remoteDataSource.obtenerIniciosProcesoFormalizacion();
+    if (iniciosRespuesta.codigoRespuesta ==
+            RespuestaBase.RESPUESTA_CORRECTA &&
+        iniciosRespuesta.respuesta != null) {
+      await _localDataSource
+          .reemplazarIniciosFormalizacion(iniciosRespuesta.respuesta!);
+    } else {
+      await _localDataSource.reemplazarIniciosFormalizacion(const []);
+    }
+  }
 }
