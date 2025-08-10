@@ -7,12 +7,17 @@ import 'core/red/cliente_http.dart';
 import 'core/red/respuesta_base.dart';
 import 'features/autenticacion/datos/fuentes_datos/azure_auth_remote_data_source.dart';
 import 'features/perfil/datos/fuentes_datos/perfil_remote_data_source.dart';
+import 'core/servicios/servicio_bd_local.dart';
+import 'features/flujo_visita/datos/fuentes_datos/general_local_data_source.dart';
+import 'features/flujo_visita/datos/fuentes_datos/general_remote_data_source.dart';
+import 'features/flujo_visita/datos/repositorios/general_repository.dart';
 import 'router/app_router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final authNotifier = AuthNotifier();
   await _initAuth(authNotifier);
+  await _sincronizarListas(authNotifier);
   runApp(VinculacionApp(authNotifier: authNotifier));
 }
 
@@ -77,6 +82,16 @@ Future<void> _initAuth(AuthNotifier authNotifier) async {
       await _clearSession(storage, authNotifier);
     }
   }
+}
+
+Future<void> _sincronizarListas(AuthNotifier authNotifier) async {
+  final token = authNotifier.token;
+  if (token == null) return;
+  final repo = GeneralRepository(
+    GeneralRemoteDataSource(ClienteHttp(token: token)),
+    GeneralLocalDataSource(ServicioBdLocal()),
+  );
+  await repo.sincronizarDatosGenerales();
 }
 
 Future<void> _clearSession(
