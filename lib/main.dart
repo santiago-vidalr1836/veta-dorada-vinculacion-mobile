@@ -11,6 +11,9 @@ import 'core/servicios/servicio_bd_local.dart';
 import 'features/flujo_visita/datos/fuentes_datos/general_local_data_source.dart';
 import 'features/flujo_visita/datos/fuentes_datos/general_remote_data_source.dart';
 import 'features/flujo_visita/datos/repositorios/general_repository.dart';
+import 'features/actividad/datos/fuentes_datos/tipo_actividad_local_data_source.dart';
+import 'features/actividad/datos/fuentes_datos/tipo_actividad_remote_data_source.dart';
+import 'features/actividad/datos/repositorios/actividad_repository_impl.dart';
 import 'router/app_router.dart';
 
 Future<void> main() async {
@@ -92,6 +95,12 @@ Future<void> _sincronizarListas(AuthNotifier authNotifier) async {
     GeneralLocalDataSource(ServicioBdLocal()),
   );
   await repo.sincronizarDatosGenerales();
+
+  final actividadRepo = ActividadRepositoryImpl(
+    TipoActividadRemoteDataSource(ClienteHttp(token: token)),
+    TipoActividadLocalDataSource(ServicioBdLocal()),
+  );
+  await actividadRepo.sincronizarTiposActividad();
 }
 
 Future<void> _clearSession(
