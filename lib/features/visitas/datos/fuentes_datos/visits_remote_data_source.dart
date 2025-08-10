@@ -26,21 +26,28 @@ class VisitsRemoteDataSource {
     if (response.statusCode == 200) {
       final Map<String, dynamic> data =
           jsonDecode(response.body) as Map<String, dynamic>;
-      final codigo = data['CodigoRespuesta'] as int?;
+      final codigo =
+          data['CodigoRespuesta'] as int? ?? RespuestaBase.RESPUESTA_ERROR;
       if (codigo == RespuestaBase.RESPUESTA_CORRECTA &&
           data['Respuesta'] is List) {
         final visitas = (data['Respuesta'] as List<dynamic>)
             .map((json) => VisitaModel.fromJson(json as Map<String, dynamic>))
             .toList();
-        return RespuestaBase.respuestaCorrecta(visitas);
+        return RespuestaBase(
+          codigoRespuesta: codigo,
+          respuesta: visitas,
+        );
       } else {
-        return RespuestaBase.respuestaError(
-          data['MensajeError']?.toString() ?? 'Error al obtener visitas',
+        return RespuestaBase(
+          codigoRespuesta: codigo,
+          mensajeError:
+              data['MensajeError']?.toString() ?? 'Error al obtener visitas',
         );
       }
     } else {
-      return RespuestaBase.respuestaError(
-        'Error al obtener visitas: ${response.statusCode}',
+      return RespuestaBase(
+        codigoRespuesta: RespuestaBase.RESPUESTA_ERROR,
+        mensajeError: 'Error al obtener visitas: ${response.statusCode}',
       );
     }
   }
