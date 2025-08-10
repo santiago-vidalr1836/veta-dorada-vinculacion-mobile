@@ -1,4 +1,4 @@
-import '../enums/reinfo.dart';
+import '../enums/origen.dart';
 
 /// Describe los datos principales de una actividad minera.
 class Actividad {
@@ -6,7 +6,7 @@ class Actividad {
   final String id;
 
   /// Origen de la actividad según su registro.
-  final Reinfo origen;
+  final Origen origen;
 
   /// Identificador del tipo de actividad.
   final int idTipoActividad;
@@ -45,7 +45,7 @@ class Actividad {
   /// Crea una [Actividad] a partir de un mapa JSON.
   factory Actividad.fromJson(Map<String, dynamic> json) => Actividad(
         id: json['Id'] as String,
-        origen: reinfoFromApi(json['Origen'] as int?),
+        origen: origenFromApi(json['Origen'] as int?),
         idTipoActividad: json['IdTipoActividad'] as int,
         idSubTipoActividad: json['IdSubTipoActividad'] as int,
         sistemaUTM: json['SistemaUTM'] as int,
