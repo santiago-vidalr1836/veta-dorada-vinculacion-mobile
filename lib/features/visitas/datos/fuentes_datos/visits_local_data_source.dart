@@ -16,9 +16,12 @@ class VisitsLocalDataSource {
   Future<void> insertVisits(List<VisitaModel> visits) async {
     try {
       for (final visit in visits) {
+        final estadoDescripcion =
+            (visit.estado as dynamic).descripcion as String? ??
+            (visit.estado as dynamic).estado as String;
         await _bdLocal.insert(ServicioBdLocal.nombreTablaVisitas, {
           'id': visit.id,
-          'estado': visit.estado.estado,
+          'estado': estadoDescripcion,
           'data': jsonEncode(visit.toJson()),
         });
       }
@@ -33,7 +36,8 @@ class VisitsLocalDataSource {
       await _bdLocal.update(
         ServicioBdLocal.nombreTablaVisitas,
         {
-          'estado': visit.estado.estado,
+          'estado': (visit.estado as dynamic).descripcion as String? ??
+              (visit.estado as dynamic).estado as String,
           'data': jsonEncode(visit.toJson()),
         },
         where: 'id = ?',
@@ -51,11 +55,15 @@ class VisitsLocalDataSource {
           await _bdLocal.query(ServicioBdLocal.nombreTablaVisitas);
       final Map<String, List<VisitaModel>> grouped = {};
       for (final row in rows) {
-        final estado = row['estado'] as String;
         final data =
             jsonDecode(row['data'] as String) as Map<String, dynamic>;
         final visita = VisitaModel.fromJson(data);
-        grouped.putIfAbsent(estado, () => []).add(visita);
+        final estadoDescripcion =
+            (visita.estado as dynamic).descripcion as String? ??
+            (visita.estado as dynamic).estado as String;
+        grouped
+            .putIfAbsent(estadoDescripcion, () => [])
+            .add(visita);
       }
       return grouped;
     } on DatabaseException catch (e) {
