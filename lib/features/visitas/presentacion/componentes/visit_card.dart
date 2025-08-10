@@ -18,7 +18,7 @@ class VisitCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fecha = visita.general.fechaProgramada;
+    final fecha = visita.estado.fechaProgramada;
     final fechaStr =
         '${fecha.day.toString().padLeft(2, '0')}/${fecha.month.toString().padLeft(2, '0')}/${fecha.year}';
 
