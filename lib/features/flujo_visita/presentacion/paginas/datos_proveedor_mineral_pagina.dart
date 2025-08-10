@@ -79,6 +79,10 @@ class _DatosProveedorMineralPaginaState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const Center(child: Text('7 de 9')),
+              const SizedBox(height: 8),
+              const LinearProgressIndicator(value: 7 / 9),
+              const SizedBox(height: 24),
               DropdownButtonFormField<String>(
                 value: _tipoPersona,
                 decoration: const InputDecoration(labelText: 'Tipo de persona'),
