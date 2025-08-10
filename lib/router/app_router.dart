@@ -14,6 +14,7 @@ import '../features/autenticacion/presentacion/paginas/login_page.dart';
 import '../features/flujo_visita/presentacion/paginas/actividad_minera_reinfo_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/actividad_minera_igafom_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/actividad_minera_verificada_pagina.dart';
+import '../features/flujo_visita/presentacion/paginas/descripcion_actividad_minera_verificada_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/datos_proveedor_mineral_pagina.dart';
 import '../features/visitas/presentacion/paginas/visitas_tabs_page.dart';
 
@@ -53,6 +54,15 @@ GoRouter createRouter(AuthNotifier authNotifier) {
             TipoActividadLocalDataSource(ServicioBdLocal()),
           );
           return ActividadMineraVerificadaPagina(repository: repo);
+        },
+      ),
+      GoRoute(
+        path: '/flujo-visita/descripcion-actividad-verificada',
+        builder: (context, state) {
+          final actividad = state.extra! as Actividad;
+          return DescripcionActividadMineraVerificadaPagina(
+            actividad: actividad,
+          );
         },
       ),
       GoRoute(

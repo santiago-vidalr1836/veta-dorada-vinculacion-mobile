@@ -120,7 +120,8 @@ class _ActividadMineraVerificadaPaginaState
       zonaUTM: int.tryParse(_zonaController.text),
       descripcion: null,
     );
-    context.push('/flujo-visita/datos-proveedor', extra: actividad);
+    context.push('/flujo-visita/descripcion-actividad-verificada',
+        extra: actividad);
   }
 
   @override
