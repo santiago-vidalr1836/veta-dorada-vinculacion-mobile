@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 
 import '../../datos/fuentes_datos/visits_local_data_source.dart'
     show VisitsLocalException;
-import '../../dominio/entidades/general.dart';
+import '../../dominio/entidades/estado_visita.dart';
 import '../../dominio/entidades/visita.dart';
 import '../../dominio/repositorios/visits_repository.dart';
 
@@ -26,11 +26,10 @@ class VisitasBloc extends Bloc<VisitasEvent, VisitasState> {
       final resultado =
           await _repository.obtenerVisitasPorGeologo(event.idGeologo);
       final programadas =
-          resultado.visitas[General.ESTADO_VISITA_PROGRAMADA] ?? [];
-      final borrador =
-          resultado.visitas[General.ESTADO_VISITA_EN_PROCESO] ?? [];
+          resultado.visitas[EstadoVisita.programada] ?? [];
+      final borrador = resultado.visitas[EstadoVisita.enProceso] ?? [];
       final completadas =
-          resultado.visitas[General.ESTADO_VISITA_FINALIZADA] ?? [];
+          resultado.visitas[EstadoVisita.finalizada] ?? [];
       emit(VisitasCargadas(
         programadas: programadas,
         borrador: borrador,

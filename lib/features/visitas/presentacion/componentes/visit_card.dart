@@ -18,9 +18,10 @@ class VisitCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fecha = visita.estado.fechaProgramada;
-    final fechaStr =
-        '${fecha.day.toString().padLeft(2, '0')}/${fecha.month.toString().padLeft(2, '0')}/${fecha.year}';
+    final fecha = visita.fechaProgramada;
+    final fechaStr = fecha != null
+        ? '${fecha.day.toString().padLeft(2, '0')}/${fecha.month.toString().padLeft(2, '0')}/${fecha.year}'
+        : '-';
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -38,6 +39,9 @@ class VisitCard extends StatelessWidget {
             Text('Proveedor: ${visita.proveedor.nombre}'),
             Text('Derecho minero: ${visita.derechoMinero.nombre}'),
             Text('Acopiador: $acopiador'),
+            Text(
+              'Ubigeo: ${visita.codigoDepartamento}-${visita.codigoProvincia}-${visita.codigoDistrito}',
+            ),
             Text('Fecha: $fechaStr'),
           ],
         ),
