@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../actividad/dominio/entidades/actividad.dart';
+
 /// Página para describir la actividad minera verificada.
 ///
 /// Muestra un formulario con varias secciones de información
 /// complementaria respecto a la actividad verificada.
 class DescripcionActividadMineraVerificadaPagina extends StatefulWidget {
-  const DescripcionActividadMineraVerificadaPagina({super.key});
+  const DescripcionActividadMineraVerificadaPagina({
+    super.key,
+    required this.actividad,
+  });
+
+  final Actividad actividad;
 
   @override
   State<DescripcionActividadMineraVerificadaPagina> createState() =>
@@ -37,7 +44,7 @@ class _DescripcionActividadMineraVerificadaPaginaState
 
   void _siguiente() {
     if (_formKey.currentState!.validate()) {
-      context.push('/flujo-visita/paso6');
+      context.push('/flujo-visita/datos-proveedor', extra: widget.actividad);
     }
   }
 
