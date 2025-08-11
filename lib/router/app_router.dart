@@ -24,6 +24,7 @@ import '../features/flujo_visita/presentacion/paginas/firma_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/firma_digital_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/registro_fotografico_verificacion_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/estimacion_produccion_pagina.dart';
+import '../features/flujo_visita/presentacion/paginas/estimacion_produccion_resultado_pagina.dart';
 import '../features/visitas/presentacion/paginas/visitas_tabs_page.dart';
 
 /// Crea la configuración del enrutador principal de la aplicación.
@@ -128,6 +129,13 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           return EstimacionProduccionPagina(
             flagMedicionCapacidad: flag,
           );
+        },
+      ),
+      GoRoute(
+        path: '/flujo-visita/estimacion-produccion/resultado',
+        builder: (context, state) {
+          final estimacion = state.extra as double? ?? 0;
+          return EstimacionProduccionResultadoPagina(estimacion: estimacion);
         },
       ),
       GoRoute(
