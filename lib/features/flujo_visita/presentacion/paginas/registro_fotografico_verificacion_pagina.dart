@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../actividad/dominio/entidades/actividad.dart';
 import '../widgets/foto_registro_item.dart';
@@ -31,6 +33,13 @@ class _RegistroFotograficoVerificacionPaginaState
     extends State<RegistroFotograficoVerificacionPagina> {
   final ImagePicker _picker = ImagePicker();
   final List<_FotoRegistro> _fotos = [];
+  static const _prefsKey = 'fotos_verificacion';
+
+  @override
+  void initState() {
+    super.initState();
+    _cargarFotos();
+  }
 
   Future<void> _agregarFoto() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.camera);
@@ -77,7 +86,7 @@ class _RegistroFotograficoVerificacionPaginaState
               child: const Text('Cancelar'),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 setState(() {
                   _fotos.add(
                     _FotoRegistro(
@@ -90,6 +99,7 @@ class _RegistroFotograficoVerificacionPaginaState
                     ),
                   );
                 });
+                await _guardarFotos();
                 Navigator.of(context).pop();
               },
               child: const Text('Guardar'),
@@ -107,10 +117,30 @@ class _RegistroFotograficoVerificacionPaginaState
       debugPrint('Error al eliminar foto: $e');
     }
     setState(() => _fotos.removeAt(index));
+    await _guardarFotos();
   }
 
   void _siguiente() {
     context.push('/flujo-visita/datos-proveedor', extra: widget.actividad);
+  }
+
+  Future<void> _guardarFotos() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString =
+        jsonEncode(_fotos.map((e) => e.toJson()).toList());
+    await prefs.setString(_prefsKey, jsonString);
+  }
+
+  Future<void> _cargarFotos() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = prefs.getString(_prefsKey);
+    if (jsonString == null) return;
+    final List<dynamic> data = jsonDecode(jsonString);
+    setState(() {
+      _fotos
+        ..clear()
+        ..addAll(data.map((e) => _FotoRegistro.fromJson(e as Map<String, dynamic>)));
+    });
   }
 
   @override
@@ -183,4 +213,22 @@ class _FotoRegistro {
   final DateTime fecha;
   final double latitud;
   final double longitud;
+
+  Map<String, dynamic> toJson() => {
+        'path': path,
+        'titulo': titulo,
+        'descripcion': descripcion,
+        'fecha': fecha.toIso8601String(),
+        'latitud': latitud,
+        'longitud': longitud,
+      };
+
+  factory _FotoRegistro.fromJson(Map<String, dynamic> json) => _FotoRegistro(
+        path: json['path'] as String,
+        titulo: json['titulo'] as String,
+        descripcion: json['descripcion'] as String,
+        fecha: DateTime.parse(json['fecha'] as String),
+        latitud: (json['latitud'] as num).toDouble(),
+        longitud: (json['longitud'] as num).toDouble(),
+      );
 }
