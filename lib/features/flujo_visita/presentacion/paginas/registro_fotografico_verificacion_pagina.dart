@@ -121,7 +121,7 @@ class _RegistroFotograficoVerificacionPaginaState
   }
 
   void _siguiente() {
-    context.push('/flujo-visita/datos-proveedor', extra: widget.actividad);
+    context.push('/flujo-visita/evaluacion-labor', extra: widget.actividad);
   }
 
   Future<void> _guardarFotos() async {

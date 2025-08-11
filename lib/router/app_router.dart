@@ -11,11 +11,15 @@ import '../features/actividad/datos/fuentes_datos/tipo_actividad_remote_data_sou
 import '../features/actividad/datos/repositorios/actividad_repository_impl.dart';
 import '../features/actividad/dominio/entidades/actividad.dart';
 import '../features/autenticacion/presentacion/paginas/login_page.dart';
+import '../features/flujo_visita/datos/fuentes_datos/general_local_data_source.dart';
+import '../features/flujo_visita/datos/fuentes_datos/general_remote_data_source.dart';
+import '../features/flujo_visita/datos/repositorios/general_repository.dart';
 import '../features/flujo_visita/presentacion/paginas/actividad_minera_reinfo_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/actividad_minera_igafom_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/actividad_minera_verificada_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/descripcion_actividad_minera_verificada_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/datos_proveedor_mineral_pagina.dart';
+import '../features/flujo_visita/presentacion/paginas/evaluacion_labor_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/registro_fotografico_verificacion_pagina.dart';
 import '../features/visitas/presentacion/paginas/visitas_tabs_page.dart';
 
@@ -82,6 +86,21 @@ GoRouter createRouter(AuthNotifier authNotifier) {
         builder: (context, state) {
           final actividad = state.extra! as Actividad;
           return RegistroFotograficoVerificacionPagina(actividad: actividad);
+        },
+      ),
+      GoRoute(
+        path: '/flujo-visita/evaluacion-labor',
+        builder: (context, state) {
+          final auth = AuthProvider.of(context);
+          final repo = GeneralRepository(
+            GeneralRemoteDataSource(ClienteHttp(token: auth.token!)),
+            GeneralLocalDataSource(ServicioBdLocal()),
+          );
+          final actividad = state.extra! as Actividad;
+          return EvaluacionLaborPagina(
+            actividad: actividad,
+            repository: repo,
+          );
         },
       ),
       GoRoute(
