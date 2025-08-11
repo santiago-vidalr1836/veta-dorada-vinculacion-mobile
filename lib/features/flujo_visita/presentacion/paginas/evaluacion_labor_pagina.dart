@@ -63,11 +63,8 @@ class _EvaluacionLaborPaginaState extends State<EvaluacionLaborPagina> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    context.push('/flujo-visita/firma',
-        extra: {
-          'actividad': widget.actividad,
-          'flagMedicionCapacidad': widget.flagMedicionCapacidad,
-        });
+    context.push('/flujo-visita/estimacion-produccion',
+        extra: widget.flagMedicionCapacidad);
   }
 
   @override

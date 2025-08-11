@@ -23,6 +23,7 @@ import '../features/flujo_visita/presentacion/paginas/evaluacion_labor_pagina.da
 import '../features/flujo_visita/presentacion/paginas/firma_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/firma_digital_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/registro_fotografico_verificacion_pagina.dart';
+import '../features/flujo_visita/presentacion/paginas/estimacion_produccion_pagina.dart';
 import '../features/visitas/presentacion/paginas/visitas_tabs_page.dart';
 
 /// Crea la configuración del enrutador principal de la aplicación.
@@ -116,6 +117,15 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           return EvaluacionLaborPagina(
             actividad: actividad,
             repository: repo,
+            flagMedicionCapacidad: flag,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/flujo-visita/estimacion-produccion',
+        builder: (context, state) {
+          final flag = state.extra as bool? ?? false;
+          return EstimacionProduccionPagina(
             flagMedicionCapacidad: flag,
           );
         },
