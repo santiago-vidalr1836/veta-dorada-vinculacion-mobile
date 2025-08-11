@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 /// Página para estimar la producción de la operación.
 ///
@@ -24,8 +25,6 @@ class _EstimacionProduccionPaginaState
   final TextEditingController _capacidadController = TextEditingController();
   final TextEditingController _diasController = TextEditingController();
 
-  double? _estimacion;
-
   @override
   void dispose() {
     _capacidadController.dispose();
@@ -37,9 +36,9 @@ class _EstimacionProduccionPaginaState
     if (!_formKey.currentState!.validate()) return;
     final capacidad = double.tryParse(_capacidadController.text) ?? 0;
     final dias = double.tryParse(_diasController.text) ?? 0;
-    setState(() {
-      _estimacion = capacidad * dias;
-    });
+    final estimacion = capacidad * dias;
+    context.push('/flujo-visita/estimacion-produccion/resultado',
+        extra: estimacion);
   }
 
   @override
@@ -80,11 +79,6 @@ class _EstimacionProduccionPaginaState
               onPressed: _calcular,
               child: const Text('Estimar'),
             ),
-            if (_estimacion != null) ...[
-              const SizedBox(height: 16),
-              Text('Producción estimada: '
-                  '${_estimacion!.toStringAsFixed(2)}'),
-            ],
           ],
         ),
       ),
