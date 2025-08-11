@@ -100,13 +100,13 @@ class _RegistroFotograficoVerificacionPaginaState
     );
   }
 
-  void _eliminarFoto(int index) {
-    final foto = _fotos.removeAt(index);
-    final file = File(foto.path);
-    if (file.existsSync()) {
-      file.deleteSync();
+  Future<void> _eliminarFoto(int index) async {
+    try {
+      await File(_fotos[index].path).delete();
+    } catch (e) {
+      debugPrint('Error al eliminar foto: $e');
     }
-    setState(() {});
+    setState(() => _fotos.removeAt(index));
   }
 
   void _siguiente() {
