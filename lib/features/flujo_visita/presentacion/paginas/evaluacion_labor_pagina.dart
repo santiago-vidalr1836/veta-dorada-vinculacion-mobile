@@ -59,7 +59,7 @@ class _EvaluacionLaborPaginaState extends State<EvaluacionLaborPagina> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    context.push('/flujo-visita/datos-proveedor', extra: widget.actividad);
+    context.push('/flujo-visita/firma', extra: widget.actividad);
   }
 
   @override
