@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
 import '../../../actividad/dominio/entidades/actividad.dart';
+import '../widgets/foto_registro_item.dart';
 
 /// Página para registrar fotografías durante la verificación.
 ///
@@ -99,6 +100,15 @@ class _RegistroFotograficoVerificacionPaginaState
     );
   }
 
+  void _eliminarFoto(int index) {
+    final foto = _fotos.removeAt(index);
+    final file = File(foto.path);
+    if (file.existsSync()) {
+      file.deleteSync();
+    }
+    setState(() {});
+  }
+
   void _siguiente() {
     context.push('/flujo-visita/datos-proveedor', extra: widget.actividad);
   }
@@ -131,18 +141,14 @@ class _RegistroFotograficoVerificacionPaginaState
                       itemCount: _fotos.length,
                       itemBuilder: (context, index) {
                         final foto = _fotos[index];
-                        return ListTile(
-                          leading: Image.file(
-                            File(foto.path),
-                            width: 56,
-                            height: 56,
-                            fit: BoxFit.cover,
-                          ),
-                          title: Text(
-                              foto.titulo.isEmpty ? 'Sin título' : foto.titulo),
-                          subtitle: Text(foto.descripcion.isEmpty
-                              ? 'Sin descripción'
-                              : foto.descripcion),
+                        return FotoRegistroItem(
+                          path: foto.path,
+                          titulo: foto.titulo,
+                          descripcion: foto.descripcion,
+                          fecha: foto.fecha,
+                          latitud: foto.latitud,
+                          longitud: foto.longitud,
+                          onDelete: () => _eliminarFoto(index),
                         );
                       },
                     ),
