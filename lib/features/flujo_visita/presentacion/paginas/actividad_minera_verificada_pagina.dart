@@ -16,10 +16,14 @@ class ActividadMineraVerificadaPagina extends StatefulWidget {
   const ActividadMineraVerificadaPagina({
     super.key,
     required this.repository,
+    required this.flagMedicionCapacidad,
   });
 
   /// Repositorio usado para obtener los tipos de actividad.
   final ActividadRepositoryImpl repository;
+
+  /// Indica si la visita requiere medición de capacidad.
+  final bool flagMedicionCapacidad;
 
   @override
   State<ActividadMineraVerificadaPagina> createState() =>
@@ -121,7 +125,10 @@ class _ActividadMineraVerificadaPaginaState
       descripcion: null,
     );
     context.push('/flujo-visita/descripcion-actividad-verificada',
-        extra: actividad);
+        extra: {
+          'actividad': actividad,
+          'flagMedicionCapacidad': widget.flagMedicionCapacidad,
+        });
   }
 
   @override

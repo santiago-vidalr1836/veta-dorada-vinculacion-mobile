@@ -11,6 +11,7 @@ class FirmaPagina extends StatelessWidget {
     super.key,
     required this.actividad,
     required this.usuario,
+    required this.flagMedicionCapacidad,
   });
 
   /// Actividad asociada a la firma.
@@ -18,6 +19,9 @@ class FirmaPagina extends StatelessWidget {
 
   /// Usuario que realizará la firma.
   final Usuario usuario;
+
+  /// Indica si la visita requiere medición de capacidad.
+  final bool flagMedicionCapacidad;
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +50,43 @@ class FirmaPagina extends StatelessWidget {
         child: SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () =>
-                context.push('/flujo-visita/firma-digital'),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Informe verificación generado'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Fecha: ${DateTime.now()}'),
+                        Text('Coordenadas: '
+                            '${actividad.utmEste}, ${actividad.utmNorte}'),
+                      ],
+                    ),
+                    actions: [
+                      if (flagMedicionCapacidad)
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            context.push(
+                                '/flujo-visita/estimacion-produccion');
+                          },
+                          child: const Text('Ir a estimación producción'),
+                        ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          context.push('/flujo-visita/firma-digital');
+                        },
+                        child: const Text('Firmar digital'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
             child: const Text('Firmar'),
           ),
         ),

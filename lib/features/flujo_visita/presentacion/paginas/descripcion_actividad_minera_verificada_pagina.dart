@@ -11,9 +11,11 @@ class DescripcionActividadMineraVerificadaPagina extends StatefulWidget {
   const DescripcionActividadMineraVerificadaPagina({
     super.key,
     required this.actividad,
+    required this.flagMedicionCapacidad,
   });
 
   final Actividad actividad;
+  final bool flagMedicionCapacidad;
 
   @override
   State<DescripcionActividadMineraVerificadaPagina> createState() =>
@@ -45,7 +47,10 @@ class _DescripcionActividadMineraVerificadaPaginaState
   void _siguiente() {
     if (_formKey.currentState!.validate()) {
       context.push('/flujo-visita/registro-fotografico',
-          extra: widget.actividad);
+          extra: {
+            'actividad': widget.actividad,
+            'flagMedicionCapacidad': widget.flagMedicionCapacidad,
+          });
     }
   }
 

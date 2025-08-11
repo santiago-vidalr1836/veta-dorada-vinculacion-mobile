@@ -20,9 +20,11 @@ class RegistroFotograficoVerificacionPagina extends StatefulWidget {
   const RegistroFotograficoVerificacionPagina({
     super.key,
     required this.actividad,
+    required this.flagMedicionCapacidad,
   });
 
   final Actividad actividad;
+  final bool flagMedicionCapacidad;
 
   @override
   State<RegistroFotograficoVerificacionPagina> createState() =>
@@ -121,7 +123,11 @@ class _RegistroFotograficoVerificacionPaginaState
   }
 
   void _siguiente() {
-    context.push('/flujo-visita/evaluacion-labor', extra: widget.actividad);
+    context.push('/flujo-visita/evaluacion-labor',
+        extra: {
+          'actividad': widget.actividad,
+          'flagMedicionCapacidad': widget.flagMedicionCapacidad,
+        });
   }
 
   Future<void> _guardarFotos() async {

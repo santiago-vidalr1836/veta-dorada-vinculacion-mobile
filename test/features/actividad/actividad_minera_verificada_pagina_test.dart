@@ -37,7 +37,10 @@ void main() {
     ]);
 
     await tester.pumpWidget(MaterialApp(
-      home: ActividadMineraVerificadaPagina(repository: repo),
+      home: ActividadMineraVerificadaPagina(
+        repository: repo,
+        flagMedicionCapacidad: false,
+      ),
     ));
     await tester.pumpAndSettle();
 
@@ -55,7 +58,10 @@ void main() {
     ]);
 
     await tester.pumpWidget(MaterialApp(
-      home: ActividadMineraVerificadaPagina(repository: repo),
+      home: ActividadMineraVerificadaPagina(
+        repository: repo,
+        flagMedicionCapacidad: false,
+      ),
     ));
     await tester.pumpAndSettle();
 

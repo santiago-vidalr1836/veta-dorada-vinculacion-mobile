@@ -14,6 +14,7 @@ class EvaluacionLaborPagina extends StatefulWidget {
     super.key,
     required this.actividad,
     required this.repository,
+    required this.flagMedicionCapacidad,
   });
 
   /// Actividad relacionada a la evaluación.
@@ -21,6 +22,9 @@ class EvaluacionLaborPagina extends StatefulWidget {
 
   /// Repositorio para obtener las condiciones del prospecto.
   final GeneralRepository repository;
+
+  /// Indica si la visita requiere medición de capacidad.
+  final bool flagMedicionCapacidad;
 
   @override
   State<EvaluacionLaborPagina> createState() => _EvaluacionLaborPaginaState();
@@ -59,7 +63,11 @@ class _EvaluacionLaborPaginaState extends State<EvaluacionLaborPagina> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-    context.push('/flujo-visita/firma', extra: widget.actividad);
+    context.push('/flujo-visita/firma',
+        extra: {
+          'actividad': widget.actividad,
+          'flagMedicionCapacidad': widget.flagMedicionCapacidad,
+        });
   }
 
   @override
