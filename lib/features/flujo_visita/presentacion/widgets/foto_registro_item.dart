@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 /// Elemento que muestra un registro fotográfico con opciones para eliminarlo.
 class FotoRegistroItem extends StatelessWidget {
@@ -37,12 +38,17 @@ class FotoRegistroItem extends StatelessWidget {
   final VoidCallback? onDelete;
 
   String _formatFecha(DateTime date) {
-    final dd = date.day.toString().padLeft(2, '0');
-    final mm = date.month.toString().padLeft(2, '0');
-    final yyyy = date.year.toString();
-    final hh = date.hour.toString().padLeft(2, '0');
-    final mi = date.minute.toString().padLeft(2, '0');
-    return '$dd/$mm/$yyyy $hh:$mi';
+    return DateFormat('dd/MM/yy HH:mm').format(date);
+  }
+
+  String _formatCoordenada(double valor, {required bool esLatitud}) {
+    final direccion = valor >= 0
+        ? (esLatitud ? 'N' : 'E')
+        : (esLatitud ? 'S' : 'O');
+    final valorAbs = valor.abs();
+    final grados = valorAbs.truncate();
+    final minutos = (valorAbs - grados) * 60;
+    return '$grados° ${minutos.toStringAsFixed(5)}\' $direccion';
   }
 
   @override
@@ -52,7 +58,8 @@ class FotoRegistroItem extends StatelessWidget {
         descripcion.isEmpty ? 'Sin descripción' : descripcion;
     final fechaMostrar = _formatFecha(fecha);
     final coordenadasMostrar =
-        '(${latitud.toStringAsFixed(4)}, ${longitud.toStringAsFixed(4)})';
+        '${_formatCoordenada(latitud, esLatitud: true)}, ${_formatCoordenada(longitud, esLatitud: false)}';
+    final infoMostrar = '$fechaMostrar - $coordenadasMostrar';
 
     return ListTile(
       leading: Image.file(
@@ -66,8 +73,7 @@ class FotoRegistroItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(descripcionMostrar),
-          Text(fechaMostrar),
-          Text(coordenadasMostrar),
+          Text(infoMostrar),
         ],
       ),
       trailing: IconButton(
