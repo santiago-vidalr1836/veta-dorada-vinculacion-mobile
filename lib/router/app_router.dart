@@ -60,15 +60,22 @@ GoRouter createRouter(AuthNotifier authNotifier) {
             TipoActividadRemoteDataSource(ClienteHttp(token: auth.token!)),
             TipoActividadLocalDataSource(ServicioBdLocal()),
           );
-          return ActividadMineraVerificadaPagina(repository: repo);
+          final flag = state.extra as bool? ?? false;
+          return ActividadMineraVerificadaPagina(
+            repository: repo,
+            flagMedicionCapacidad: flag,
+          );
         },
       ),
       GoRoute(
         path: '/flujo-visita/descripcion-actividad-verificada',
         builder: (context, state) {
-          final actividad = state.extra! as Actividad;
+          final extras = state.extra! as Map<String, dynamic>;
+          final actividad = extras['actividad'] as Actividad;
+          final flag = extras['flagMedicionCapacidad'] as bool;
           return DescripcionActividadMineraVerificadaPagina(
             actividad: actividad,
+            flagMedicionCapacidad: flag,
           );
         },
       ),
@@ -86,8 +93,13 @@ GoRouter createRouter(AuthNotifier authNotifier) {
       GoRoute(
         path: '/flujo-visita/registro-fotografico',
         builder: (context, state) {
-          final actividad = state.extra! as Actividad;
-          return RegistroFotograficoVerificacionPagina(actividad: actividad);
+          final extras = state.extra! as Map<String, dynamic>;
+          final actividad = extras['actividad'] as Actividad;
+          final flag = extras['flagMedicionCapacidad'] as bool;
+          return RegistroFotograficoVerificacionPagina(
+            actividad: actividad,
+            flagMedicionCapacidad: flag,
+          );
         },
       ),
       GoRoute(
@@ -98,10 +110,13 @@ GoRouter createRouter(AuthNotifier authNotifier) {
             GeneralRemoteDataSource(ClienteHttp(token: auth.token!)),
             GeneralLocalDataSource(ServicioBdLocal()),
           );
-          final actividad = state.extra! as Actividad;
+          final extras = state.extra! as Map<String, dynamic>;
+          final actividad = extras['actividad'] as Actividad;
+          final flag = extras['flagMedicionCapacidad'] as bool;
           return EvaluacionLaborPagina(
             actividad: actividad,
             repository: repo,
+            flagMedicionCapacidad: flag,
           );
         },
       ),
@@ -109,10 +124,13 @@ GoRouter createRouter(AuthNotifier authNotifier) {
         path: '/flujo-visita/firma',
         builder: (context, state) {
           final auth = AuthProvider.of(context);
-          final actividad = state.extra! as Actividad;
+          final extras = state.extra! as Map<String, dynamic>;
+          final actividad = extras['actividad'] as Actividad;
+          final flag = extras['flagMedicionCapacidad'] as bool;
           return FirmaPagina(
             actividad: actividad,
             usuario: auth.usuario!,
+            flagMedicionCapacidad: flag,
           );
         },
       ),
