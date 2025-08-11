@@ -21,6 +21,8 @@ class ServicioBdLocal {
   static const String nombreTablaInicioProcesoFormalizacion =
       'inicio_proceso_formalizacion';
   static const String nombreTablaTipoActividad = 'tipo_actividad';
+  static const String nombreTablaCondicionProspecto =
+      'condicion_prospecto';
 
   static const _nombreBd = 'vinculacion.db';
   static const _versionBd = 1;
@@ -58,6 +60,12 @@ class ServicioBdLocal {
         await db.execute('''
           CREATE TABLE $nombreTablaTipoActividad(
             id INTEGER PRIMARY KEY,
+            descripcion TEXT
+          );
+        ''');
+        await db.execute('''
+          CREATE TABLE $nombreTablaCondicionProspecto(
+            id TEXT PRIMARY KEY,
             descripcion TEXT
           );
         ''');

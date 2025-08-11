@@ -4,6 +4,7 @@ import 'package:veta_dorada_vinculacion_mobile/core/servicios/servicio_bd_local.
 
 import '../../dominio/entidades/inicio_proceso_formalizacion.dart';
 import '../../dominio/entidades/tipo_proveedor.dart';
+import '../../dominio/entidades/condicion_prospecto.dart';
 
 /// Fuente de datos local para almacenar y recuperar listas generales.
 class GeneralLocalDataSource {
@@ -15,6 +16,8 @@ class GeneralLocalDataSource {
       ServicioBdLocal.nombreTablaTipoProveedor;
   static const String _tablaIniciosFormalizacion =
       ServicioBdLocal.nombreTablaInicioProcesoFormalizacion;
+  static const String _tablaCondicionesProspecto =
+      ServicioBdLocal.nombreTablaCondicionProspecto;
 
   /// Reemplaza los tipos de proveedor almacenados.
   Future<void> reemplazarTiposProveedor(List<TipoProveedor> tipos) async {
@@ -73,6 +76,39 @@ class GeneralLocalDataSource {
     } on DatabaseException catch (e) {
       throw GeneralLocalException(
           'Error al obtener inicios formalización: $e');
+    }
+  }
+
+  /// Reemplaza las condiciones del prospecto almacenadas.
+  Future<void> reemplazarCondicionesProspecto(
+      List<CondicionProspecto> condiciones) async {
+    try {
+      await _bdLocal.delete(_tablaCondicionesProspecto);
+      for (final condicion in condiciones) {
+        await _bdLocal.insert(_tablaCondicionesProspecto, {
+          'id': condicion.id,
+          'descripcion': condicion.descripcion,
+        });
+      }
+    } on DatabaseException catch (e) {
+      throw GeneralLocalException(
+          'Error al guardar condiciones prospecto: $e');
+    }
+  }
+
+  /// Obtiene las condiciones del prospecto almacenadas.
+  Future<List<CondicionProspecto>> obtenerCondicionesProspecto() async {
+    try {
+      final rows = await _bdLocal.query(_tablaCondicionesProspecto);
+      return rows
+          .map((row) => CondicionProspecto(
+                id: row['id'] as String,
+                descripcion: row['descripcion'] as String,
+              ))
+          .toList();
+    } on DatabaseException catch (e) {
+      throw GeneralLocalException(
+          'Error al obtener condiciones prospecto: $e');
     }
   }
 }
