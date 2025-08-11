@@ -20,6 +20,8 @@ import '../features/flujo_visita/presentacion/paginas/actividad_minera_verificad
 import '../features/flujo_visita/presentacion/paginas/descripcion_actividad_minera_verificada_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/datos_proveedor_mineral_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/evaluacion_labor_pagina.dart';
+import '../features/flujo_visita/presentacion/paginas/firma_pagina.dart';
+import '../features/flujo_visita/presentacion/paginas/firma_digital_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/registro_fotografico_verificacion_pagina.dart';
 import '../features/visitas/presentacion/paginas/visitas_tabs_page.dart';
 
@@ -102,6 +104,21 @@ GoRouter createRouter(AuthNotifier authNotifier) {
             repository: repo,
           );
         },
+      ),
+      GoRoute(
+        path: '/flujo-visita/firma',
+        builder: (context, state) {
+          final auth = AuthProvider.of(context);
+          final actividad = state.extra! as Actividad;
+          return FirmaPagina(
+            actividad: actividad,
+            usuario: auth.usuario!,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/flujo-visita/firma-digital',
+        builder: (context, state) => const FirmaDigitalPagina(),
       ),
       GoRoute(
         path: '/flujo-visita/datos-proveedor',
