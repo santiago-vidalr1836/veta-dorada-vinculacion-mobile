@@ -78,7 +78,7 @@ GoRouter createRouter(AuthNotifier authNotifier) {
         },
       ),
       GoRoute(
-        path: '/flujo-visita/registro-fotografico-verificacion',
+        path: '/flujo-visita/registro-fotografico',
         builder: (context, state) {
           final actividad = state.extra! as Actividad;
           return RegistroFotograficoVerificacionPagina(actividad: actividad);

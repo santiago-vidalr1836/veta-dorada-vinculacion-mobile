@@ -44,7 +44,7 @@ class _DescripcionActividadMineraVerificadaPaginaState
 
   void _siguiente() {
     if (_formKey.currentState!.validate()) {
-      context.push('/flujo-visita/registro-fotografico-verificacion',
+      context.push('/flujo-visita/registro-fotografico',
           extra: widget.actividad);
     }
   }
