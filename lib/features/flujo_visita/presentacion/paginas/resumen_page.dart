@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/red/cliente_http.dart';
+import '../../../../core/auth/auth_http_client.dart';
 import '../../../datos/fuentes_datos/documento_remote_data_source.dart';
 import '../../../datos/repositorios/flow_repository_impl.dart';
 import '../../dominio/casos_uso/completar_flujo.dart';
@@ -23,16 +23,17 @@ class ResumenPage extends StatefulWidget {
 
 class _ResumenPageState extends State<ResumenPage> {
   late final CompletarFlujo _completarFlujo;
+  bool _initialized = false;
 
   bool _enviando = false;
 
   @override
-  void initState() {
-    super.initState();
-    // En un escenario real el token provendría del proceso de autenticación.
-    final client = ClienteHttp(token: '');
-    final documento = DocumentoRemoteDataSource(client);
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_initialized) return;
+    final documento = DocumentoRemoteDataSource(authenticatedClient(context));
     _completarFlujo = CompletarFlujo(documento, widget.repository);
+    _initialized = true;
   }
 
   Future<bool> _formulariosCompletos() async {
