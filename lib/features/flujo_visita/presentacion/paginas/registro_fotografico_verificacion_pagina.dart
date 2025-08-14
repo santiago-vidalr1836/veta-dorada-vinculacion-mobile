@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -7,9 +6,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../actividad/dominio/entidades/actividad.dart';
+import '../../dominio/entidades/registro_fotografico.dart';
+import '../../dominio/repositorios/flow_repository.dart';
 import '../widgets/foto_registro_item.dart';
 
 /// Página para registrar fotografías durante la verificación.
@@ -21,10 +21,12 @@ class RegistroFotograficoVerificacionPagina extends StatefulWidget {
     super.key,
     required this.actividad,
     required this.flagMedicionCapacidad,
+    required this.flowRepository,
   });
 
   final Actividad actividad;
   final bool flagMedicionCapacidad;
+  final FlowRepository flowRepository;
 
   @override
   State<RegistroFotograficoVerificacionPagina> createState() =>
@@ -34,8 +36,7 @@ class RegistroFotograficoVerificacionPagina extends StatefulWidget {
 class _RegistroFotograficoVerificacionPaginaState
     extends State<RegistroFotograficoVerificacionPagina> {
   final ImagePicker _picker = ImagePicker();
-  final List<_FotoRegistro> _fotos = [];
-  static const _prefsKey = 'fotos_verificacion';
+  final List<RegistroFotografico> _fotos = [];
 
   @override
   void initState() {
@@ -89,19 +90,16 @@ class _RegistroFotograficoVerificacionPaginaState
             ),
             TextButton(
               onPressed: () async {
-                setState(() {
-                  _fotos.add(
-                    _FotoRegistro(
-                      path: saved.path,
-                      titulo: tituloController.text,
-                      descripcion: descripcionController.text,
-                      fecha: now,
-                      latitud: position.latitude,
-                      longitud: position.longitude,
-                    ),
-                  );
-                });
-                await _guardarFotos();
+                final registro = RegistroFotografico(
+                  path: saved.path,
+                  titulo: tituloController.text,
+                  descripcion: descripcionController.text,
+                  fecha: now,
+                  latitud: position.latitude,
+                  longitud: position.longitude,
+                );
+                await widget.flowRepository.agregarFotoVerificacion(registro);
+                await _cargarFotos();
                 Navigator.of(context).pop();
               },
               child: const Text('Guardar'),
@@ -118,8 +116,8 @@ class _RegistroFotograficoVerificacionPaginaState
     } catch (e) {
       debugPrint('Error al eliminar foto: $e');
     }
-    setState(() => _fotos.removeAt(index));
-    await _guardarFotos();
+    await widget.flowRepository.eliminarFotoVerificacion(index);
+    await _cargarFotos();
   }
 
   void _siguiente() {
@@ -130,22 +128,12 @@ class _RegistroFotograficoVerificacionPaginaState
         });
   }
 
-  Future<void> _guardarFotos() async {
-    final prefs = await SharedPreferences.getInstance();
-    final jsonString =
-        jsonEncode(_fotos.map((e) => e.toJson()).toList());
-    await prefs.setString(_prefsKey, jsonString);
-  }
-
   Future<void> _cargarFotos() async {
-    final prefs = await SharedPreferences.getInstance();
-    final jsonString = prefs.getString(_prefsKey);
-    if (jsonString == null) return;
-    final List<dynamic> data = jsonDecode(jsonString);
+    final fotos = await widget.flowRepository.obtenerFotosVerificacion();
     setState(() {
       _fotos
         ..clear()
-        ..addAll(data.map((e) => _FotoRegistro.fromJson(e as Map<String, dynamic>)));
+        ..addAll(fotos);
     });
   }
 
@@ -197,44 +185,8 @@ class _RegistroFotograficoVerificacionPaginaState
               ),
             )
           ],
-        ),
       ),
-    );
-  }
-}
-
-class _FotoRegistro {
-  _FotoRegistro({
-    required this.path,
-    required this.titulo,
-    required this.descripcion,
-    required this.fecha,
-    required this.latitud,
-    required this.longitud,
-  });
-
-  final String path;
-  final String titulo;
-  final String descripcion;
-  final DateTime fecha;
-  final double latitud;
-  final double longitud;
-
-  Map<String, dynamic> toJson() => {
-        'path': path,
-        'titulo': titulo,
-        'descripcion': descripcion,
-        'fecha': fecha.toIso8601String(),
-        'latitud': latitud,
-        'longitud': longitud,
-      };
-
-  factory _FotoRegistro.fromJson(Map<String, dynamic> json) => _FotoRegistro(
-        path: json['path'] as String,
-        titulo: json['titulo'] as String,
-        descripcion: json['descripcion'] as String,
-        fecha: DateTime.parse(json['fecha'] as String),
-        latitud: (json['latitud'] as num).toDouble(),
-        longitud: (json['longitud'] as num).toDouble(),
+      ),
       );
+  }
 }

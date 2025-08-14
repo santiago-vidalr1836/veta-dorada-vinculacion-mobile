@@ -14,6 +14,8 @@ import '../features/autenticacion/presentacion/paginas/login_page.dart';
 import '../features/flujo_visita/datos/fuentes_datos/general_local_data_source.dart';
 import '../features/flujo_visita/datos/fuentes_datos/general_remote_data_source.dart';
 import '../features/flujo_visita/datos/repositorios/general_repository.dart';
+import '../features/flujo_visita/datos/fuentes_datos/verificacion_remote_data_source.dart';
+import '../features/flujo_visita/datos/repositorios/flow_repository_impl.dart';
 import '../features/flujo_visita/presentacion/paginas/actividad_minera_reinfo_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/actividad_minera_igafom_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/actividad_minera_verificada_pagina.dart';
@@ -29,6 +31,11 @@ import '../features/visitas/presentacion/paginas/visitas_tabs_page.dart';
 
 /// Crea la configuración del enrutador principal de la aplicación.
 GoRouter createRouter(AuthNotifier authNotifier) {
+  final flowRepository = FlowRepositoryImpl(
+    VerificacionRemoteDataSource(
+      ClienteHttp(token: authNotifier.token ?? ''),
+    ),
+  );
   return GoRouter(
     initialLocation: '/visitas',
     redirect: (context, state) {
@@ -78,6 +85,7 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           return DescripcionActividadMineraVerificadaPagina(
             actividad: actividad,
             flagMedicionCapacidad: flag,
+            flowRepository: flowRepository,
           );
         },
       ),
@@ -101,6 +109,7 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           return RegistroFotograficoVerificacionPagina(
             actividad: actividad,
             flagMedicionCapacidad: flag,
+            flowRepository: flowRepository,
           );
         },
       ),
@@ -119,6 +128,7 @@ GoRouter createRouter(AuthNotifier authNotifier) {
             actividad: actividad,
             repository: repo,
             flagMedicionCapacidad: flag,
+            flowRepository: flowRepository,
           );
         },
       ),
@@ -128,6 +138,7 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           final flag = state.extra as bool? ?? false;
           return EstimacionProduccionPagina(
             flagMedicionCapacidad: flag,
+            flowRepository: flowRepository,
           );
         },
       ),

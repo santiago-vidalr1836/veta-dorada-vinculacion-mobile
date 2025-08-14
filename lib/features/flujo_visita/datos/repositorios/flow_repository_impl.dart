@@ -1,4 +1,6 @@
 import '../../dominio/entidades/descripcion_actividad_verificada.dart';
+import '../../dominio/entidades/evaluacion.dart';
+import '../../dominio/entidades/estimacion.dart';
 import '../../dominio/entidades/registro_fotografico.dart';
 import '../../dominio/entidades/completar_visita_comando.dart';
 import '../../dominio/repositorios/flow_repository.dart';
@@ -11,6 +13,8 @@ class FlowRepositoryImpl implements FlowRepository {
   final VerificacionRemoteDataSource _verificacionRemoteDataSource;
 
   DescripcionActividadVerificada? _descripcion;
+  Evaluacion? _evaluacion;
+  Estimacion? _estimacion;
   final List<RegistroFotografico> _fotos = [];
 
   @override
@@ -26,8 +30,33 @@ class FlowRepositoryImpl implements FlowRepository {
   }
 
   @override
+  Future<void> guardarEvaluacion(Evaluacion evaluacion) async {
+    _evaluacion = evaluacion;
+  }
+
+  @override
+  Future<Evaluacion?> obtenerEvaluacion() async {
+    return _evaluacion;
+  }
+
+  @override
+  Future<void> guardarEstimacion(Estimacion estimacion) async {
+    _estimacion = estimacion;
+  }
+
+  @override
+  Future<Estimacion?> obtenerEstimacion() async {
+    return _estimacion;
+  }
+
+  @override
   Future<void> agregarFotoVerificacion(RegistroFotografico foto) async {
     _fotos.add(foto);
+  }
+
+  @override
+  Future<void> eliminarFotoVerificacion(int index) async {
+    _fotos.removeAt(index);
   }
 
   @override

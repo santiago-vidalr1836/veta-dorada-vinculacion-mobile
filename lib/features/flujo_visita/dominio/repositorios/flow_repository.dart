@@ -1,4 +1,6 @@
 import '../entidades/descripcion_actividad_verificada.dart';
+import '../entidades/evaluacion.dart';
+import '../entidades/estimacion.dart';
 import '../entidades/registro_fotografico.dart';
 import '../entidades/completar_visita_comando.dart';
 
@@ -12,8 +14,23 @@ abstract class FlowRepository {
   Future<DescripcionActividadVerificada?>
       obtenerDescripcionActividadVerificada();
 
+  /// Guarda la evaluación de la labor realizada.
+  Future<void> guardarEvaluacion(Evaluacion evaluacion);
+
+  /// Recupera la evaluación almacenada.
+  Future<Evaluacion?> obtenerEvaluacion();
+
+  /// Guarda la estimación de producción calculada.
+  Future<void> guardarEstimacion(Estimacion estimacion);
+
+  /// Recupera la estimación de producción almacenada.
+  Future<Estimacion?> obtenerEstimacion();
+
   /// Agrega un registro fotográfico de la verificación.
   Future<void> agregarFotoVerificacion(RegistroFotografico foto);
+
+  /// Elimina un registro fotográfico por índice.
+  Future<void> eliminarFotoVerificacion(int index);
 
   /// Obtiene la lista de registros fotográficos agregados.
   Future<List<RegistroFotografico>> obtenerFotosVerificacion();

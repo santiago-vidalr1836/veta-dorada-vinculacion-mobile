@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../datos/repositorios/general_repository.dart';
 import '../../dominio/entidades/condicion_prospecto.dart';
+import '../../dominio/entidades/evaluacion.dart';
+import '../../dominio/repositorios/flow_repository.dart';
 
 /// Página para evaluar la labor durante la visita.
 ///
@@ -15,6 +17,7 @@ class EvaluacionLaborPagina extends StatefulWidget {
     required this.actividad,
     required this.repository,
     required this.flagMedicionCapacidad,
+    required this.flowRepository,
   });
 
   /// Actividad relacionada a la evaluación.
@@ -25,6 +28,9 @@ class EvaluacionLaborPagina extends StatefulWidget {
 
   /// Indica si la visita requiere medición de capacidad.
   final bool flagMedicionCapacidad;
+
+  /// Repositorio para almacenar la evaluación.
+  final FlowRepository flowRepository;
 
   @override
   State<EvaluacionLaborPagina> createState() => _EvaluacionLaborPaginaState();
@@ -59,10 +65,17 @@ class _EvaluacionLaborPaginaState extends State<EvaluacionLaborPagina> {
 
   bool get _isFormValid => _condicionSeleccionada != null;
 
-  void _siguiente() {
+  Future<void> _siguiente() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
+    final evaluacion = Evaluacion(
+      idCondicionProspecto: int.parse(_condicionSeleccionada!.id),
+      anotacion:
+          _anotacionController.text.isEmpty ? null : _anotacionController.text,
+    );
+    await widget.flowRepository.guardarEvaluacion(evaluacion);
+    if (!mounted) return;
     context.push('/flujo-visita/estimacion-produccion',
         extra: widget.flagMedicionCapacidad);
   }

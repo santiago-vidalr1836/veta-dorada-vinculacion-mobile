@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../actividad/dominio/entidades/actividad.dart';
+import '../../dominio/entidades/descripcion_actividad_verificada.dart';
+import '../../dominio/repositorios/flow_repository.dart';
 
 /// Página para describir la actividad minera verificada.
 ///
@@ -12,10 +14,12 @@ class DescripcionActividadMineraVerificadaPagina extends StatefulWidget {
     super.key,
     required this.actividad,
     required this.flagMedicionCapacidad,
+    required this.flowRepository,
   });
 
   final Actividad actividad;
   final bool flagMedicionCapacidad;
+  final FlowRepository flowRepository;
 
   @override
   State<DescripcionActividadMineraVerificadaPagina> createState() =>
@@ -44,8 +48,19 @@ class _DescripcionActividadMineraVerificadaPaginaState
     super.dispose();
   }
 
-  void _siguiente() {
+  Future<void> _siguiente() async {
     if (_formKey.currentState!.validate()) {
+      final descripcion = DescripcionActividadVerificada(
+        coordenadas: _coordenadasController.text,
+        zona: _zonaController.text,
+        actividad: _actividadController.text,
+        equipos: _equiposController.text,
+        trabajadores: _trabajadoresController.text,
+        condicionesLaborales: _seguridadController.text,
+      );
+      await widget.flowRepository
+          .guardarDescripcionActividadVerificada(descripcion);
+      if (!mounted) return;
       context.push('/flujo-visita/registro-fotografico',
           extra: {
             'actividad': widget.actividad,
