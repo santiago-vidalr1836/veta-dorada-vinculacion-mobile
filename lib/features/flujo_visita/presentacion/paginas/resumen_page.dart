@@ -1,11 +1,19 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
-import '../../../datos/fuentes_datos/documento_remote_data_source.dart';
-import '../../../datos/repositorios/flow_repository_impl.dart';
-import '../../dominio/entidades/registro_fotografico.dart';
 import '../../../../core/red/cliente_http.dart';
+import '../../../datos/fuentes_datos/documento_remote_data_source.dart';
+import '../../../datos/fuentes_datos/verificacion_remote_data_source.dart';
+import '../../../datos/repositorios/flow_repository_impl.dart';
+import '../../dominio/casos_uso/completar_flujo.dart';
+import '../../dominio/entidades/completar_visita_comando.dart';
+import '../../dominio/entidades/descripcion.dart';
+import '../../dominio/entidades/evaluacion.dart';
+import '../../dominio/entidades/estimacion.dart';
+import '../../dominio/entidades/foto.dart';
+import '../../dominio/entidades/proveedor_snapshot.dart';
+import '../../dominio/entidades/actividad.dart' as actividad_cmd;
+import '../../dominio/entidades/registro_fotografico.dart';
+import '../../dominio/entidades/descripcion_actividad_verificada.dart';
 
 /// Página final del flujo donde se envían los datos recopilados.
 class ResumenPage extends StatefulWidget {
@@ -16,8 +24,8 @@ class ResumenPage extends StatefulWidget {
 }
 
 class _ResumenPageState extends State<ResumenPage> {
-  final FlowRepositoryImpl _repository = FlowRepositoryImpl();
-  late final DocumentoRemoteDataSource _remoteDataSource;
+  late final FlowRepositoryImpl _repository;
+  late final CompletarFlujo _completarFlujo;
 
   bool _enviando = false;
 
@@ -25,7 +33,11 @@ class _ResumenPageState extends State<ResumenPage> {
   void initState() {
     super.initState();
     // En un escenario real el token provendría del proceso de autenticación.
-    _remoteDataSource = DocumentoRemoteDataSource(ClienteHttp(token: ''));
+    final client = ClienteHttp(token: '');
+    final documento = DocumentoRemoteDataSource(client);
+    final verificacion = VerificacionRemoteDataSource(client);
+    _repository = FlowRepositoryImpl(verificacion);
+    _completarFlujo = CompletarFlujo(documento, _repository);
   }
 
   Future<bool> _formulariosCompletos() async {
@@ -38,25 +50,51 @@ class _ResumenPageState extends State<ResumenPage> {
 
     setState(() => _enviando = true);
 
+    final descripcion = await _repository.obtenerDescripcionActividadVerificada();
     final fotos = await _repository.obtenerFotosVerificacion();
-    final List<RegistroFotografico> actualizadas = [];
 
-    for (final foto in fotos) {
-      final file = File(foto.path);
-      final url = await _remoteDataSource.subirDocumento(file);
-      actualizadas.add(
-        RegistroFotografico(
-          path: url,
-          titulo: foto.titulo,
-          descripcion: foto.descripcion,
-          fecha: foto.fecha,
-          latitud: foto.latitud,
-          longitud: foto.longitud,
-        ),
-      );
-    }
+    final comando = CompletarVisitaComando(
+      idVisita: 0,
+      proveedor: ProveedorSnapshot(
+        tipoPersona: '',
+        nombre: '',
+        inicioFormalizacion: false,
+      ),
+      actividad: actividad_cmd.Actividad(
+        idTipoActividad: 0,
+        idSubTipoActividad: 0,
+        utmEste: 0,
+        utmNorte: 0,
+      ),
+      descripcion: Descripcion(
+        coordenadas: descripcion?.coordenadas ?? '',
+        zona: descripcion?.zona ?? '',
+        actividad: descripcion?.actividad ?? '',
+        equipos: descripcion?.equipos ?? '',
+        trabajadores: descripcion?.trabajadores ?? '',
+        condicionesLaborales: descripcion?.condicionesLaborales ?? '',
+      ),
+      evaluacion: const Evaluacion(idCondicionProspecto: 0, anotacion: ''),
+      estimacion: const Estimacion(
+        capacidadDiaria: 0,
+        diasOperacion: 0,
+        produccionEstimada: 0,
+      ),
+      fotos: fotos
+          .map(
+            (e) => Foto(
+              imagen: e.path,
+              titulo: e.titulo,
+              descripcion: e.descripcion,
+              fecha: e.fecha,
+              latitud: e.latitud,
+              longitud: e.longitud,
+            ),
+          )
+          .toList(),
+    );
 
-    // TODO: Enviar `actualizadas` junto con el resto de la información.
+    await _completarFlujo(comando);
 
     setState(() => _enviando = false);
   }

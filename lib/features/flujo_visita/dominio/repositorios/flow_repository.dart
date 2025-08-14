@@ -1,5 +1,6 @@
 import '../entidades/descripcion_actividad_verificada.dart';
 import '../entidades/registro_fotografico.dart';
+import '../entidades/completar_visita_comando.dart';
 
 /// Repositorio para manejar los datos del flujo de visita.
 abstract class FlowRepository {
@@ -16,5 +17,8 @@ abstract class FlowRepository {
 
   /// Obtiene la lista de registros fotográficos agregados.
   Future<List<RegistroFotografico>> obtenerFotosVerificacion();
+
+  /// Completa el flujo enviando la información recopilada al servidor.
+  Future<void> completarFlujo(CompletarVisitaComando comando);
 }
 
