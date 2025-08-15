@@ -76,9 +76,22 @@ class _ResumenPageState extends State<ResumenPage> {
       fotos: const [],
     );
 
-    await _completarFlujo(comando);
-
-    setState(() => _enviando = false);
+    try {
+      await _completarFlujo(comando);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Datos enviados correctamente')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error al enviar datos')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _enviando = false);
+      }
+    }
   }
 
   @override
@@ -86,12 +99,16 @@ class _ResumenPageState extends State<ResumenPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Resumen')),
       body: Center(
-        child: _enviando
-            ? const CircularProgressIndicator()
-            : ElevatedButton(
-                onPressed: _enviarDatos,
-                child: const Text('Enviar datos'),
-              ),
+        child: ElevatedButton(
+          onPressed: _enviando ? null : _enviarDatos,
+          child: _enviando
+              ? const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Text('Enviar datos'),
+        ),
       ),
     );
   }
