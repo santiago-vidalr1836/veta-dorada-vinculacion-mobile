@@ -1,11 +1,11 @@
 /// Información general de una visita.
 class General {
   /// Estado para una visita programada.
-  static const String ESTADO_VISITA_PROGRAMADA = 'PROGRAMADA';
+  static const String ESTADO_VISITA_PROGRAMADA = 'ESTADO_VISITA_PROGRAMADA';
   /// Estado para una visita en proceso.
-  static const String ESTADO_VISITA_EN_PROCESO = 'EN_PROCESO';
-  /// Estado para una visita finalizada.
-  static const String ESTADO_VISITA_FINALIZADA = 'FINALIZADA';
+  static const String ESTADO_VISITA_EN_PROCESO = 'ESTADO_VISITA_EN_PROCESO';
+  /// Estado para una visita realizada.
+  static const String ESTADO_VISITA_REALIZADA = 'ESTADO_VISITA_REALIZADA';
 
   final String codigo;
   final String nombre;
