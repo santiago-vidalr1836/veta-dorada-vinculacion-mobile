@@ -53,19 +53,19 @@ class ServicioBdLocal {
         ''');
         await db.execute('''
           CREATE TABLE $nombreTablaInicioProcesoFormalizacion(
-            id TEXT PRIMARY KEY,
+            codigo TEXT PRIMARY KEY,
             descripcion TEXT
           );
         ''');
         await db.execute('''
           CREATE TABLE $nombreTablaTipoActividad(
-            id INTEGER PRIMARY KEY,
+            codigo INTEGER PRIMARY KEY,
             descripcion TEXT
           );
         ''');
         await db.execute('''
           CREATE TABLE $nombreTablaCondicionProspecto(
-            id TEXT PRIMARY KEY,
+            codigo TEXT PRIMARY KEY,
             descripcion TEXT
           );
         ''');

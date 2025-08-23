@@ -70,7 +70,7 @@ class _EvaluacionLaborPaginaState extends State<EvaluacionLaborPagina> {
       return;
     }
     final evaluacion = Evaluacion(
-      idCondicionProspecto: int.parse(_condicionSeleccionada!.id),
+      idCondicionProspecto: _condicionSeleccionada!.codigo,
       anotacion:
           _anotacionController.text.isEmpty ? null : _anotacionController.text,
     );

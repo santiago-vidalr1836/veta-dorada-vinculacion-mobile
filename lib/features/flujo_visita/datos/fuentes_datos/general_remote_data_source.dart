@@ -18,7 +18,7 @@ class GeneralRemoteDataSource {
   /// Obtiene los tipos de proveedor disponibles.
   Future<RespuestaBase<List<TipoProveedor>>> obtenerTiposProveedor() async {
     final uri =
-        Uri.parse('${EnvironmentConfig.apiBaseUrl}/api/tipo-proveedor');
+        Uri.parse('${EnvironmentConfig.apiBaseUrl}/api/tipo/tipo-proveedor');
     final response = await _client.get(uri);
 
     if (response.statusCode == 200) {
@@ -52,7 +52,7 @@ class GeneralRemoteDataSource {
   Future<RespuestaBase<List<InicioProcesoFormalizacion>>>
       obtenerIniciosProcesoFormalizacion() async {
     final uri = Uri.parse(
-        '${EnvironmentConfig.apiBaseUrl}/api/inicio-proceso-formalizacion');
+        '${EnvironmentConfig.apiBaseUrl}/api/tipo/inicio-proceso-formalizacion');
     final response = await _client.get(uri);
 
     if (response.statusCode == 200) {
@@ -87,7 +87,7 @@ class GeneralRemoteDataSource {
   Future<RespuestaBase<List<CondicionProspecto>>>
       obtenerCondicionesProspectoVerificacion() async {
     final uri = Uri.parse(
-        '${EnvironmentConfig.apiBaseUrl}/api/general/condicionProspectoVerificacion');
+        '${EnvironmentConfig.apiBaseUrl}/api/general/tipo/condicionProspectoVerificacion');
     final response = await _client.get(uri);
 
     if (response.statusCode == 200) {

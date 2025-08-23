@@ -1,7 +1,7 @@
 /// Evaluación de la labor realizada durante la visita.
 class Evaluacion {
   /// Identificador de la condición del prospecto.
-  final int idCondicionProspecto;
+  final String idCondicionProspecto;
 
   /// Anotaciones adicionales de la evaluación.
   final String? anotacion;
@@ -13,7 +13,7 @@ class Evaluacion {
 
   /// Crea una [Evaluacion] a partir de un mapa JSON.
   factory Evaluacion.fromJson(Map<String, dynamic> json) => Evaluacion(
-        idCondicionProspecto: json['idCondicionProspecto'] as int,
+        idCondicionProspecto: json['idCondicionProspecto'] as String,
         anotacion: json['anotacion'] as String?,
       );
 

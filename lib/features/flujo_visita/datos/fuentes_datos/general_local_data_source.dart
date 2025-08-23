@@ -86,7 +86,7 @@ class GeneralLocalDataSource {
       await _bdLocal.delete(_tablaCondicionesProspecto);
       for (final condicion in condiciones) {
         await _bdLocal.insert(_tablaCondicionesProspecto, {
-          'id': condicion.id,
+          'codigo': condicion.codigo,
           'descripcion': condicion.descripcion,
         });
       }
@@ -102,7 +102,7 @@ class GeneralLocalDataSource {
       final rows = await _bdLocal.query(_tablaCondicionesProspecto);
       return rows
           .map((row) => CondicionProspecto(
-                id: row['id'] as String,
+                codigo: row['codigo'] as String,
                 descripcion: row['descripcion'] as String,
               ))
           .toList();
