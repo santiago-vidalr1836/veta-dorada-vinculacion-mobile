@@ -29,7 +29,7 @@ class VisitasBloc extends Bloc<VisitasEvent, VisitasState> {
           resultado.visitas[EstadoVisita.programada] ?? [];
       final borrador = resultado.visitas[EstadoVisita.enProceso] ?? [];
       final completadas =
-          resultado.visitas[EstadoVisita.finalizada] ?? [];
+          resultado.visitas[EstadoVisita.realizada] ?? [];
       emit(VisitasCargadas(
         programadas: programadas,
         borrador: borrador,

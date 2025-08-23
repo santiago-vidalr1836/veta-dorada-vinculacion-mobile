@@ -42,12 +42,13 @@ class VisitsRepositoryImpl implements VisitsRepository {
   }
 
   String _mapearEstado(String codigo) {
-    switch (codigo) {
+    final normalizado = codigo.replaceFirst('ESTADO_VISITA_', '');
+    switch (normalizado) {
       case 'PROGRAMADA':
         return EstadoVisita.programada;
       case 'REALIZADA':
       case 'FINALIZADA':
-        return EstadoVisita.finalizada;
+        return EstadoVisita.realizada;
       case 'EN_PROCESO':
         return EstadoVisita.enProceso;
       default:
