@@ -87,7 +87,7 @@ class GeneralRemoteDataSource {
   Future<RespuestaBase<List<CondicionProspecto>>>
       obtenerCondicionesProspectoVerificacion() async {
     final uri = Uri.parse(
-        '${EnvironmentConfig.apiBaseUrl}/api/general/tipo/condicionProspectoVerificacion');
+        '${EnvironmentConfig.apiBaseUrl}/api/general/tipo/condicion-prospecto-verificacion');
     final response = await _client.get(uri);
 
     if (response.statusCode == 200) {

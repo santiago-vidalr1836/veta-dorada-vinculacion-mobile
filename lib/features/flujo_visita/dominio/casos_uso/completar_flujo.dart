@@ -56,7 +56,7 @@ class CompletarFlujo {
             descripcionLocal?.condicionesLaborales ?? '',
       ),
       evaluacion: evaluacionLocal ??
-          const Evaluacion(idCondicionProspecto: 0, anotacion: ''),
+          const Evaluacion(idCondicionProspecto: '0', anotacion: ''),
       estimacion: estimacionLocal ??
           const Estimacion(
             capacidadDiaria: 0,

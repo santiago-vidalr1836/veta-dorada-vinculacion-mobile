@@ -67,7 +67,7 @@ class _ResumenPageState extends State<ResumenPage> {
         trabajadores: '',
         condicionesLaborales: '',
       ),
-      evaluacion: const Evaluacion(idCondicionProspecto: 0, anotacion: ''),
+      evaluacion: const Evaluacion(idCondicionProspecto: '', anotacion: ''),
       estimacion: const Estimacion(
         capacidadDiaria: 0,
         diasOperacion: 0,

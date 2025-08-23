@@ -102,7 +102,7 @@ void main() {
         condiciones: RespuestaBase(
           codigoRespuesta: RespuestaBase.RESPUESTA_CORRECTA,
           respuesta: [
-            const CondicionProspecto(id: '1', descripcion: 'Activo'),
+            const CondicionProspecto(codigo: '1', descripcion: 'Activo'),
           ],
         ),
       );
@@ -136,7 +136,7 @@ void main() {
       final local = _FakeLocal(
         tipos: [const TipoProveedor(id: '1', descripcion: 'Tipo')],
         inicios: [const InicioProcesoFormalizacion(id: '1', descripcion: 'Ini')],
-        condiciones: [const CondicionProspecto(id: '1', descripcion: 'Cond')],
+        condiciones: [const CondicionProspecto(codigo: '1', descripcion: 'Cond')],
       );
       final repo = GeneralRepository(remoto, local);
 
