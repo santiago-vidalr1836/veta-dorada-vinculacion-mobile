@@ -163,8 +163,7 @@ class VisitaCard extends StatelessWidget {
                 onPressed: () {
                   context.push('/flujo-visita/datos-proveedor',
                       extra: {
-                        'actividad': visita,
-                        'flagMedicionCapacidad': widget.flagMedicionCapacidad,
+                        'visita': visita
                       });
                 },
                 child: const Text('Est. producción'),

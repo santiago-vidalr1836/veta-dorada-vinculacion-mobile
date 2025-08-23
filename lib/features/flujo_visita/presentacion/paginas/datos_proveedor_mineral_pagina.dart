@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/visitas/dominio/entidades/visita.dart';
 
 import '../../../actividad/dominio/entidades/actividad.dart';
 
@@ -6,9 +7,9 @@ import '../../../actividad/dominio/entidades/actividad.dart';
 ///
 /// Muestra un formulario para registrar la información del proveedor.
 class DatosProveedorMineralPagina extends StatefulWidget {
-  const DatosProveedorMineralPagina({super.key, required this.actividad});
+  const DatosProveedorMineralPagina({super.key, required this.visita});
 
-  final Actividad actividad;
+  final Visita visita;
 
   @override
   State<DatosProveedorMineralPagina> createState() =>
