@@ -1,5 +1,6 @@
 import 'package:veta_dorada_vinculacion_mobile/core/red/respuesta_base.dart';
 
+import '../../dominio/entidades/estado_visita.dart';
 import '../../dominio/entidades/visita.dart';
 import '../../dominio/repositorios/visits_repository.dart';
 import '../fuentes_datos/visits_local_data_source.dart';
@@ -22,19 +23,35 @@ class VisitsRepositoryImpl implements VisitsRepository {
       await _localDataSource.insertVisits(remotas);
       final Map<String, List<Visita>> agrupadas = {};
       for (final visita in remotas) {
-        agrupadas.putIfAbsent(visita.estado.codigo, () => []).add(visita);
+        final estado = _mapearEstado(visita.estado.codigo);
+        agrupadas.putIfAbsent(estado, () => []).add(visita);
       }
       return (visitas: agrupadas, advertencia: null);
     } else {
       final locales = await _localDataSource.getVisitsGroupedByState();
       final Map<String, List<Visita>> agrupadas = {};
       locales.forEach((estado, visitas) {
-        agrupadas[estado] = visitas.cast<Visita>();
+        final estadoMapeado = _mapearEstado(estado);
+        agrupadas[estadoMapeado] = visitas.cast<Visita>();
       });
       return (
         visitas: agrupadas,
         advertencia: respuesta.mensajeError,
       );
+    }
+  }
+
+  String _mapearEstado(String codigo) {
+    switch (codigo) {
+      case 'PROGRAMADA':
+        return EstadoVisita.programada;
+      case 'REALIZADA':
+      case 'FINALIZADA':
+        return EstadoVisita.finalizada;
+      case 'EN_PROCESO':
+        return EstadoVisita.enProceso;
+      default:
+        return codigo;
     }
   }
 }
