@@ -153,20 +153,29 @@ class VisitaCard extends StatelessWidget {
               ],
             ),
             if(visita.flagEstimacionProduccion)
-              TextButton(
-                style: TextButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    side: BorderSide(color: const Color(0xFF717782), width: 1)
-                  ),
+              Container(
+                height: 32,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  spacing: 8,
+                  children: [
+                    Text(
+                      'Est. producción',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: const Color(0xFF191C20),
+                        fontSize: 14,
+                        fontFamily: 'Roboto',
+                        fontWeight: FontWeight.w500,
+                        height: 1.43,
+                        letterSpacing: 0.10,
+                      ),
+                    ),
+                  ],
                 ),
-                onPressed: () {
-                  context.push('/flujo-visita/datos-proveedor',
-                      extra: {
-                        'visita': visita
-                      });
-                },
-                child: const Text('Est. producción'),
               ),
             Divider(),
           ],

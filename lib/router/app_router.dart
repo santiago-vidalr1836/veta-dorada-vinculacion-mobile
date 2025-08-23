@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/visitas/dominio/entidades/visita.dart';
 
 import '../core/auth/auth_notifier.dart';
 import '../core/auth/auth_provider.dart';
@@ -170,8 +171,8 @@ GoRouter createRouter(AuthNotifier authNotifier) {
       GoRoute(
         path: '/flujo-visita/datos-proveedor',
         builder: (context, state) {
-          final actividad = state.extra! as Actividad;
-          return DatosProveedorMineralPagina(actividad: actividad);
+          final visita = state.extra! as Visita;
+          return DatosProveedorMineralPagina(visita: visita);
         },
       ),
       StatefulShellRoute.indexedStack(

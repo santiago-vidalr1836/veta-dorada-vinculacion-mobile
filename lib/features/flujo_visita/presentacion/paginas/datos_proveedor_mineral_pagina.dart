@@ -63,7 +63,7 @@ class _DatosProveedorMineralPaginaState
   void _siguiente() {
     if (_formKey.currentState!.validate()) {
       // ignore: avoid_print
-      print('Actividad recibida: ${widget.actividad.toJson()}');
+      print('Visita recibida: ${widget.visita.toJson()}');
       // Navegar al siguiente paso o guardar la información.
     }
   }
