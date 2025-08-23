@@ -1,8 +1,8 @@
 /// Describe el tipo de visita a realizar.
 class TipoVisita {
   /// Identificador único del tipo de visita.
-  final String id;
-  final String codigo;
+  final int id;
+  final String? codigo;
   /// Descripción del tipo de visita.
   final String nombre;
 
@@ -11,8 +11,8 @@ class TipoVisita {
 
   /// Crea un [TipoVisita] a partir de un mapa JSON.
   factory TipoVisita.fromJson(Map<String, dynamic> json) => TipoVisita(
-        id: json['Id'] as String,
-        codigo: json['Codigo'] as String,
+        id: json['Id'] as int,
+        codigo: json['Codigo'] as String?,
         nombre: json['Nombre'] as String
       );
 

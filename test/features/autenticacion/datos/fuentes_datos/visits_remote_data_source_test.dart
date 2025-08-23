@@ -17,26 +17,51 @@ void main() {
             'CodigoRespuesta': 1,
             'Respuesta': [
               {
-                'Id': 'v1',
-                'General': {
-                  'Estado': 'PROGRAMADA',
-                  'fechaProgramada': '2023-01-01T00:00:00.000Z',
-                  'fechaEjecucion': null,
-                  'observaciones': null,
+                'Id': 1,
+                'Estado': {
+                  'Codigo': 'PRG',
+                  'Nombre': 'Programada',
+                  'Descripcion': null
                 },
-                'proveedor': {
-                  'id': 'p1',
-                  'nombre': 'Proveedor 1',
-                  'tipo': {'codigo': 'TP', 'descripcion': 'Tipo'},
-                  'ruc': '12345678901',
-                  'estado': {'codigo': 'ACT', 'descripcion': 'Activo'}
+                'Proveedor': {
+                  'Id': 1,
+                  'Tipo': {
+                    'Codigo': 'TP',
+                    'Nombre': 'Tipo',
+                    'Descripcion': null
+                  },
+                  'Ruc': '12345678901',
+                  'NombreCompleto': 'Proveedor 1',
+                  'Estado': {
+                    'Codigo': 'ACT',
+                    'Nombre': 'Activo',
+                    'Descripcion': null
+                  },
+                  'DerechoMinero': []
                 },
-                'tipoVisita': {'id': 't1', 'descripcion': 'Tipo'},
-                'derechoMinero': {
-                  'id': 'd1',
-                  'codigo': 'DM1',
-                  'nombre': 'Derecho 1',
+                'TipoVisita': {
+                  'Id': 1,
+                  'Codigo': null,
+                  'Nombre': 'Tipo'
                 },
+                'DerechoMinero': {
+                  'Id': 1,
+                  'CodigoUnico': 'DM1',
+                  'Denominacion': 'Derecho 1'
+                },
+                'FechaProgramada': '2023-01-01T00:00:00.000Z',
+                'Geologo': {
+                  'Id': 1,
+                  'Nombres': 'Geo',
+                  'Apellidos': 'Logo',
+                  'CorreoElectronico': 'geo@example.com'
+                },
+                'Acopiador': {
+                  'Id': 2,
+                  'Nombres': 'Aco',
+                  'Apellidos': 'Piador',
+                  'CorreoElectronico': 'aco@example.com'
+                }
               }
             ]
           }),
@@ -53,7 +78,7 @@ void main() {
       final visitas = result.respuesta;
       expect(visitas, isA<List<VisitaModel>>());
       expect(visitas, hasLength(1));
-      expect(visitas![0].id, 'v1');
+      expect(visitas![0].id, 1);
       expect(visitas[0].proveedor.nombre(), 'Proveedor 1');
     });
 
