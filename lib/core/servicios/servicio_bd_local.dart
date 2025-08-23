@@ -17,6 +17,12 @@ class ServicioBdLocal {
   factory ServicioBdLocal() => _instancia;
 
   static const String nombreTablaVisitas = 'visitas';
+  static const String nombreTablaTipoProveedor = 'tipo_proveedor';
+  static const String nombreTablaInicioProcesoFormalizacion =
+      'inicio_proceso_formalizacion';
+  static const String nombreTablaTipoActividad = 'tipo_actividad';
+  static const String nombreTablaCondicionProspecto =
+      'condicion_prospecto';
 
   static const _nombreBd = 'vinculacion.db';
   static const _versionBd = 1;
@@ -37,6 +43,30 @@ class ServicioBdLocal {
             id TEXT PRIMARY KEY,
             estado TEXT,
             data TEXT
+          );
+        ''');
+        await db.execute('''
+          CREATE TABLE $nombreTablaTipoProveedor(
+            id TEXT PRIMARY KEY,
+            descripcion TEXT
+          );
+        ''');
+        await db.execute('''
+          CREATE TABLE $nombreTablaInicioProcesoFormalizacion(
+            id TEXT PRIMARY KEY,
+            descripcion TEXT
+          );
+        ''');
+        await db.execute('''
+          CREATE TABLE $nombreTablaTipoActividad(
+            id INTEGER PRIMARY KEY,
+            descripcion TEXT
+          );
+        ''');
+        await db.execute('''
+          CREATE TABLE $nombreTablaCondicionProspecto(
+            id TEXT PRIMARY KEY,
+            descripcion TEXT
           );
         ''');
       },
@@ -69,6 +99,20 @@ class ServicioBdLocal {
     return db.update(
       table,
       values,
+      where: where,
+      whereArgs: whereArgs,
+    );
+  }
+
+  /// Elimina registros de [table].
+  Future<int> delete(
+    String table, {
+    String? where,
+    List<Object?>? whereArgs,
+  }) async {
+    final db = await database;
+    return db.delete(
+      table,
       where: where,
       whereArgs: whereArgs,
     );
