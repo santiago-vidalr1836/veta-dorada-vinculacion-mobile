@@ -25,7 +25,7 @@ class ServicioBdLocal {
       'condicion_prospecto';
 
   static const _nombreBd = 'vinculacion.db';
-  static const _versionBd = 1;
+  static const _versionBd = 2;
 
   Database? _db;
 
@@ -69,6 +69,34 @@ class ServicioBdLocal {
             descripcion TEXT
           );
         ''');
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS $nombreTablaTipoProveedor(
+              id TEXT PRIMARY KEY,
+              descripcion TEXT
+            );
+          ''');
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS $nombreTablaInicioProcesoFormalizacion(
+              id TEXT PRIMARY KEY,
+              descripcion TEXT
+            );
+          ''');
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS $nombreTablaTipoActividad(
+              id INTEGER PRIMARY KEY,
+              descripcion TEXT
+            );
+          ''');
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS $nombreTablaCondicionProspecto(
+              id TEXT PRIMARY KEY,
+              descripcion TEXT
+            );
+          ''');
+        }
       },
     );
     return _db!;
