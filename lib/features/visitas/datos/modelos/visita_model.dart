@@ -42,7 +42,7 @@ class VisitaModel extends Visita {
   @override
   Map<String, dynamic> toJson() => {
         'Id': id,
-        'General': estado.toJson(),
+        'Estado': estado.toJson(),
         'Proveedor': proveedor.toJson(),
         'TipoVisita': tipoVisita.toJson(),
         'DerechoMinero': derechoMinero.toJson(),
