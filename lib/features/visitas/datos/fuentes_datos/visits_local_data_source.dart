@@ -18,7 +18,8 @@ class VisitsLocalDataSource {
       for (final visit in visits) {
         await _bdLocal.insert(ServicioBdLocal.nombreTablaVisitas, {
           'id': visit.id,
-          'estado': visit.estado,
+          // Solo se almacena el código del estado para compatibilidad con SQLite
+          'estado': visit.estado.codigo,
           'data': jsonEncode(visit.toJson()),
         });
       }
@@ -33,7 +34,8 @@ class VisitsLocalDataSource {
       await _bdLocal.update(
         ServicioBdLocal.nombreTablaVisitas,
         {
-          'estado': visit.estado,
+          // Solo se almacena el código del estado para compatibilidad con SQLite
+          'estado': visit.estado.codigo,
           'data': jsonEncode(visit.toJson()),
         },
         where: 'id = ?',
