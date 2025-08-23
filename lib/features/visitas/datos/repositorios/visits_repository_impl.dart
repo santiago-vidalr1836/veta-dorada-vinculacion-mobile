@@ -22,7 +22,7 @@ class VisitsRepositoryImpl implements VisitsRepository {
       await _localDataSource.insertVisits(remotas);
       final Map<String, List<Visita>> agrupadas = {};
       for (final visita in remotas) {
-        agrupadas.putIfAbsent(visita.id.toString(), () => []).add(visita);
+        agrupadas.putIfAbsent(visita.estado.codigo, () => []).add(visita);
       }
       return (visitas: agrupadas, advertencia: null);
     } else {
