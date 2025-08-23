@@ -7,5 +7,5 @@ abstract class VisitsRepository {
   /// Retorna un registro con las listas y un [advertencia] cuando la
   /// sincronización remota falla y se usan datos locales.
   Future<({Map<String, List<Visita>> visitas, String? advertencia})>
-      obtenerVisitasPorGeologo(String id);
+      obtenerVisitasPorGeologo(int id);
 }

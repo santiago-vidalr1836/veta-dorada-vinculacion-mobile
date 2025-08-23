@@ -17,7 +17,7 @@ class VisitsRemoteDataSource {
   /// Realiza una solicitud GET a `/api/geologos/{idGeologo}/visitas` y
   /// devuelve una [RespuestaBase] con la lista de [VisitaModel].
   Future<RespuestaBase<List<VisitaModel>>> obtenerVisitas(
-      String idGeologo) async {
+      int idGeologo) async {
     final uri = Uri.parse(
       '${EnvironmentConfig.apiBaseUrl}/api/geologos/$idGeologo/visitas',
     );

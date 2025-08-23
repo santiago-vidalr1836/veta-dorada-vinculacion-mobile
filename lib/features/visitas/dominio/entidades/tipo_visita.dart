@@ -2,22 +2,24 @@
 class TipoVisita {
   /// Identificador único del tipo de visita.
   final String id;
-
+  final String codigo;
   /// Descripción del tipo de visita.
-  final String descripcion;
+  final String nombre;
 
   /// Crea una instancia de [TipoVisita].
-  const TipoVisita({required this.id, required this.descripcion});
+  const TipoVisita({required this.id, required this.codigo,required this.nombre});
 
   /// Crea un [TipoVisita] a partir de un mapa JSON.
   factory TipoVisita.fromJson(Map<String, dynamic> json) => TipoVisita(
-        id: json['id'] as String,
-        descripcion: json['descripcion'] as String,
+        id: json['Id'] as String,
+        codigo: json['Codigo'] as String,
+        nombre: json['Nombre'] as String
       );
 
   /// Convierte el [TipoVisita] en un mapa JSON.
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'descripcion': descripcion,
+        'Id': id,
+        'Codigo' : codigo,
+        'Nombre' : nombre
       };
 }

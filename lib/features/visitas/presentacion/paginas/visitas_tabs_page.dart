@@ -9,7 +9,7 @@ import '../../datos/repositorios/visits_repository_impl.dart';
 import '../../dominio/entidades/visita.dart';
 import '../bloc/visitas_bloc.dart';
 import '../componentes/pestana_personalizada.dart';
-import '../componentes/visit_card.dart';
+import '../componentes/visita_card.dart';
 
 /// Página que muestra las visitas organizadas en pestañas.
 class VisitasTabsPage extends StatefulWidget {
@@ -103,7 +103,7 @@ class _VisitasTabsPageState extends State<VisitasTabsPage> {
       itemCount: visitas.length,
       itemBuilder: (context, index) {
         final visita = visitas[index];
-        return VisitCard(visita: visita);
+        return VisitaCard(visita: visita);
       },
     );
   }

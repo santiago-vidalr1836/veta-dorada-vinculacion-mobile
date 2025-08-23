@@ -3,24 +3,27 @@ class Usuario {
   const Usuario({
     required this.id,
     required this.nombre,
+    required this.apellidos,
     required this.correo,
   });
 
   /// Identificador único del usuario.
-  final String id;
+  final int id;
 
   /// Nombre completo del usuario.
   final String nombre;
 
   /// Correo electrónico del usuario.
   final String correo;
+  final String apellidos;
 
   /// Crea una instancia de [Usuario] a partir de un mapa JSON.
   factory Usuario.fromJson(Map<String, dynamic> json) {
     return Usuario(
-      id: json['Id'] as String,
-      nombre: json['Nombre'] as String,
-      correo: json['Correo'] as String,
+      id: json['Id'] as int,
+      nombre: json['Nombres'] as String,
+      apellidos: json['Apellidos'] as String,
+      correo: json['CorreoElectronico'] as String,
     );
   }
 

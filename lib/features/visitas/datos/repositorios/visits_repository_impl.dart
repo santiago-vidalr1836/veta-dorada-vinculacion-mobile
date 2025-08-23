@@ -14,7 +14,7 @@ class VisitsRepositoryImpl implements VisitsRepository {
 
   @override
   Future<({Map<String, List<Visita>> visitas, String? advertencia})>
-      obtenerVisitasPorGeologo(String id) async {
+      obtenerVisitasPorGeologo(int id) async {
     final respuesta = await _remoteDataSource.obtenerVisitas(id);
     if (respuesta.codigoRespuesta == RespuestaBase.RESPUESTA_CORRECTA &&
         respuesta.respuesta != null) {
@@ -22,7 +22,7 @@ class VisitsRepositoryImpl implements VisitsRepository {
       await _localDataSource.insertVisits(remotas);
       final Map<String, List<Visita>> agrupadas = {};
       for (final visita in remotas) {
-        agrupadas.putIfAbsent(visita.general.estado, () => []).add(visita);
+        agrupadas.putIfAbsent(visita.id.toString(), () => []).add(visita);
       }
       return (visitas: agrupadas, advertencia: null);
     } else {

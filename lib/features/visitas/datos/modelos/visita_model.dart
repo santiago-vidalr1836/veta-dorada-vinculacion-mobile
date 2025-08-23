@@ -1,3 +1,4 @@
+import '../../../perfil/datos/modelos/usuario.dart';
 import '../../dominio/entidades/derecho_minero.dart';
 import '../../dominio/entidades/general.dart';
 import '../../dominio/entidades/proveedor.dart';
@@ -12,16 +13,19 @@ class VisitaModel extends Visita {
   /// Crea una instancia de [VisitaModel].
   const VisitaModel({
     required super.id,
-    required super.general,
+    required super.estado,
     required super.proveedor,
     required super.tipoVisita,
     required super.derechoMinero,
+    required super.fechaProgramada,
+    required super.geologo,
+    required super.acopiador
   });
 
   /// Crea un [VisitaModel] a partir de un mapa JSON.
   factory VisitaModel.fromJson(Map<String, dynamic> json) => VisitaModel(
-        id: json['Id'] as String,
-        general: General.fromJson(json['Estado'] as Map<String, dynamic>),
+        id: json['Id'] as int,
+        estado: General.fromJson(json['Estado'] as Map<String, dynamic>),
         proveedor:
             Proveedor.fromJson(json['Proveedor'] as Map<String, dynamic>),
         tipoVisita:
@@ -29,16 +33,22 @@ class VisitaModel extends Visita {
         derechoMinero: DerechoMinero.fromJson(
           json['DerechoMinero'] as Map<String, dynamic>,
         ),
+        fechaProgramada: DateTime.parse(json['FechaProgramada'] as String),
+        geologo: Usuario.fromJson(json['Geologo'] as Map<String, dynamic>),
+        acopiador: Usuario.fromJson(json['Acopiador'] as Map<String, dynamic>)
       );
 
   /// Convierte el modelo en un mapa JSON compatible con la API.
   @override
   Map<String, dynamic> toJson() => {
         'Id': id,
-        'General': general.toJson(),
+        'General': estado.toJson(),
         'Proveedor': proveedor.toJson(),
         'TipoVisita': tipoVisita.toJson(),
         'DerechoMinero': derechoMinero.toJson(),
+        'FechaProgramada' : fechaProgramada.toIso8601String(),
+        'Geologo' : geologo.toJson(),
+        'Acopiador' : acopiador.toJson()
       };
 }
 

@@ -14,12 +14,12 @@ void main() {
       final mockClient = MockClient((request) async {
         return http.Response(
           jsonEncode({
-            'codigoRespuesta': 1,
-            'respuesta': [
+            'CodigoRespuesta': 1,
+            'Respuesta': [
               {
-                'id': 'v1',
-                'general': {
-                  'estado': 'PROGRAMADA',
+                'Id': 'v1',
+                'General': {
+                  'Estado': 'PROGRAMADA',
                   'fechaProgramada': '2023-01-01T00:00:00.000Z',
                   'fechaEjecucion': null,
                   'observaciones': null,
@@ -41,14 +41,14 @@ void main() {
       final client = ClienteHttp(token: 'token', inner: mockClient);
       final dataSource = VisitsRemoteDataSource(client);
 
-      final result = await dataSource.obtenerVisitas('g1');
+      final result = await dataSource.obtenerVisitas(1);
 
       expect(result.codigoRespuesta, RespuestaBase.RESPUESTA_CORRECTA);
       final visitas = result.respuesta;
       expect(visitas, isA<List<VisitaModel>>());
       expect(visitas, hasLength(1));
       expect(visitas![0].id, 'v1');
-      expect(visitas[0].proveedor.nombre, 'Proveedor 1');
+      expect(visitas[0].proveedor.nombre(), 'Proveedor 1');
     });
 
     test('obtenerVisitas retorna error en fallo', () async {
@@ -65,7 +65,7 @@ void main() {
       final client = ClienteHttp(token: 'token', inner: mockClient);
       final dataSource = VisitsRemoteDataSource(client);
 
-      final result = await dataSource.obtenerVisitas('g1');
+      final result = await dataSource.obtenerVisitas(1);
 
       expect(result.codigoRespuesta, RespuestaBase.RESPUESTA_ERROR);
       expect(result.respuesta, isNull);

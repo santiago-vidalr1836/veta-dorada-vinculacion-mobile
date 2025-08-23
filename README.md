@@ -56,3 +56,6 @@ environment variables:
 
 These `--dart-define` parameters are required when running on the emulator as
 well.
+
+cd "C:\Users\santiago.vidal\AppData\Local\Android\Sdk\platform-tools"
+.\adb reverse tcp:44377 tcp:44377 

@@ -3,22 +3,18 @@ import 'package:flutter/material.dart';
 import '../../dominio/entidades/visita.dart';
 
 /// Tarjeta que muestra la información principal de una [Visita].
-class VisitCard extends StatelessWidget {
-  const VisitCard({
+class VisitaCard extends StatelessWidget {
+  const VisitaCard({
     super.key,
     required this.visita,
-    this.acopiador = '-',
   });
 
   /// Visita que se va a mostrar.
   final Visita visita;
 
-  /// Nombre del acopiador asignado a la visita.
-  final String acopiador;
-
   @override
   Widget build(BuildContext context) {
-    final fecha = visita.general.fechaProgramada;
+    final fecha = visita.fechaProgramada;
     final fechaStr =
         '${fecha.day.toString().padLeft(2, '0')}/${fecha.month.toString().padLeft(2, '0')}/${fecha.year}';
 
@@ -30,14 +26,14 @@ class VisitCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              visita.tipoVisita.descripcion,
+              visita.tipoVisita.nombre,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
             Text('Código: ${visita.derechoMinero.codigo}'),
-            Text('Proveedor: ${visita.proveedor.nombre}'),
-            Text('Derecho minero: ${visita.derechoMinero.nombre}'),
-            Text('Acopiador: $acopiador'),
+            Text('Proveedor: ${visita.proveedor.nombre()}'),
+            Text('Derecho minero: ${visita.derechoMinero.denominacion}'),
+            Text('Acopiador: ${visita.acopiador.nombre}'),
             Text('Fecha: $fechaStr'),
           ],
         ),

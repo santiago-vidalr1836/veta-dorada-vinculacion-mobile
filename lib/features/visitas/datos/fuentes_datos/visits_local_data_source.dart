@@ -18,7 +18,7 @@ class VisitsLocalDataSource {
       for (final visit in visits) {
         await _bdLocal.insert(ServicioBdLocal.nombreTablaVisitas, {
           'id': visit.id,
-          'estado': visit.general.estado,
+          'estado': visit.estado,
           'data': jsonEncode(visit.toJson()),
         });
       }
@@ -33,7 +33,7 @@ class VisitsLocalDataSource {
       await _bdLocal.update(
         ServicioBdLocal.nombreTablaVisitas,
         {
-          'estado': visit.general.estado,
+          'estado': visit.estado,
           'data': jsonEncode(visit.toJson()),
         },
         where: 'id = ?',
