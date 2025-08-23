@@ -25,6 +25,7 @@ class Visita {
 
   final Usuario geologo;
   final Usuario acopiador;
+  final bool flagEstimacionProduccion;
 
   /// Crea una instancia de [Visita].
   const Visita({
@@ -35,7 +36,8 @@ class Visita {
     required this.derechoMinero,
     required this.fechaProgramada,
     required this.geologo,
-    required this.acopiador
+    required this.acopiador,
+    required this.flagEstimacionProduccion
   });
 
   /// Crea una [Visita] a partir de un mapa JSON.
@@ -50,7 +52,8 @@ class Visita {
             json['DerechoMinero'] as Map<String, dynamic>),
         fechaProgramada: DateTime.parse(json['FechaProgramada'] as String),
         geologo: Usuario.fromJson(json['Geologo'] as Map<String, dynamic>),
-        acopiador: Usuario.fromJson(json['Acopiador'] as Map<String, dynamic>)
+        acopiador: Usuario.fromJson(json['Acopiador'] as Map<String, dynamic>),
+        flagEstimacionProduccion: json['FlagEstimacionProduccion']!=null?json['FlagEstimacionProduccion'] as bool : false
       );
 
   /// Convierte la visita en un mapa JSON.

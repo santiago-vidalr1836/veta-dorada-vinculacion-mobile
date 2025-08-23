@@ -2,6 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:veta_dorada_vinculacion_mobile/core/red/respuesta_base.dart';
 import 'package:veta_dorada_vinculacion_mobile/core/servicios/servicio_bd_local.dart';
 import 'package:veta_dorada_vinculacion_mobile/core/red/cliente_http.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/perfil/datos/modelos/oficina.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/perfil/datos/modelos/perfil.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/perfil/datos/modelos/usuario.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/visitas/datos/fuentes_datos/visits_local_data_source.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/visitas/datos/fuentes_datos/visits_remote_data_source.dart';
@@ -43,7 +45,7 @@ VisitaModel _buildVisita(int id, String estadoCodigo) {
   final proveedor = Proveedor(id: 1, tipo: general, ruc: '', estado: general);
   final tipo = TipoVisita(id: 1, codigo: '', nombre: '');
   final derecho = DerechoMinero(id: 1, codigo: '', denominacion: '');
-  final usuario = Usuario(id: 1, nombre: '', apellidos: '', correo: '');
+  final usuario = Usuario(id: 1, nombre: '', apellidos: '', correo: '',oficina: Oficina(id: 0, nombre: ''),perfil: Perfil(id: 0, nombre: ''));
   return VisitaModel(
     id: id,
     estado: generalEstado,
@@ -53,6 +55,7 @@ VisitaModel _buildVisita(int id, String estadoCodigo) {
     fechaProgramada: DateTime(2023),
     geologo: usuario,
     acopiador: usuario,
+    flagEstimacionProduccion: false
   );
 }
 

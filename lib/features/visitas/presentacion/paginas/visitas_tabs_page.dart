@@ -56,9 +56,13 @@ class _VisitasTabsPageState extends State<VisitasTabsPage> {
       length: 3,
       child: Column(
         children: [
+          const SizedBox(height: 20),
+          const Text('Visitas verificaciones y soportes',
+          style: TextStyle(fontSize: 22),),
+          const SizedBox(height: 25),
           const TabBar(
-            indicatorColor: Colors.blue,
-            labelColor: Colors.blue,
+            indicatorColor: Color.fromRGBO(0, 78, 133, 1),
+            labelColor: Color.fromRGBO(0, 78, 133, 1),
             tabs: [
               PestanaPersonalizada(titulo: 'Programadas'),
               PestanaPersonalizada(titulo: 'Borrador'),

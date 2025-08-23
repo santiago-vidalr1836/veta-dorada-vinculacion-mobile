@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'core/auth/auth_notifier.dart';
 import 'core/auth/auth_provider.dart';
 import 'core/red/cliente_http.dart';
-import 'core/red/respuesta_base.dart';
 import 'features/autenticacion/datos/fuentes_datos/azure_auth_remote_data_source.dart';
 import 'features/perfil/datos/fuentes_datos/perfil_remote_data_source.dart';
 import 'core/servicios/servicio_bd_local.dart';
@@ -18,6 +18,7 @@ import 'router/app_router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('es_ES', null);
   final authNotifier = AuthNotifier();
   await _initAuth(authNotifier);
   await _sincronizarListas(authNotifier);

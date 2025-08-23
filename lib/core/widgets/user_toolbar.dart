@@ -12,7 +12,6 @@ class UserToolbar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     required this.usuario,
     required this.token,
-    this.puesto,
     this.onMenuPressed,
   });
 
@@ -21,9 +20,6 @@ class UserToolbar extends StatelessWidget implements PreferredSizeWidget {
 
   /// Token de acceso utilizado para obtener la foto desde Microsoft Graph.
   final String token;
-
-  /// Puesto o cargo del usuario.
-  final String? puesto;
 
   /// Callback que se ejecuta al presionar el botón de menú para abrir el
   /// [Drawer].
@@ -51,23 +47,11 @@ class UserToolbar extends StatelessWidget implements PreferredSizeWidget {
       ),
       title: Row(
         children: [
-          FutureBuilder<Uint8List?>(
-            future: _fetchPhoto(),
-            builder: (context, snapshot) {
-              final bytes = snapshot.data;
-              return CircleAvatar(
-                backgroundImage: bytes != null ? MemoryImage(bytes) : null,
-                child: bytes == null ? const Icon(Icons.person) : null,
-              );
-            },
-          ),
-          const SizedBox(width: 8),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(usuario.nombre, style: const TextStyle(fontSize: 16)),
-              if (puesto != null)
-                Text(puesto!, style: const TextStyle(fontSize: 12)),
+              Text('${usuario.nombre} ${usuario.apellidos}', style: const TextStyle(fontSize: 16)),
+              Text('${usuario.perfil.nombre} ● ${usuario.oficina.nombre}', style: const TextStyle(fontSize: 12)),
             ],
           ),
         ],

@@ -48,7 +48,6 @@ class _ProtectedScaffoldState extends State<ProtectedScaffold> {
       ),
       appBar: UserToolbar(
         usuario: widget.usuario,
-        puesto: widget.puesto,
         token: widget.token,
         onMenuPressed: () => _scaffoldKey.currentState?.openDrawer(),
       ),

@@ -19,7 +19,8 @@ class VisitaModel extends Visita {
     required super.derechoMinero,
     required super.fechaProgramada,
     required super.geologo,
-    required super.acopiador
+    required super.acopiador,
+    required super.flagEstimacionProduccion
   });
 
   /// Crea un [VisitaModel] a partir de un mapa JSON.
@@ -34,8 +35,9 @@ class VisitaModel extends Visita {
           json['DerechoMinero'] as Map<String, dynamic>,
         ),
         fechaProgramada: DateTime.parse(json['FechaProgramada'] as String),
-        geologo: Usuario.fromJson(json['Geologo'] as Map<String, dynamic>),
-        acopiador: Usuario.fromJson(json['Acopiador'] as Map<String, dynamic>)
+        geologo: Usuario.fromJsonSimple(json['Geologo'] as Map<String, dynamic>),
+        acopiador: Usuario.fromJsonSimple(json['Acopiador'] as Map<String, dynamic>),
+        flagEstimacionProduccion:  json['FlagEstimacionProduccion'] !=null? json['FlagEstimacionProduccion'] as bool : false
       );
 
   /// Convierte el modelo en un mapa JSON compatible con la API.
