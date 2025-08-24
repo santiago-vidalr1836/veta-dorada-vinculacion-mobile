@@ -20,6 +20,7 @@ import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/ent
 import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/entidades/realizar_verificacion_dto.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/repositorios/verificacion_repository.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/presentacion/paginas/actividad_minera_reinfo_pagina.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/presentacion/paginas/actividad_minera_igafom_pagina.dart';
 
 class _FakeRepository extends ActividadRepositoryImpl {
   _FakeRepository(this._tipos)
@@ -239,7 +240,8 @@ void main() {
     expect(saved.actividades.first.idSubTipoActividad, 1);
   });
 
-  testWidgets('navega a actividad igafom al guardar', (tester) async {
+  testWidgets('navega a actividad igafom al guardar y muestra título esperado',
+      (tester) async {
     final repo = _FakeRepository([
       TipoActividad(id: 1, nombre: 'Explotación'),
     ]);
@@ -256,7 +258,10 @@ void main() {
         ),
         GoRoute(
           path: '/flujo-visita/actividad-igafom',
-          builder: (context, state) => const Placeholder(),
+          builder: (context, state) => ActividadMineraIgafomPagina(
+            repository: repo,
+            actividadReinfo: state.extra as Actividad?,
+          ),
         ),
       ],
     );
@@ -278,6 +283,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(router.location, '/flujo-visita/actividad-igafom');
+    expect(
+      find.text(
+          'Actividad Minera Declarada por el Proveedor de Mineral en el IGAFOM'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('precarga datos si existe actividad previa', (tester) async {
