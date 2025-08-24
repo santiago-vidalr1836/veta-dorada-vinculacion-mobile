@@ -14,6 +14,7 @@ class ProtectedScaffold extends StatefulWidget {
     required this.token,
     this.puesto,
     required this.onNavigate,
+    this.bottomBar,
   });
 
   /// Contenido principal de la página.
@@ -30,6 +31,9 @@ class ProtectedScaffold extends StatefulWidget {
 
   /// Callback de navegación utilizado por el `SideNav`.
   final void Function(String ruta) onNavigate;
+
+  /// Barra inferior opcional.
+  final Widget? bottomBar;
 
   @override
   State<ProtectedScaffold> createState() => _ProtectedScaffoldState();
@@ -52,6 +56,7 @@ class _ProtectedScaffoldState extends State<ProtectedScaffold> {
         onMenuPressed: () => _scaffoldKey.currentState?.openDrawer(),
       ),
       body: widget.body,
+      bottomNavigationBar: widget.bottomBar,
     );
   }
 }

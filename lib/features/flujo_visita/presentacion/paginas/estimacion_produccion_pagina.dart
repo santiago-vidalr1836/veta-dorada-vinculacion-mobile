@@ -129,6 +129,7 @@ class _EstimacionProduccionPaginaState
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 labelText: 'Longitud de avance (m)',
+                border: OutlineInputBorder(),
               ),
               validator: (value) => value == null || value.isEmpty
                   ? 'Ingrese la longitud'
@@ -140,6 +141,7 @@ class _EstimacionProduccionPaginaState
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 labelText: 'Altura del frente (m)',
+                border: OutlineInputBorder(),
               ),
               validator: (value) => value == null || value.isEmpty
                   ? 'Ingrese la altura'
@@ -151,6 +153,7 @@ class _EstimacionProduccionPaginaState
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 labelText: 'Espesor de la veta (m)',
+                border: OutlineInputBorder(),
               ),
               validator: (value) => value == null || value.isEmpty
                   ? 'Ingrese el espesor'
@@ -162,6 +165,7 @@ class _EstimacionProduccionPaginaState
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 labelText: 'Número de disparos por día',
+                border: OutlineInputBorder(),
               ),
               validator: (value) => value == null || value.isEmpty
                   ? 'Ingrese los disparos'
@@ -173,6 +177,7 @@ class _EstimacionProduccionPaginaState
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 labelText: 'Días trabajados',
+                border: OutlineInputBorder(),
               ),
               validator: (value) =>
                   value == null || value.isEmpty ? 'Ingrese los días' : null,
@@ -183,6 +188,7 @@ class _EstimacionProduccionPaginaState
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
                 labelText: 'Porcentaje de roca caja (%)',
+                border: OutlineInputBorder(),
               ),
               validator: (value) => value == null || value.isEmpty
                   ? 'Ingrese el porcentaje'

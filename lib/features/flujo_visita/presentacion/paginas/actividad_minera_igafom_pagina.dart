@@ -315,53 +315,80 @@ class _ActividadMineraIgafomPaginaState
               const SizedBox(height: 16),
               TextFormField(
                 controller: _sistemaController,
-                decoration:
-                    const InputDecoration(labelText: 'Sistema UTM'),
+                decoration: const InputDecoration(
+                  labelText: 'Sistema UTM',
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _zonaController,
-                decoration: const InputDecoration(labelText: 'Zona'),
+                decoration: const InputDecoration(
+                  labelText: 'Zona',
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 16),
               const Text('Coordenadas Componente 01'),
               TextFormField(
                 controller: _comp01EsteController,
-                decoration: const InputDecoration(labelText: 'Este'),
+                decoration: const InputDecoration(
+                  labelText: 'Este',
+                  border: OutlineInputBorder(),
+                ),
               ),
               TextFormField(
                 controller: _comp01NorteController,
-                decoration: const InputDecoration(labelText: 'Norte'),
+                decoration: const InputDecoration(
+                  labelText: 'Norte',
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 16),
               const Text('Coordenadas Componente 02'),
               TextFormField(
                 controller: _comp02EsteController,
-                decoration: const InputDecoration(labelText: 'Este'),
+                decoration: const InputDecoration(
+                  labelText: 'Este',
+                  border: OutlineInputBorder(),
+                ),
               ),
               TextFormField(
                 controller: _comp02NorteController,
-                decoration: const InputDecoration(labelText: 'Norte'),
+                decoration: const InputDecoration(
+                  labelText: 'Norte',
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _departamentoController,
-                decoration:
-                    const InputDecoration(labelText: 'Departamento'),
+                decoration: const InputDecoration(
+                  labelText: 'Departamento',
+                  border: OutlineInputBorder(),
+                ),
               ),
               TextFormField(
                 controller: _provinciaController,
-                decoration: const InputDecoration(labelText: 'Provincia'),
+                decoration: const InputDecoration(
+                  labelText: 'Provincia',
+                  border: OutlineInputBorder(),
+                ),
               ),
               TextFormField(
                 controller: _distritoController,
-                decoration: const InputDecoration(labelText: 'Distrito'),
+                decoration: const InputDecoration(
+                  labelText: 'Distrito',
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _derechoMineroController,
-                decoration:
-                    const InputDecoration(labelText: 'Derecho minero'),
+                decoration: const InputDecoration(
+                  labelText: 'Derecho minero',
+                  border: OutlineInputBorder(),
+                ),
               ),
               const SizedBox(height: 24),
               SizedBox(

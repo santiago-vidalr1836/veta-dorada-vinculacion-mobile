@@ -155,6 +155,7 @@ class _DescripcionActividadMineraVerificadaPaginaState
                 controller: _coordenadasController,
                 decoration: const InputDecoration(
                   labelText: 'Coordenadas, ubicación geográfica y política',
+                  border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.multiline,
                 minLines: 3,
@@ -167,6 +168,7 @@ class _DescripcionActividadMineraVerificadaPaginaState
                 controller: _zonaController,
                 decoration: const InputDecoration(
                   labelText: 'Zona de la labor minera',
+                  border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.multiline,
                 minLines: 3,
@@ -179,6 +181,7 @@ class _DescripcionActividadMineraVerificadaPaginaState
                 controller: _actividadController,
                 decoration: const InputDecoration(
                   labelText: 'Actividad minera verificada',
+                  border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.multiline,
                 minLines: 3,
@@ -191,6 +194,7 @@ class _DescripcionActividadMineraVerificadaPaginaState
                 controller: _equiposController,
                 decoration: const InputDecoration(
                   labelText: 'Equipos y maquinaria',
+                  border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.multiline,
                 minLines: 3,
@@ -203,6 +207,7 @@ class _DescripcionActividadMineraVerificadaPaginaState
                 controller: _trabajadoresController,
                 decoration: const InputDecoration(
                   labelText: 'Trabajadores',
+                  border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.multiline,
                 minLines: 3,
@@ -216,6 +221,7 @@ class _DescripcionActividadMineraVerificadaPaginaState
                 decoration: const InputDecoration(
                   labelText:
                       'Trabajo forzado/infantil, medio ambiente y seguridad',
+                  border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.multiline,
                 minLines: 3,
