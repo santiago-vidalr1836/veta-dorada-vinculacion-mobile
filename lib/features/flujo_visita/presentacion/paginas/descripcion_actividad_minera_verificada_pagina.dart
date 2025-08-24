@@ -5,6 +5,7 @@ import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../dominio/entidades/descripcion_actividad_verificada.dart';
 import '../../dominio/entidades/descripcion.dart';
 import '../../dominio/repositorios/flow_repository.dart';
+import '../../dominio/repositorios/verificacion_repository.dart';
 import '../../dominio/entidades/realizar_verificacion_dto.dart';
 import '../../dominio/calcular_avance.dart';
 
@@ -18,12 +19,14 @@ class DescripcionActividadMineraVerificadaPagina extends StatefulWidget {
     required this.actividad,
     required this.flagMedicionCapacidad,
     required this.flowRepository,
+    required this.verificacionRepository,
     required this.dto,
   });
 
   final Actividad actividad;
   final bool flagMedicionCapacidad;
   final FlowRepository flowRepository;
+  final VerificacionRepository verificacionRepository;
   final RealizarVerificacionDto dto;
 
   @override
@@ -102,6 +105,7 @@ class _DescripcionActividadMineraVerificadaPaginaState
         fotos: widget.dto.fotos,
         idempotencyKey: widget.dto.idempotencyKey,
       );
+      await widget.verificacionRepository.guardarVerificacion(dtoActualizado);
       _avance = calcularAvance(dtoActualizado);
       if (!mounted) return;
       setState(() {});
