@@ -3,8 +3,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../dominio/entidades/descripcion_actividad_verificada.dart';
+import '../../dominio/entidades/descripcion.dart';
 import '../../dominio/repositorios/flow_repository.dart';
 import '../../dominio/entidades/realizar_verificacion_dto.dart';
+import '../../dominio/calcular_avance.dart';
 
 /// Página para describir la actividad minera verificada.
 ///
@@ -40,6 +42,9 @@ class _DescripcionActividadMineraVerificadaPaginaState
   final _trabajadoresController = TextEditingController();
   final _seguridadController = TextEditingController();
 
+  static const int _totalPasos = totalPasosVerificacion;
+  double _avance = 0;
+
   @override
   void initState() {
     super.initState();
@@ -50,6 +55,7 @@ class _DescripcionActividadMineraVerificadaPaginaState
     _equiposController.text = desc.equipos;
     _trabajadoresController.text = desc.trabajadores;
     _seguridadController.text = desc.condicionesLaborales;
+    _avance = calcularAvance(widget.dto);
   }
 
   @override
@@ -75,11 +81,35 @@ class _DescripcionActividadMineraVerificadaPaginaState
       );
       await widget.flowRepository
           .guardarDescripcionActividadVerificada(descripcion);
+      final dtoActualizado = RealizarVerificacionDto(
+        idVerificacion: widget.dto.idVerificacion,
+        idVisita: widget.dto.idVisita,
+        idUsuario: widget.dto.idUsuario,
+        fechaInicioMovil: widget.dto.fechaInicioMovil,
+        fechaFinMovil: widget.dto.fechaFinMovil,
+        proveedorSnapshot: widget.dto.proveedorSnapshot,
+        actividades: widget.dto.actividades,
+        descripcion: Descripcion(
+          coordenadas: descripcion.coordenadas,
+          zona: descripcion.zona,
+          actividad: descripcion.actividad,
+          equipos: descripcion.equipos,
+          trabajadores: descripcion.trabajadores,
+          condicionesLaborales: descripcion.condicionesLaborales,
+        ),
+        evaluacion: widget.dto.evaluacion,
+        estimacion: widget.dto.estimacion,
+        fotos: widget.dto.fotos,
+        idempotencyKey: widget.dto.idempotencyKey,
+      );
+      _avance = calcularAvance(dtoActualizado);
       if (!mounted) return;
+      setState(() {});
       context.push('/flujo-visita/registro-fotografico',
           extra: {
             'actividad': widget.actividad,
             'flagMedicionCapacidad': widget.flagMedicionCapacidad,
+            'dto': dtoActualizado,
           });
     }
   }
@@ -95,9 +125,11 @@ class _DescripcionActividadMineraVerificadaPaginaState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Center(child: Text('5 de 9')),
+              Center(
+                  child: Text('${(_avance * _totalPasos).round()} de '
+                      '$_totalPasos')),
               const SizedBox(height: 8),
-              const LinearProgressIndicator(value: 5 / 9),
+              LinearProgressIndicator(value: _avance),
               const SizedBox(height: 24),
               TextFormField(
                 controller: _coordenadasController,

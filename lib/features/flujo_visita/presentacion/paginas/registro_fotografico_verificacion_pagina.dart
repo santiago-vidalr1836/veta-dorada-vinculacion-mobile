@@ -11,6 +11,9 @@ import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../dominio/entidades/registro_fotografico.dart';
 import '../../dominio/repositorios/flow_repository.dart';
 import '../widgets/foto_registro_item.dart';
+import '../../dominio/entidades/realizar_verificacion_dto.dart';
+import '../../dominio/entidades/foto.dart';
+import '../../dominio/calcular_avance.dart';
 
 /// Página para registrar fotografías durante la verificación.
 ///
@@ -22,11 +25,13 @@ class RegistroFotograficoVerificacionPagina extends StatefulWidget {
     required this.actividad,
     required this.flagMedicionCapacidad,
     required this.flowRepository,
+    required this.dto,
   });
 
   final Actividad actividad;
   final bool flagMedicionCapacidad;
   final FlowRepository flowRepository;
+  final RealizarVerificacionDto dto;
 
   @override
   State<RegistroFotograficoVerificacionPagina> createState() =>
@@ -37,6 +42,9 @@ class _RegistroFotograficoVerificacionPaginaState
     extends State<RegistroFotograficoVerificacionPagina> {
   final ImagePicker _picker = ImagePicker();
   final List<RegistroFotografico> _fotos = [];
+
+  static const int _totalPasos = totalPasosVerificacion;
+  double _avance = 0;
 
   @override
   void initState() {
@@ -134,7 +142,35 @@ class _RegistroFotograficoVerificacionPaginaState
       _fotos
         ..clear()
         ..addAll(fotos);
+      final dtoActualizado = _dtoConFotos(_fotos);
+      _avance = calcularAvance(dtoActualizado);
     });
+  }
+
+  RealizarVerificacionDto _dtoConFotos(List<RegistroFotografico> fotos) {
+    return RealizarVerificacionDto(
+      idVerificacion: widget.dto.idVerificacion,
+      idVisita: widget.dto.idVisita,
+      idUsuario: widget.dto.idUsuario,
+      fechaInicioMovil: widget.dto.fechaInicioMovil,
+      fechaFinMovil: widget.dto.fechaFinMovil,
+      proveedorSnapshot: widget.dto.proveedorSnapshot,
+      actividades: widget.dto.actividades,
+      descripcion: widget.dto.descripcion,
+      evaluacion: widget.dto.evaluacion,
+      estimacion: widget.dto.estimacion,
+      fotos: fotos
+          .map((f) => Foto(
+                imagen: f.path,
+                titulo: f.titulo,
+                descripcion: f.descripcion,
+                fecha: f.fecha,
+                latitud: f.latitud,
+                longitud: f.longitud,
+              ))
+          .toList(),
+      idempotencyKey: widget.dto.idempotencyKey,
+    );
   }
 
   @override
@@ -145,9 +181,11 @@ class _RegistroFotograficoVerificacionPaginaState
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            const Center(child: Text('6 de 9')),
+            Center(
+                child: Text('${(_avance * _totalPasos).round()} de '
+                    '$_totalPasos')),
             const SizedBox(height: 8),
-            const LinearProgressIndicator(value: 6 / 9),
+            LinearProgressIndicator(value: _avance),
             const SizedBox(height: 24),
             Align(
               alignment: Alignment.centerLeft,
