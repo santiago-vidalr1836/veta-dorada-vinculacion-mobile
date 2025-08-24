@@ -79,20 +79,7 @@ class _EstimacionProduccionPaginaState
       produccionMensualEstimada: pme,
       produccionMensual: produccionMensual,
     );
-    final dtoActualizado = RealizarVerificacionDto(
-      idVerificacion: _dto.idVerificacion,
-      idVisita: _dto.idVisita,
-      idUsuario: _dto.idUsuario,
-      fechaInicioMovil: _dto.fechaInicioMovil,
-      fechaFinMovil: _dto.fechaFinMovil,
-      proveedorSnapshot: _dto.proveedorSnapshot,
-      actividades: _dto.actividades,
-      descripcion: _dto.descripcion,
-      evaluacion: _dto.evaluacion,
-      estimacion: estimacion,
-      fotos: _dto.fotos,
-      idempotencyKey: _dto.idempotencyKey,
-    );
+    final dtoActualizado = _dto.copyWith(estimacion: estimacion);
     await widget.verificacionRepository.guardarVerificacion(dtoActualizado);
     if (!mounted) return;
     context.push('/flujo-visita/estimacion-produccion/resultado',

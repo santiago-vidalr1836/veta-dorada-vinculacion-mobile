@@ -197,65 +197,48 @@ class _ActividadMineraVerificadaPaginaState
 
     var dto = await widget.verificacionRepository
         .obtenerVerificacion(widget.idVisita);
-    if (dto == null) {
-      dto = RealizarVerificacionDto(
-        idVerificacion: 0,
-        idVisita: widget.idVisita,
-        idUsuario: 0,
-        fechaInicioMovil: DateTime.now(),
-        fechaFinMovil: DateTime.now(),
-        proveedorSnapshot: const ProveedorSnapshot(
-          tipoPersona: '',
-          nombre: '',
-          inicioFormalizacion: '',
-        ),
-        actividades: [actividad],
-        descripcion: const Descripcion(
-          coordenadas: '',
-          zona: '',
-          actividad: '',
-          equipos: '',
-          trabajadores: '',
-          condicionesLaborales: '',
-        ),
-        evaluacion: const Evaluacion(idCondicionProspecto: '', anotacion: ''),
-        estimacion: const Estimacion(
-          longitudAvance: 0,
-          alturaFrente: 0,
-          espesorVeta: 0,
-          numeroDisparosDia: 0,
-          diasTrabajados: 0,
-          porcentajeRocaCaja: 0,
-          produccionDiariaEstimada: 0,
-          produccionMensualEstimada: 0,
-          produccionMensual: 0,
-        ),
-        fotos: const <Foto>[],
-        idempotencyKey: '',
-      );
+    dto ??= RealizarVerificacionDto(
+      idVerificacion: 0,
+      idVisita: widget.idVisita,
+      idUsuario: 0,
+      proveedorSnapshot: const ProveedorSnapshot(
+        tipoPersona: '',
+        nombre: '',
+        inicioFormalizacion: '',
+      ),
+      actividades: const <Actividad>[],
+      descripcion: const Descripcion(
+        coordenadas: '',
+        zona: '',
+        actividad: '',
+        equipos: '',
+        trabajadores: '',
+        condicionesLaborales: '',
+      ),
+      evaluacion: const Evaluacion(idCondicionProspecto: '', anotacion: ''),
+      estimacion: const Estimacion(
+        longitudAvance: 0,
+        alturaFrente: 0,
+        espesorVeta: 0,
+        numeroDisparosDia: 0,
+        diasTrabajados: 0,
+        porcentajeRocaCaja: 0,
+        produccionDiariaEstimada: 0,
+        produccionMensualEstimada: 0,
+        produccionMensual: 0,
+      ),
+      fotos: const <Foto>[],
+      idempotencyKey: '',
+    );
+    final actividades =
+        List<Actividad>.from(dto.actividades ?? <Actividad>[]);
+    final index = actividades.indexWhere((a) => a.origen == Origen.verificada);
+    if (index >= 0) {
+      actividades[index] = actividad;
     } else {
-      final actividades = dto.actividades!=null?List<Actividad>.from(dto.actividades!):<Actividad>[];
-      final index = actividades.indexWhere((a) => a.origen == Origen.verificada);
-      if (index >= 0) {
-        actividades[index] = actividad;
-      } else {
-        actividades.add(actividad);
-      }
-      dto = RealizarVerificacionDto(
-        idVerificacion: dto.idVerificacion,
-        idVisita: dto.idVisita,
-        idUsuario: dto.idUsuario,
-        fechaInicioMovil: dto.fechaInicioMovil,
-        fechaFinMovil: dto.fechaFinMovil,
-        proveedorSnapshot: dto.proveedorSnapshot,
-        actividades: actividades,
-        descripcion: dto.descripcion,
-        evaluacion: dto.evaluacion,
-        estimacion: dto.estimacion,
-        fotos: dto.fotos,
-        idempotencyKey: dto.idempotencyKey,
-      );
+      actividades.add(actividad);
     }
+    dto = dto.copyWith(actividades: actividades);
     await widget.verificacionRepository.guardarVerificacion(dto);
     _avance = calcularAvance(dto);
     final actividadGuardada =
