@@ -54,14 +54,24 @@ class _EvaluacionLaborPaginaState extends State<EvaluacionLaborPagina> {
   void initState() {
     super.initState();
     _dto = widget.dto;
+    _init();
+  }
+
+  Future<void> _init() async {
+    final previa =
+        await widget.verificacionRepository.obtenerVerificacion(widget.dto.idVisita);
+    if (previa != null) {
+      _dto = previa;
+    }
     _anotacionController.text = _dto.evaluacion.anotacion ?? '';
-    _cargarCondiciones();
+    await _cargarCondiciones();
   }
 
   Future<void> _cargarCondiciones() async {
-    final resultado = await widget.repository.obtenerCondicionesProspecto();
+    final condiciones =
+        await widget.repository.obtenerCondicionesProspectoVerificacion();
     setState(() {
-      _condiciones = resultado.condiciones;
+      _condiciones = condiciones;
       for (final cond in _condiciones) {
         if (cond.codigo == _dto.evaluacion.idCondicionProspecto) {
           _condicionSeleccionada = cond;
