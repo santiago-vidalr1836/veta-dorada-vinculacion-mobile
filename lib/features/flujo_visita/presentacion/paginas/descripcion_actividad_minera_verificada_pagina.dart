@@ -17,12 +17,14 @@ class DescripcionActividadMineraVerificadaPagina extends StatefulWidget {
     super.key,
     required this.actividad,
     required this.flagMedicionCapacidad,
+    required this.flagEstimacionProduccion,
     required this.verificacionRepository,
     required this.dto,
   });
 
   final Actividad actividad;
   final bool flagMedicionCapacidad;
+  final bool flagEstimacionProduccion;
   final VerificacionRepository verificacionRepository;
   final RealizarVerificacionDto dto;
 
@@ -108,6 +110,7 @@ class _DescripcionActividadMineraVerificadaPaginaState
           extra: {
             'actividad': widget.actividad,
             'flagMedicionCapacidad': widget.flagMedicionCapacidad,
+            'flagEstimacionProduccion': widget.flagEstimacionProduccion,
             'dto': dtoActualizado,
           });
     }

@@ -58,11 +58,14 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           final verificacionRepo = VerificacionRepositoryImpl(
             VerificacionLocalDataSource(ServicioBdLocal()),
           );
-          final idVisita = state.extra as int;
+          final extras = state.extra! as Map<String, dynamic>;
+          final idVisita = extras['idVisita'] as int;
+          final flagEstimacion = extras['flagEstimacionProduccion'] as bool;
           return ActividadMineraReinfoPagina(
             repository: repo,
             verificacionRepository: verificacionRepo,
             idVisita: idVisita,
+            flagEstimacionProduccion: flagEstimacion,
           );
         },
       ),
@@ -80,10 +83,12 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           final extras = state.extra! as Map<String, dynamic>;
           final flag = extras['flagMedicionCapacidad'] as bool? ?? false;
           final idVisita = extras['idVisita'] as int;
+          final flagEstimacion = extras['flagEstimacionProduccion'] as bool;
           return ActividadMineraVerificadaPagina(
             repository: repo,
             verificacionRepository: verificacionRepo,
             flagMedicionCapacidad: flag,
+            flagEstimacionProduccion: flagEstimacion,
             idVisita: idVisita,
           );
         },
@@ -94,6 +99,7 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           final extras = state.extra! as Map<String, dynamic>;
           final actividad = extras['actividad'] as Actividad;
           final flag = extras['flagMedicionCapacidad'] as bool;
+          final flagEstimacion = extras['flagEstimacionProduccion'] as bool;
           final dto = extras['dto'] as RealizarVerificacionDto;
           final verificacionRepo = VerificacionRepositoryImpl(
             VerificacionLocalDataSource(ServicioBdLocal()),
@@ -101,6 +107,7 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           return DescripcionActividadMineraVerificadaPagina(
             actividad: actividad,
             flagMedicionCapacidad: flag,
+            flagEstimacionProduccion: flagEstimacion,
             verificacionRepository: verificacionRepo,
             dto: dto,
           );
@@ -120,10 +127,12 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           final extras = state.extra! as Map<String, dynamic>;
           final actividad = extras['actividad'] as Actividad?;
           final idVisita = extras['idVisita'] as int;
+          final flagEstimacion = extras['flagEstimacionProduccion'] as bool;
           return ActividadMineraIgafomPagina(
             repository: repo,
             verificacionRepository: verificacionRepo,
             idVisita: idVisita,
+            flagEstimacionProduccion: flagEstimacion,
             actividadReinfo: actividad,
           );
         },
@@ -134,6 +143,7 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           final extras = state.extra! as Map<String, dynamic>;
           final actividad = extras['actividad'] as Actividad;
           final flag = extras['flagMedicionCapacidad'] as bool;
+          final flagEstimacion = extras['flagEstimacionProduccion'] as bool;
           final dto = extras['dto'] as RealizarVerificacionDto;
           final verificacionRepo = VerificacionRepositoryImpl(
             VerificacionLocalDataSource(ServicioBdLocal()),
@@ -141,6 +151,7 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           return RegistroFotograficoVerificacionPagina(
             actividad: actividad,
             flagMedicionCapacidad: flag,
+            flagEstimacionProduccion: flagEstimacion,
             verificacionRepository: verificacionRepo,
             dto: dto,
           );
@@ -157,6 +168,7 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           final extras = state.extra! as Map<String, dynamic>;
           final actividad = extras['actividad'] as Actividad;
           final flag = extras['flagMedicionCapacidad'] as bool;
+          final flagEstimacion = extras['flagEstimacionProduccion'] as bool;
           final dto = extras['dto'] as RealizarVerificacionDto;
           final verificacionRepo = VerificacionRepositoryImpl(
             VerificacionLocalDataSource(ServicioBdLocal()),
@@ -165,6 +177,7 @@ GoRouter createRouter(AuthNotifier authNotifier) {
             actividad: actividad,
             repository: repo,
             flagMedicionCapacidad: flag,
+            flagEstimacionProduccion: flagEstimacion,
             verificacionRepository: verificacionRepo,
             dto: dto,
           );
@@ -200,10 +213,14 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           final extras = state.extra! as Map<String, dynamic>;
           final actividad = extras['actividad'] as Actividad;
           final flag = extras['flagMedicionCapacidad'] as bool;
+          final flagEstimacion = extras['flagEstimacionProduccion'] as bool;
+          final dto = extras['dto'] as RealizarVerificacionDto;
           return FirmaPagina(
             actividad: actividad,
             usuario: auth.usuario!,
             flagMedicionCapacidad: flag,
+            flagEstimacionProduccion: flagEstimacion,
+            dto: dto,
           );
         },
       ),

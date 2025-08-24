@@ -18,6 +18,7 @@ class EvaluacionLaborPagina extends StatefulWidget {
     required this.actividad,
     required this.repository,
     required this.flagMedicionCapacidad,
+    required this.flagEstimacionProduccion,
     required this.verificacionRepository,
     required this.dto,
   });
@@ -30,6 +31,9 @@ class EvaluacionLaborPagina extends StatefulWidget {
 
   /// Indica si la visita requiere medición de capacidad.
   final bool flagMedicionCapacidad;
+
+  /// Indica si la visita requiere estimación de producción.
+  final bool flagEstimacionProduccion;
 
   /// Repositorio para almacenar la evaluación.
   final VerificacionRepository verificacionRepository;
@@ -117,6 +121,8 @@ class _EvaluacionLaborPaginaState extends State<EvaluacionLaborPagina> {
     context.push('/flujo-visita/firma', extra: {
       'actividad': widget.actividad,
       'flagMedicionCapacidad': widget.flagMedicionCapacidad,
+      'flagEstimacionProduccion': widget.flagEstimacionProduccion,
+      'dto': dtoActualizado,
     });
   }
 

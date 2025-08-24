@@ -55,6 +55,7 @@ void main() {
         repository: repo,
         verificacionRepository: _FakeVerificacionRepository(),
         flagMedicionCapacidad: false,
+        flagEstimacionProduccion: false,
         idVisita: 0,
       ),
     ));
@@ -78,6 +79,7 @@ void main() {
         repository: repo,
         verificacionRepository: _FakeVerificacionRepository(),
         flagMedicionCapacidad: false,
+        flagEstimacionProduccion: false,
         idVisita: 0,
       ),
     ));
