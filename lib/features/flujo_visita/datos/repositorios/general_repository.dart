@@ -64,6 +64,15 @@ class GeneralRepository {
     }
   }
 
+  /// Obtiene las condiciones del prospecto para verificación directamente
+  /// desde la API.
+  Future<List<CondicionProspecto>>
+      obtenerCondicionesProspectoVerificacion() async {
+    final respuesta =
+        await _remoteDataSource.obtenerCondicionesProspectoVerificacion();
+    return respuesta.respuesta ?? [];
+  }
+
   /// Sincroniza los catálogos generales al inicio de la aplicación.
   ///
   /// Borra los datos existentes y descarga los registros más recientes desde
