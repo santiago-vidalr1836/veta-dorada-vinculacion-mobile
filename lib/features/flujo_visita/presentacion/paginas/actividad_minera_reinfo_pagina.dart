@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/auth/auth_provider.dart';
+import '../../../../core/widgets/protected_scaffold.dart';
 import '../../../actividad/datos/repositorios/actividad_repository_impl.dart';
 import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../../actividad/dominio/entidades/tipo_actividad.dart';
@@ -244,16 +246,31 @@ class _ActividadMineraReinfoPaginaState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: const Text(
-              'Actividad Minera Declarada por el Proveedor de Mineral en el Comprobante de Recepción de Datos para el REINFO')),
+    final auth = AuthProvider.of(context);
+    return ProtectedScaffold(
+      usuario: auth.usuario!,
+      token: auth.token!,
+      onNavigate: (ruta) => context.go(ruta),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
+              const SizedBox(
+                width: 378,
+                child: Text(
+                  'Actividad Minera Declarada por el Proveedor de Mineral en el Comprobante de Recepción de Datos para el REINFO',
+                  style: TextStyle(
+                    color: Color(0xFF1D1B20),
+                    fontSize: 22,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w400,
+                    height: 1.27,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
               DropdownButtonFormField<TipoActividad>(
                 decoration: const InputDecoration(
                   labelText: 'Tipo de actividad',

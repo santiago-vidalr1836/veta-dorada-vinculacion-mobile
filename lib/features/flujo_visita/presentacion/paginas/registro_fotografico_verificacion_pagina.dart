@@ -14,6 +14,8 @@ import '../../dominio/entidades/realizar_verificacion_dto.dart';
 import '../../dominio/entidades/foto.dart';
 import '../../dominio/calcular_avance.dart';
 import '../../dominio/repositorios/verificacion_repository.dart';
+import '../../../../core/auth/auth_provider.dart';
+import '../../../../core/widgets/protected_scaffold.dart';
 
 /// Página para registrar fotografías durante la verificación.
 ///
@@ -191,12 +193,29 @@ class _RegistroFotograficoVerificacionPaginaState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Registro Fotográfico')),
+    final auth = AuthProvider.of(context);
+    return ProtectedScaffold(
+      usuario: auth.usuario!,
+      token: auth.token!,
+      onNavigate: (ruta) => context.go(ruta),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
+            const SizedBox(
+              width: 378,
+              child: Text(
+                'Registro Fotográfico',
+                style: TextStyle(
+                  color: Color(0xFF1D1B20),
+                  fontSize: 22,
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.w400,
+                  height: 1.27,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
             Center(
                 child: Text('${(_avance * _totalPasos).round()} de '
                     '$_totalPasos')),
@@ -239,8 +258,8 @@ class _RegistroFotograficoVerificacionPaginaState
               ),
             )
           ],
+        ),
       ),
-      ),
-      );
+    );
   }
 }
