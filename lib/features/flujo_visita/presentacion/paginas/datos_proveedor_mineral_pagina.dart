@@ -127,7 +127,7 @@ class _DatosProveedorMineralPaginaState
       count++;
     }
     if (dto.evaluacion.idCondicionProspecto.isNotEmpty ||
-        dto.evaluacion.anotacion.isNotEmpty) {
+        (dto.evaluacion.anotacion?.isNotEmpty ?? false)) {
       count++;
     }
     if (dto.estimacion.capacidadDiaria > 0 ||
