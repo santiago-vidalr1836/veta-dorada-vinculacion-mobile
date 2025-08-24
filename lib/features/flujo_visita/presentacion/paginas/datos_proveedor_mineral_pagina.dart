@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/visitas/dominio/entidades/visita.dart';
 
-import '../../../actividad/dominio/entidades/actividad.dart';
+import '../../datos/repositorios/general_repository.dart';
+import '../../dominio/entidades/inicio_proceso_formalizacion.dart';
+import '../../dominio/entidades/tipo_proveedor.dart';
 
 /// Página para registrar los datos del proveedor de mineral.
 ///
 /// Muestra un formulario para registrar la información del proveedor.
 class DatosProveedorMineralPagina extends StatefulWidget {
-  const DatosProveedorMineralPagina({super.key, required this.visita});
+  const DatosProveedorMineralPagina({
+    super.key,
+    required this.visita,
+    required this.repository,
+  });
 
   final Visita visita;
+  final GeneralRepository repository;
 
   @override
   State<DatosProveedorMineralPagina> createState() =>
@@ -28,12 +35,38 @@ class _DatosProveedorMineralPaginaState
   final TextEditingController _razonSocialController = TextEditingController();
   final TextEditingController _representanteController = TextEditingController();
 
-  String? _tipoPersona;
-  String? _inicioFormalizacion;
+  List<TipoProveedor> _tiposPersona = [];
+  TipoProveedor? _tipoPersona;
+  List<InicioProcesoFormalizacion> _iniciosFormalizacion = [];
+  InicioProcesoFormalizacion? _inicioFormalizacion;
 
   @override
   void initState() {
     super.initState();
+    _cargarCatalogos();
+  }
+
+  Future<void> _cargarCatalogos() async {
+    final tipos = await widget.repository.obtenerTiposProveedor();
+    final inicios = await widget.repository.obtenerIniciosFormalizacion();
+    setState(() {
+      _tiposPersona = tipos.tipos;
+      _iniciosFormalizacion = inicios.inicios;
+      for (final tipo in _tiposPersona) {
+        if (tipo.id == widget.visita.proveedor.tipo.codigo) {
+          _tipoPersona = tipo;
+          break;
+        }
+      }
+      if (_inicioFormalizacion != null) {
+        for (final inicio in _iniciosFormalizacion) {
+          if (inicio.id == _inicioFormalizacion!.id) {
+            _inicioFormalizacion = inicio;
+            break;
+          }
+        }
+      }
+    });
   }
 
   @override
@@ -49,10 +82,10 @@ class _DatosProveedorMineralPaginaState
     if (_tipoPersona == null || _inicioFormalizacion == null) {
       return false;
     }
-    if (_tipoPersona == TIPO_PERSONA_NATURAL) {
+    if (_tipoPersona!.id == TIPO_PERSONA_NATURAL) {
       return _nombreController.text.isNotEmpty;
     }
-    if (_tipoPersona == TIPO_PERSONA_JURIDICA) {
+    if (_tipoPersona!.id == TIPO_PERSONA_JURIDICA) {
       return _rucController.text.isNotEmpty &&
           _razonSocialController.text.isNotEmpty &&
           _representanteController.text.isNotEmpty;
@@ -84,19 +117,17 @@ class _DatosProveedorMineralPaginaState
               const SizedBox(height: 8),
               const LinearProgressIndicator(value: 8 / 9),
               const SizedBox(height: 24),
-              DropdownButtonFormField<String>(
+              DropdownButtonFormField<TipoProveedor>(
                 value: _tipoPersona,
                 decoration: const InputDecoration(labelText: 'Tipo de persona'),
-                items: const [
-                  DropdownMenuItem(
-                    value: TIPO_PERSONA_NATURAL,
-                    child: Text('Persona Natural'),
-                  ),
-                  DropdownMenuItem(
-                    value: TIPO_PERSONA_JURIDICA,
-                    child: Text('Persona Jurídica'),
-                  ),
-                ],
+                items: _tiposPersona
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(e.descripcion),
+                      ),
+                    )
+                    .toList(),
                 onChanged: (value) {
                   setState(() {
                     _tipoPersona = value;
@@ -106,7 +137,7 @@ class _DatosProveedorMineralPaginaState
                     value == null ? 'Seleccione el tipo de persona' : null,
               ),
               const SizedBox(height: 16),
-              if (_tipoPersona == TIPO_PERSONA_NATURAL) ...[
+              if (_tipoPersona?.id == TIPO_PERSONA_NATURAL) ...[
                 TextFormField(
                   controller: _nombreController,
                   decoration: const InputDecoration(labelText: 'Nombre'),
@@ -118,7 +149,7 @@ class _DatosProveedorMineralPaginaState
                 ),
                 const SizedBox(height: 16),
               ],
-              if (_tipoPersona == TIPO_PERSONA_JURIDICA) ...[
+              if (_tipoPersona?.id == TIPO_PERSONA_JURIDICA) ...[
                 TextFormField(
                   controller: _rucController,
                   decoration: const InputDecoration(labelText: 'RUC'),
@@ -152,14 +183,18 @@ class _DatosProveedorMineralPaginaState
                 ),
                 const SizedBox(height: 16),
               ],
-              DropdownButtonFormField<String>(
+              DropdownButtonFormField<InicioProcesoFormalizacion>(
                 value: _inicioFormalizacion,
                 decoration: const InputDecoration(
                     labelText: 'Inicio de Proceso de Formalización'),
-                items: const [
-                  DropdownMenuItem(value: 'SI', child: Text('Sí')),
-                  DropdownMenuItem(value: 'NO', child: Text('No')),
-                ],
+                items: _iniciosFormalizacion
+                    .map(
+                      (e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(e.descripcion),
+                      ),
+                    )
+                    .toList(),
                 onChanged: (value) {
                   setState(() {
                     _inicioFormalizacion = value;

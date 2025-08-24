@@ -171,8 +171,16 @@ GoRouter createRouter(AuthNotifier authNotifier) {
       GoRoute(
         path: '/flujo-visita/datos-proveedor',
         builder: (context, state) {
+          final auth = AuthProvider.of(context);
+          final repo = GeneralRepository(
+            GeneralRemoteDataSource(ClienteHttp(token: auth.token!)),
+            GeneralLocalDataSource(ServicioBdLocal()),
+          );
           final visita = state.extra! as Visita;
-          return DatosProveedorMineralPagina(visita: visita);
+          return DatosProveedorMineralPagina(
+            visita: visita,
+            repository: repo,
+          );
         },
       ),
       StatefulShellRoute.indexedStack(
