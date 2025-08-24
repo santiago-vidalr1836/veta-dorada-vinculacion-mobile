@@ -12,6 +12,7 @@ import '../componentes/pestana_personalizada.dart';
 import '../componentes/visita_card.dart';
 import '../../../flujo_visita/datos/fuentes_datos/verificacion_local_data_source.dart';
 import '../../../flujo_visita/datos/repositorios/verificacion_repository_impl.dart';
+import '../../../flujo_visita/dominio/repositorios/verificacion_repository.dart';
 
 /// Página que muestra las visitas organizadas en pestañas.
 class VisitasTabsPage extends StatefulWidget {
@@ -23,6 +24,7 @@ class VisitasTabsPage extends StatefulWidget {
 
 class _VisitasTabsPageState extends State<VisitasTabsPage> {
   late VisitasBloc _bloc;
+  late VerificacionRepository _verificacionRepository;
   bool _inicializado = false;
 
   @override
@@ -35,8 +37,9 @@ class _VisitasTabsPageState extends State<VisitasTabsPage> {
     final repo = VisitsRepositoryImpl(remoto, local);
     final verificacionLocal =
         VerificacionLocalDataSource(ServicioBdLocal());
-    final verificacionRepo = VerificacionRepositoryImpl(verificacionLocal);
-    _bloc = VisitasBloc(repo, verificacionRepo)
+    _verificacionRepository =
+        VerificacionRepositoryImpl(verificacionLocal);
+    _bloc = VisitasBloc(repo, _verificacionRepository)
       ..add(CargarVisitas(auth.usuario!.id));
     _bloc.stream.listen((state) {
       if (state is VisitasCargadas && state.advertencia != null) {
@@ -113,7 +116,10 @@ class _VisitasTabsPageState extends State<VisitasTabsPage> {
       itemCount: visitas.length,
       itemBuilder: (context, index) {
         final visita = visitas[index];
-        return VisitaCard(visita: visita);
+        return VisitaCard(
+          visita: visita,
+          verificacionRepository: _verificacionRepository,
+        );
       },
     );
   }

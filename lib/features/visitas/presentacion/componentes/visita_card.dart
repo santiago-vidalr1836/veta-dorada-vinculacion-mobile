@@ -3,13 +3,23 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../dominio/entidades/visita.dart';
+import '../../../../core/auth/auth_provider.dart';
+import '../../../flujo_visita/dominio/entidades/realizar_verificacion_dto.dart';
+import '../../../flujo_visita/dominio/repositorios/verificacion_repository.dart';
 
 /// Tarjeta que muestra la información principal de una [Visita].
 class VisitaCard extends StatelessWidget {
-  const VisitaCard({super.key, required this.visita});
+  const VisitaCard({
+    super.key,
+    required this.visita,
+    required this.verificacionRepository,
+  });
 
   /// Visita que se va a mostrar.
   final Visita visita;
+
+  /// Repositorio para persistir la verificación.
+  final VerificacionRepository verificacionRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +31,18 @@ class VisitaCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: 0,
       child: InkWell(
-        onTap: () =>
-            context.push('/flujo-visita/datos-proveedor', extra: visita),
+        onTap: () async {
+          final auth = AuthProvider.of(context);
+          final dto = RealizarVerificacionDto(
+            idVerificacion: DateTime.now().millisecondsSinceEpoch,
+            idVisita: visita.id,
+            idUsuario: auth.usuario!.id,
+            idempotencyKey:
+                '${DateTime.now().microsecondsSinceEpoch}-${visita.id}',
+          );
+          await verificacionRepository.guardarVerificacion(dto);
+          context.push('/flujo-visita/datos-proveedor', extra: visita);
+        },
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
