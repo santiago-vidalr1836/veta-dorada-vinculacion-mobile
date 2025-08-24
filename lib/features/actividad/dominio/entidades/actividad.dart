@@ -15,7 +15,7 @@ class Actividad {
   final int idSubTipoActividad;
 
   /// Sistema de coordenadas UTM utilizado.
-  final int sistemaUTM;
+  final int? sistemaUTM;
 
   /// Coordenada Este en el sistema UTM.
   final double utmEste;
@@ -29,17 +29,21 @@ class Actividad {
   /// Descripción adicional de la actividad.
   final String? descripcion;
 
+  /// Derecho minero asociado si aplica.
+  final String? derechoMinero;
+
   /// Crea una instancia de [Actividad].
   const Actividad({
     required this.id,
     required this.origen,
     required this.idTipoActividad,
     required this.idSubTipoActividad,
-    required this.sistemaUTM,
+    this.sistemaUTM,
     required this.utmEste,
     required this.utmNorte,
     this.zonaUTM,
     this.descripcion,
+    this.derechoMinero,
   });
 
   /// Crea una [Actividad] a partir de un mapa JSON.
@@ -48,11 +52,14 @@ class Actividad {
         origen: origenFromApi(json['Origen'] as int?),
         idTipoActividad: json['IdTipoActividad'] as int,
         idSubTipoActividad: json['IdSubTipoActividad'] as int,
-        sistemaUTM: json['SistemaUTM'] as int,
+        sistemaUTM:
+            (json['SistemaUTM'] ?? json['sistemaUtm']) as int?,
         utmEste: (json['UtmEste'] as num).toDouble(),
         utmNorte: (json['UtmNorte'] as num).toDouble(),
-        zonaUTM: json['ZonaUTM'] as int?,
+        zonaUTM: json['ZonaUTM'] as int? ?? json['zonaUtm'] as int?,
         descripcion: json['Descripcion'] as String?,
+        derechoMinero:
+            json['DerechoMinero'] as String? ?? json['derechoMinero'] as String?,
       );
 
   /// Convierte la [Actividad] en un mapa JSON compatible con la API.
@@ -66,6 +73,7 @@ class Actividad {
         'UtmNorte': utmNorte,
         'ZonaUTM': zonaUTM,
         'Descripcion': descripcion,
+        'DerechoMinero': derechoMinero,
       };
 }
 

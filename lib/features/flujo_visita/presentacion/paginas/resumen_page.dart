@@ -9,7 +9,8 @@ import '../../dominio/entidades/descripcion.dart';
 import '../../dominio/entidades/evaluacion.dart';
 import '../../dominio/entidades/estimacion.dart';
 import '../../dominio/entidades/proveedor_snapshot.dart';
-import '../../dominio/entidades/actividad.dart' as actividad_cmd;
+import '../../../actividad/dominio/entidades/actividad.dart' as actividad_cmd;
+import '../../../actividad/dominio/enums/origen.dart';
 
 /// Página final del flujo donde se envían los datos recopilados.
 class ResumenPage extends StatefulWidget {
@@ -54,8 +55,11 @@ class _ResumenPageState extends State<ResumenPage> {
         inicioFormalizacion: false,
       ),
       actividad: actividad_cmd.Actividad(
+        id: '',
+        origen: Origen.reinfo,
         idTipoActividad: 0,
         idSubTipoActividad: 0,
+        sistemaUTM: 0,
         utmEste: 0,
         utmNorte: 0,
       ),
