@@ -10,6 +10,8 @@ import 'package:veta_dorada_vinculacion_mobile/features/actividad/datos/fuentes_
 import 'package:veta_dorada_vinculacion_mobile/features/actividad/datos/fuentes_datos/tipo_actividad_remote_data_source.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/actividad/datos/repositorios/actividad_repository_impl.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/actividad/dominio/entidades/tipo_actividad.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/entidades/realizar_verificacion_dto.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/repositorios/verificacion_repository.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/presentacion/paginas/actividad_minera_igafom_pagina.dart';
 
 class _FakeRepository extends ActividadRepositoryImpl {
@@ -30,6 +32,23 @@ class _FakeRepository extends ActividadRepositoryImpl {
   }
 }
 
+class _FakeVerificacionRepository implements VerificacionRepository {
+  RealizarVerificacionDto? _dto;
+
+  @override
+  Future<void> guardarVerificacion(RealizarVerificacionDto dto) async {
+    _dto = dto;
+  }
+
+  @override
+  Future<RealizarVerificacionDto?> obtenerVerificacion(int idVisita) async =>
+      _dto;
+
+  @override
+  Future<List<int>> obtenerVisitasConVerificacion() async =>
+      _dto == null ? [] : [_dto!.idVisita];
+}
+
 void main() {
   testWidgets('carga inicial de combos', (tester) async {
     final repo = _FakeRepository([
@@ -38,7 +57,10 @@ void main() {
     ]);
 
     await tester.pumpWidget(MaterialApp(
-      home: ActividadMineraIgafomPagina(repository: repo),
+      home: ActividadMineraIgafomPagina(
+        repository: repo,
+        verificacionRepository: _FakeVerificacionRepository(),
+      ),
     ));
     await tester.pumpAndSettle();
 
@@ -56,7 +78,10 @@ void main() {
     ]);
 
     await tester.pumpWidget(MaterialApp(
-      home: ActividadMineraIgafomPagina(repository: repo),
+      home: ActividadMineraIgafomPagina(
+        repository: repo,
+        verificacionRepository: _FakeVerificacionRepository(),
+      ),
     ));
     await tester.pumpAndSettle();
 
@@ -95,6 +120,7 @@ void main() {
           path: '/',
           builder: (context, state) => ActividadMineraIgafomPagina(
             repository: repo,
+            verificacionRepository: _FakeVerificacionRepository(),
           ),
         ),
         GoRoute(
