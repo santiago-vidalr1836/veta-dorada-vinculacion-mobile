@@ -19,7 +19,7 @@ class TipoActividadLocalDataSource {
       for (final tipo in tipos) {
         await _bdLocal.insert(_tabla, {
           'id': tipo.id,
-          'descripcion': tipo.descripcion,
+          'nombre': tipo.nombre,
         });
       }
     } on DatabaseException catch (e) {
@@ -35,7 +35,7 @@ class TipoActividadLocalDataSource {
       return rows
           .map((row) => TipoActividad(
                 id: row['id'] as int,
-                descripcion: row['descripcion'] as String,
+                nombre: row['nombre'] as String,
               ))
           .toList();
     } on DatabaseException catch (e) {

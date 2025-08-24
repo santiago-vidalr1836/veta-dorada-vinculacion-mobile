@@ -92,7 +92,7 @@ class _ActividadMineraVerificadaPaginaState
       _subTipoSeleccionado = null;
       _subTiposDisponibles = _mapaSubTipos[tipo?.id] ?? [];
       if (tipo != null) {
-        final desc = tipo.descripcion.toLowerCase();
+        final desc = tipo.nombre.toLowerCase();
         if (desc.contains('beneficio')) {
           _labelSubTipo = 'Tipo de Beneficio';
         } else if (desc.contains('explot')) {
@@ -149,7 +149,7 @@ class _ActividadMineraVerificadaPaginaState
                 items: _tipos
                     .map((e) => DropdownMenuItem(
                           value: e,
-                          child: Text(e.descripcion),
+                          child: Text(e.nombre),
                         ))
                     .toList(),
                 onChanged: _onTipoChanged,

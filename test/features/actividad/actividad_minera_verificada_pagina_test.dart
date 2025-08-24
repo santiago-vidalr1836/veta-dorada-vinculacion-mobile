@@ -32,8 +32,8 @@ class _FakeRepository extends ActividadRepositoryImpl {
 void main() {
   testWidgets('carga inicial de combos', (tester) async {
     final repo = _FakeRepository([
-      TipoActividad(id: 1, descripcion: 'Exploración'),
-      TipoActividad(id: 2, descripcion: 'Beneficio'),
+      TipoActividad(id: 1, nombre: 'Exploración'),
+      TipoActividad(id: 2, nombre: 'Beneficio'),
     ]);
 
     await tester.pumpWidget(MaterialApp(
@@ -53,8 +53,8 @@ void main() {
 
   testWidgets('cambia combo secundario al seleccionar otro tipo', (tester) async {
     final repo = _FakeRepository([
-      TipoActividad(id: 1, descripcion: 'Explotación'),
-      TipoActividad(id: 2, descripcion: 'Beneficio'),
+      TipoActividad(id: 1, nombre: 'Explotación'),
+      TipoActividad(id: 2, nombre: 'Beneficio'),
     ]);
 
     await tester.pumpWidget(MaterialApp(

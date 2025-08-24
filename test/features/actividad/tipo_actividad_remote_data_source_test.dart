@@ -16,8 +16,8 @@ void main() {
         final body = jsonEncode({
           'CodigoRespuesta': RespuestaBase.RESPUESTA_CORRECTA,
           'Respuesta': [
-            {'id': 1, 'descripcion': 'Exploración'},
-            {'id': 2, 'descripcion': 'Beneficio'},
+            {'Id': 1, 'Nombre': 'Exploración'},
+            {'Id': 2, 'Nombre': 'Beneficio'},
           ],
         });
         return http.Response(body, 200);
@@ -30,7 +30,7 @@ void main() {
       expect(respuesta.codigoRespuesta, RespuestaBase.RESPUESTA_CORRECTA);
       expect(respuesta.respuesta, isA<List<TipoActividad>>());
       expect(respuesta.respuesta!.length, 2);
-      expect(respuesta.respuesta!.first.descripcion, 'Exploración');
+      expect(respuesta.respuesta!.first.nombre, 'Exploración');
     });
 
     test('devuelve error cuando el servidor responde con código no 200', () async {
