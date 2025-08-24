@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../dominio/entidades/descripcion_actividad_verificada.dart';
 import '../../dominio/entidades/descripcion.dart';
-import '../../dominio/repositorios/flow_repository.dart';
 import '../../dominio/repositorios/verificacion_repository.dart';
 import '../../dominio/entidades/realizar_verificacion_dto.dart';
 import '../../dominio/calcular_avance.dart';
@@ -18,14 +17,12 @@ class DescripcionActividadMineraVerificadaPagina extends StatefulWidget {
     super.key,
     required this.actividad,
     required this.flagMedicionCapacidad,
-    required this.flowRepository,
     required this.verificacionRepository,
     required this.dto,
   });
 
   final Actividad actividad;
   final bool flagMedicionCapacidad;
-  final FlowRepository flowRepository;
   final VerificacionRepository verificacionRepository;
   final RealizarVerificacionDto dto;
 
@@ -82,8 +79,6 @@ class _DescripcionActividadMineraVerificadaPaginaState
         trabajadores: _trabajadoresController.text,
         condicionesLaborales: _seguridadController.text,
       );
-      await widget.flowRepository
-          .guardarDescripcionActividadVerificada(descripcion);
       final dtoActualizado = RealizarVerificacionDto(
         idVerificacion: widget.dto.idVerificacion,
         idVisita: widget.dto.idVisita,

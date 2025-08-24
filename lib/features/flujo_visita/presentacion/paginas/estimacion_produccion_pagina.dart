@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../dominio/entidades/estimacion.dart';
-import '../../dominio/repositorios/flow_repository.dart';
+import '../../dominio/entidades/realizar_verificacion_dto.dart';
+import '../../dominio/repositorios/verificacion_repository.dart';
 
 /// Página para estimar la producción de la operación.
 ///
@@ -12,12 +13,14 @@ class EstimacionProduccionPagina extends StatefulWidget {
   const EstimacionProduccionPagina({
     super.key,
     required this.flagMedicionCapacidad,
-    required this.flowRepository,
+    required this.verificacionRepository,
+    required this.dto,
   });
 
   /// Indica si se debe mostrar el indicador de capacidad operativa.
   final bool flagMedicionCapacidad;
-  final FlowRepository flowRepository;
+  final VerificacionRepository verificacionRepository;
+  final RealizarVerificacionDto dto;
 
   @override
   State<EstimacionProduccionPagina> createState() =>
@@ -29,6 +32,13 @@ class _EstimacionProduccionPaginaState
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _capacidadController = TextEditingController();
   final TextEditingController _diasController = TextEditingController();
+  late RealizarVerificacionDto _dto;
+
+  @override
+  void initState() {
+    super.initState();
+    _dto = widget.dto;
+  }
 
   @override
   void dispose() {
@@ -47,7 +57,21 @@ class _EstimacionProduccionPaginaState
       diasOperacion: dias,
       produccionEstimada: estimacionValor,
     );
-    await widget.flowRepository.guardarEstimacion(estimacion);
+    final dtoActualizado = RealizarVerificacionDto(
+      idVerificacion: _dto.idVerificacion,
+      idVisita: _dto.idVisita,
+      idUsuario: _dto.idUsuario,
+      fechaInicioMovil: _dto.fechaInicioMovil,
+      fechaFinMovil: _dto.fechaFinMovil,
+      proveedorSnapshot: _dto.proveedorSnapshot,
+      actividades: _dto.actividades,
+      descripcion: _dto.descripcion,
+      evaluacion: _dto.evaluacion,
+      estimacion: estimacion,
+      fotos: _dto.fotos,
+      idempotencyKey: _dto.idempotencyKey,
+    );
+    await widget.verificacionRepository.guardarVerificacion(dtoActualizado);
     if (!mounted) return;
     context.push('/flujo-visita/estimacion-produccion/resultado',
         extra: estimacionValor);

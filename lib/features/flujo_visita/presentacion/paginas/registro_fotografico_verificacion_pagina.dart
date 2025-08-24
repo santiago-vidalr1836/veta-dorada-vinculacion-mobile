@@ -9,11 +9,11 @@ import 'package:path/path.dart' as p;
 
 import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../dominio/entidades/registro_fotografico.dart';
-import '../../dominio/repositorios/flow_repository.dart';
 import '../widgets/foto_registro_item.dart';
 import '../../dominio/entidades/realizar_verificacion_dto.dart';
 import '../../dominio/entidades/foto.dart';
 import '../../dominio/calcular_avance.dart';
+import '../../dominio/repositorios/verificacion_repository.dart';
 
 /// Página para registrar fotografías durante la verificación.
 ///
@@ -24,13 +24,13 @@ class RegistroFotograficoVerificacionPagina extends StatefulWidget {
     super.key,
     required this.actividad,
     required this.flagMedicionCapacidad,
-    required this.flowRepository,
+    required this.verificacionRepository,
     required this.dto,
   });
 
   final Actividad actividad;
   final bool flagMedicionCapacidad;
-  final FlowRepository flowRepository;
+  final VerificacionRepository verificacionRepository;
   final RealizarVerificacionDto dto;
 
   @override
@@ -42,6 +42,7 @@ class _RegistroFotograficoVerificacionPaginaState
     extends State<RegistroFotograficoVerificacionPagina> {
   final ImagePicker _picker = ImagePicker();
   final List<RegistroFotografico> _fotos = [];
+  late RealizarVerificacionDto _dto;
 
   static const int _totalPasos = totalPasosVerificacion;
   double _avance = 0;
@@ -49,7 +50,20 @@ class _RegistroFotograficoVerificacionPaginaState
   @override
   void initState() {
     super.initState();
-    _cargarFotos();
+    _dto = widget.dto;
+    _fotos.addAll(
+      _dto.fotos.map(
+        (f) => RegistroFotografico(
+          path: f.imagen,
+          titulo: f.titulo,
+          descripcion: f.descripcion,
+          fecha: f.fecha,
+          latitud: f.latitud,
+          longitud: f.longitud,
+        ),
+      ),
+    );
+    _avance = calcularAvance(_dto);
   }
 
   Future<void> _agregarFoto() async {
@@ -106,8 +120,12 @@ class _RegistroFotograficoVerificacionPaginaState
                   latitud: position.latitude,
                   longitud: position.longitude,
                 );
-                await widget.flowRepository.agregarFotoVerificacion(registro);
-                await _cargarFotos();
+                setState(() {
+                  _fotos.add(registro);
+                  _dto = _dtoConFotos(_fotos);
+                  _avance = calcularAvance(_dto);
+                });
+                await widget.verificacionRepository.guardarVerificacion(_dto);
                 Navigator.of(context).pop();
               },
               child: const Text('Guardar'),
@@ -124,41 +142,36 @@ class _RegistroFotograficoVerificacionPaginaState
     } catch (e) {
       debugPrint('Error al eliminar foto: $e');
     }
-    await widget.flowRepository.eliminarFotoVerificacion(index);
-    await _cargarFotos();
-  }
-
-  void _siguiente() {
-    context.push('/flujo-visita/evaluacion-labor',
-        extra: {
-          'actividad': widget.actividad,
-          'flagMedicionCapacidad': widget.flagMedicionCapacidad,
-        });
-  }
-
-  Future<void> _cargarFotos() async {
-    final fotos = await widget.flowRepository.obtenerFotosVerificacion();
     setState(() {
-      _fotos
-        ..clear()
-        ..addAll(fotos);
-      final dtoActualizado = _dtoConFotos(_fotos);
-      _avance = calcularAvance(dtoActualizado);
+      _fotos.removeAt(index);
+      _dto = _dtoConFotos(_fotos);
+      _avance = calcularAvance(_dto);
+    });
+    await widget.verificacionRepository.guardarVerificacion(_dto);
+  }
+
+  Future<void> _siguiente() async {
+    await widget.verificacionRepository.guardarVerificacion(_dto);
+    if (!mounted) return;
+    context.push('/flujo-visita/evaluacion-labor', extra: {
+      'actividad': widget.actividad,
+      'flagMedicionCapacidad': widget.flagMedicionCapacidad,
+      'dto': _dto,
     });
   }
 
   RealizarVerificacionDto _dtoConFotos(List<RegistroFotografico> fotos) {
     return RealizarVerificacionDto(
-      idVerificacion: widget.dto.idVerificacion,
-      idVisita: widget.dto.idVisita,
-      idUsuario: widget.dto.idUsuario,
-      fechaInicioMovil: widget.dto.fechaInicioMovil,
-      fechaFinMovil: widget.dto.fechaFinMovil,
-      proveedorSnapshot: widget.dto.proveedorSnapshot,
-      actividades: widget.dto.actividades,
-      descripcion: widget.dto.descripcion,
-      evaluacion: widget.dto.evaluacion,
-      estimacion: widget.dto.estimacion,
+      idVerificacion: _dto.idVerificacion,
+      idVisita: _dto.idVisita,
+      idUsuario: _dto.idUsuario,
+      fechaInicioMovil: _dto.fechaInicioMovil,
+      fechaFinMovil: _dto.fechaFinMovil,
+      proveedorSnapshot: _dto.proveedorSnapshot,
+      actividades: _dto.actividades,
+      descripcion: _dto.descripcion,
+      evaluacion: _dto.evaluacion,
+      estimacion: _dto.estimacion,
       fotos: fotos
           .map((f) => Foto(
                 imagen: f.path,
@@ -169,7 +182,7 @@ class _RegistroFotograficoVerificacionPaginaState
                 longitud: f.longitud,
               ))
           .toList(),
-      idempotencyKey: widget.dto.idempotencyKey,
+      idempotencyKey: _dto.idempotencyKey,
     );
   }
 

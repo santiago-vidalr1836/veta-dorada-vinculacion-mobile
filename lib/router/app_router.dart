@@ -15,8 +15,6 @@ import '../features/autenticacion/presentacion/paginas/login_page.dart';
 import '../features/flujo_visita/datos/fuentes_datos/general_local_data_source.dart';
 import '../features/flujo_visita/datos/fuentes_datos/general_remote_data_source.dart';
 import '../features/flujo_visita/datos/repositorios/general_repository.dart';
-import '../features/flujo_visita/datos/fuentes_datos/verificacion_remote_data_source.dart';
-import '../features/flujo_visita/datos/repositorios/flow_repository_impl.dart';
 import '../features/flujo_visita/datos/fuentes_datos/verificacion_local_data_source.dart';
 import '../features/flujo_visita/datos/repositorios/verificacion_repository_impl.dart';
 import '../features/flujo_visita/presentacion/paginas/actividad_minera_reinfo_pagina.dart';
@@ -35,11 +33,6 @@ import '../features/flujo_visita/dominio/entidades/realizar_verificacion_dto.dar
 
 /// Crea la configuración del enrutador principal de la aplicación.
 GoRouter createRouter(AuthNotifier authNotifier) {
-  final flowRepository = FlowRepositoryImpl(
-    VerificacionRemoteDataSource(
-      ClienteHttp(token: authNotifier.token ?? ''),
-    ),
-  );
   return GoRouter(
     initialLocation: '/visitas',
     redirect: (context, state) {
@@ -108,7 +101,6 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           return DescripcionActividadMineraVerificadaPagina(
             actividad: actividad,
             flagMedicionCapacidad: flag,
-            flowRepository: flowRepository,
             verificacionRepository: verificacionRepo,
             dto: dto,
           );
@@ -143,10 +135,13 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           final actividad = extras['actividad'] as Actividad;
           final flag = extras['flagMedicionCapacidad'] as bool;
           final dto = extras['dto'] as RealizarVerificacionDto;
+          final verificacionRepo = VerificacionRepositoryImpl(
+            VerificacionLocalDataSource(ServicioBdLocal()),
+          );
           return RegistroFotograficoVerificacionPagina(
             actividad: actividad,
             flagMedicionCapacidad: flag,
-            flowRepository: flowRepository,
+            verificacionRepository: verificacionRepo,
             dto: dto,
           );
         },
@@ -162,21 +157,32 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           final extras = state.extra! as Map<String, dynamic>;
           final actividad = extras['actividad'] as Actividad;
           final flag = extras['flagMedicionCapacidad'] as bool;
+          final dto = extras['dto'] as RealizarVerificacionDto;
+          final verificacionRepo = VerificacionRepositoryImpl(
+            VerificacionLocalDataSource(ServicioBdLocal()),
+          );
           return EvaluacionLaborPagina(
             actividad: actividad,
             repository: repo,
             flagMedicionCapacidad: flag,
-            flowRepository: flowRepository,
+            verificacionRepository: verificacionRepo,
+            dto: dto,
           );
         },
       ),
       GoRoute(
         path: '/flujo-visita/estimacion-produccion',
         builder: (context, state) {
-          final flag = state.extra as bool? ?? false;
+          final extras = state.extra! as Map<String, dynamic>;
+          final flag = extras['flagMedicionCapacidad'] as bool;
+          final dto = extras['dto'] as RealizarVerificacionDto;
+          final verificacionRepo = VerificacionRepositoryImpl(
+            VerificacionLocalDataSource(ServicioBdLocal()),
+          );
           return EstimacionProduccionPagina(
             flagMedicionCapacidad: flag,
-            flowRepository: flowRepository,
+            verificacionRepository: verificacionRepo,
+            dto: dto,
           );
         },
       ),
