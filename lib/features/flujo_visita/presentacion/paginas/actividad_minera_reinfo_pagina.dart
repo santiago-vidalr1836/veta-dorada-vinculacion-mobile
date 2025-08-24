@@ -103,19 +103,13 @@ class _ActividadMineraReinfoPaginaState
     final resultado = await widget.repository.obtenerTiposActividad();
     _tipos = resultado.tipos;
 
-    if (dto != null && dto.actividades.isNotEmpty) {
-      final actividad = dto.actividades.first;
+    if (dto != null && dto.actividades!=null && dto.actividades!.isNotEmpty) {
+      final actividad = dto.actividades!.first;
       for (final tipo in _tipos) {
         if (tipo.id == actividad.idTipoActividad) {
           _tipoSeleccionado = tipo;
           final desc = tipo.nombre.toLowerCase();
-          if (desc.contains('beneficio')) {
-            _labelSubTipo = 'Tipo de Beneficio';
-          } else if (desc.contains('explot')) {
-            _labelSubTipo = 'Tipo de Explotación';
-          } else {
-            _labelSubTipo = 'Sub Tipo';
-          }
+          _labelSubTipo = 'Tipo de $desc';
           _subTiposDisponibles = _mapaSubTipos[tipo.id] ?? [];
           if (actividad.idSubTipoActividad > 0 &&
               actividad.idSubTipoActividad <= _subTiposDisponibles.length) {
@@ -187,7 +181,7 @@ class _ActividadMineraReinfoPaginaState
         proveedorSnapshot: const ProveedorSnapshot(
           tipoPersona: '',
           nombre: '',
-          inicioFormalizacion: false,
+          inicioFormalizacion: '',
         ),
         actividades: [actividad],
         descripcion: const Descripcion(
@@ -213,8 +207,7 @@ class _ActividadMineraReinfoPaginaState
         fotos: const <Foto>[],
         idempotencyKey: '',
       );
-    } else {
-      final actividades = List<Actividad>.from(dto.actividades);
+      final actividades = dto.actividades!=null? List<Actividad>.from(dto.actividades!):<Actividad>[];
       if (actividades.isNotEmpty) {
         actividades[0] = actividad;
       } else {
@@ -264,7 +257,6 @@ class _ActividadMineraReinfoPaginaState
                   style: TextStyle(
                     color: Color(0xFF1D1B20),
                     fontSize: 22,
-                    fontFamily: 'Roboto',
                     fontWeight: FontWeight.w400,
                     height: 1.27,
                   ),

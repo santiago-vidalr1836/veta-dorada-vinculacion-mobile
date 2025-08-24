@@ -49,7 +49,7 @@ void main() {
       proveedorSnapshot: const ProveedorSnapshot(
         tipoPersona: '',
         nombre: '',
-        inicioFormalizacion: false,
+        inicioFormalizacion: '',
       ),
       actividades: const [],
       descripcion: const Descripcion(
@@ -119,12 +119,12 @@ void main() {
 
     final saved = verificacionRepo.savedDto;
     expect(saved, isNotNull);
-    expect(saved!.descripcion.coordenadas, 'coord');
-    expect(saved.descripcion.zona, 'zona');
-    expect(saved.descripcion.actividad, 'act');
-    expect(saved.descripcion.equipos, 'equip');
-    expect(saved.descripcion.trabajadores, 'trab');
-    expect(saved.descripcion.condicionesLaborales, 'seg');
+    expect(saved!.descripcion?.coordenadas, 'coord');
+    expect(saved.descripcion?.zona, 'zona');
+    expect(saved.descripcion?.actividad, 'act');
+    expect(saved.descripcion?.equipos, 'equip');
+    expect(saved.descripcion?.trabajadores, 'trab');
+    expect(saved.descripcion?.condicionesLaborales, 'seg');
   });
 }
 

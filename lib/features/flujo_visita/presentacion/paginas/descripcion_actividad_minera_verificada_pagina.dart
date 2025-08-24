@@ -53,12 +53,12 @@ class _DescripcionActividadMineraVerificadaPaginaState
   void initState() {
     super.initState();
     final desc = widget.dto.descripcion;
-    _coordenadasController.text = desc.coordenadas;
-    _zonaController.text = desc.zona;
-    _actividadController.text = desc.actividad;
-    _equiposController.text = desc.equipos;
-    _trabajadoresController.text = desc.trabajadores;
-    _seguridadController.text = desc.condicionesLaborales;
+    _coordenadasController.text = desc?.coordenadas??'';
+    _zonaController.text = desc?.zona??'';
+    _actividadController.text = desc?.actividad??'';
+    _equiposController.text = desc?.equipos??'';
+    _trabajadoresController.text = desc?.trabajadores??'';
+    _seguridadController.text = desc?.condicionesLaborales??'';
     _avance = calcularAvance(widget.dto);
   }
 
@@ -139,7 +139,6 @@ class _DescripcionActividadMineraVerificadaPaginaState
                   style: TextStyle(
                     color: Color(0xFF1D1B20),
                     fontSize: 22,
-                    fontFamily: 'Roboto',
                     fontWeight: FontWeight.w400,
                     height: 1.27,
                   ),

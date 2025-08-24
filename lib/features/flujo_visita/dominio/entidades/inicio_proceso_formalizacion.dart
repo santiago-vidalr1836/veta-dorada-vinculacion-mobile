@@ -1,25 +1,25 @@
 /// Define un inicio de proceso de formalización.
 class InicioProcesoFormalizacion {
   /// Identificador único del registro.
-  final String id;
+  final String codigo;
 
-  /// Descripción del inicio de proceso.
-  final String descripcion;
+  /// Nombre del inicio de proceso.
+  final String nombre;
 
   /// Crea una instancia de [InicioProcesoFormalizacion].
   const InicioProcesoFormalizacion(
-      {required this.id, required this.descripcion});
+      {required this.codigo, required this.nombre});
 
   /// Crea un [InicioProcesoFormalizacion] a partir de un mapa JSON.
   factory InicioProcesoFormalizacion.fromJson(Map<String, dynamic> json) =>
       InicioProcesoFormalizacion(
-        id: json['id'] as String,
-        descripcion: json['descripcion'] as String,
+        codigo: json['Codigo'] as String,
+        nombre: json['Nombre'] as String,
       );
 
   /// Convierte la entidad en un mapa JSON.
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'descripcion': descripcion,
+        'Codigo': codigo,
+        'Nombre': nombre,
       };
 }

@@ -1,23 +1,23 @@
 /// Representa un tipo de proveedor disponible en el sistema.
 class TipoProveedor {
   /// Identificador único del tipo de proveedor.
-  final String id;
+  final String codigo;
 
   /// Descripción del tipo de proveedor.
-  final String descripcion;
+  final String nombre;
 
   /// Crea una instancia de [TipoProveedor].
-  const TipoProveedor({required this.id, required this.descripcion});
+  const TipoProveedor({required this.codigo, required this.nombre});
 
   /// Crea un [TipoProveedor] a partir de un mapa JSON.
   factory TipoProveedor.fromJson(Map<String, dynamic> json) => TipoProveedor(
-        id: json['id'] as String,
-        descripcion: json['descripcion'] as String,
+        codigo: json['Codigo'] as String,
+        nombre: json['Nombre'] as String,
       );
 
   /// Convierte el [TipoProveedor] en un mapa JSON.
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'descripcion': descripcion,
+        'Codigo': codigo,
+        'Nombre': nombre,
       };
 }

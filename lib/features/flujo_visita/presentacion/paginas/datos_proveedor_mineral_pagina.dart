@@ -69,10 +69,10 @@ class _DatosProveedorMineralPaginaState
 
     if (dto != null) {
       final proveedor = dto.proveedorSnapshot;
-      _nombreController.text = proveedor.nombre;
-      _rucController.text = proveedor.ruc ?? '';
-      _razonSocialController.text = proveedor.razonSocial ?? '';
-      _representanteController.text = proveedor.representanteLegal ?? '';
+      _nombreController.text = proveedor?.nombre??'';
+      _rucController.text = proveedor?.ruc ?? '';
+      _razonSocialController.text = proveedor?.razonSocial ?? '';
+      _representanteController.text = proveedor?.representanteLegal ?? '';
     } else {
       final proveedor = widget.visita.proveedor;
       _nombreController.text = proveedor.nombreCompleto ?? '';
@@ -94,17 +94,17 @@ class _DatosProveedorMineralPaginaState
     setState(() {
       _tiposPersona = tipos.tipos;
       _iniciosFormalizacion = inicios.inicios;
-      final tipoId =
-          dto?.proveedorSnapshot.tipoPersona ?? widget.visita.proveedor.tipo.codigo;
+      final codigoTipo =
+          dto?.proveedorSnapshot?.tipoPersona ?? widget.visita.proveedor.tipo.codigo;
       for (final tipo in _tiposPersona) {
-        if (tipo.id == tipoId) {
+        if (tipo.codigo == codigoTipo) {
           _tipoPersona = tipo;
           break;
         }
       }
       if (_inicioFormalizacion != null) {
         for (final inicio in _iniciosFormalizacion) {
-          if (inicio.id == _inicioFormalizacion!.id) {
+          if (inicio.codigo == _inicioFormalizacion!.codigo) {
             _inicioFormalizacion = inicio;
             break;
           }
@@ -126,10 +126,10 @@ class _DatosProveedorMineralPaginaState
     if (_tipoPersona == null || _inicioFormalizacion == null) {
       return false;
     }
-    if (_tipoPersona!.id == TIPO_PERSONA_NATURAL) {
+    if (_tipoPersona!.codigo == TIPO_PERSONA_NATURAL) {
       return _nombreController.text.isNotEmpty;
     }
-    if (_tipoPersona!.id == TIPO_PERSONA_JURIDICA) {
+    if (_tipoPersona!.codigo == TIPO_PERSONA_JURIDICA) {
       return _rucController.text.isNotEmpty &&
           _razonSocialController.text.isNotEmpty &&
           _representanteController.text.isNotEmpty;
@@ -142,7 +142,7 @@ class _DatosProveedorMineralPaginaState
       return;
     }
     final proveedor = ProveedorSnapshot(
-      tipoPersona: _tipoPersona!.id,
+      tipoPersona: _tipoPersona!.codigo,
       nombre: _nombreController.text,
       ruc: _rucController.text.isEmpty ? null : _rucController.text,
       razonSocial:
@@ -150,7 +150,7 @@ class _DatosProveedorMineralPaginaState
       representanteLegal: _representanteController.text.isEmpty
           ? null
           : _representanteController.text,
-      inicioFormalizacion: _inicioFormalizacion?.id == '1',
+      inicioFormalizacion: _inicioFormalizacion?.codigo,
     );
     var dto =
         await widget.verificacionRepository.obtenerVerificacion(widget.visita.id);
@@ -224,6 +224,36 @@ class _DatosProveedorMineralPaginaState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 34),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${widget.visita.id}'.padLeft(4, '0'),
+                    style: TextStyle(
+                      color: const Color(0xFF1D1B20) /* Schemes-On-Surface */,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w400,
+                      height: 1.33,
+                      letterSpacing: 0.50,
+                    ),
+                  ),
+                  Text(
+                      '${(_avance * _totalPasos).round()} de ''$_totalPasos',
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      height: 1.50,
+                      letterSpacing: 0.15,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 32),
+              LinearProgressIndicator(value: _avance),
+              const SizedBox(height: 32),
               const SizedBox(
                 width: 378,
                 child: Text(
@@ -231,27 +261,21 @@ class _DatosProveedorMineralPaginaState
                   style: TextStyle(
                     color: Color(0xFF1D1B20),
                     fontSize: 22,
-                    fontFamily: 'Roboto',
                     fontWeight: FontWeight.w400,
                     height: 1.27,
                   ),
                 ),
               ),
               const SizedBox(height: 16),
-              Center(
-                  child: Text('${(_avance * _totalPasos).round()} de '
-                      '$_totalPasos')),
-              const SizedBox(height: 8),
-              LinearProgressIndicator(value: _avance),
               const SizedBox(height: 24),
               DropdownButtonFormField<TipoProveedor>(
                 value: _tipoPersona,
-                decoration: const InputDecoration(labelText: 'Tipo de persona'),
+                decoration: const InputDecoration(labelText: 'Tipo de persona',border: OutlineInputBorder()),
                 items: _tiposPersona
                     .map(
                       (e) => DropdownMenuItem(
                         value: e,
-                        child: Text(e.descripcion),
+                        child: Text(e.nombre),
                       ),
                     )
                     .toList(),
@@ -264,10 +288,10 @@ class _DatosProveedorMineralPaginaState
                     value == null ? 'Seleccione el tipo de persona' : null,
               ),
               const SizedBox(height: 16),
-              if (_tipoPersona?.id == TIPO_PERSONA_NATURAL) ...[
+              if (_tipoPersona?.codigo == TIPO_PERSONA_NATURAL) ...[
                 TextFormField(
                   controller: _nombreController,
-                  decoration: const InputDecoration(labelText: 'Nombre'),
+                  decoration: const InputDecoration(labelText: 'Nombre',border: OutlineInputBorder()),
                   onChanged: (_) => setState(() {}),
                   validator: (value) =>
                       (value == null || value.isEmpty)
@@ -276,10 +300,10 @@ class _DatosProveedorMineralPaginaState
                 ),
                 const SizedBox(height: 16),
               ],
-              if (_tipoPersona?.id == TIPO_PERSONA_JURIDICA) ...[
+              if (_tipoPersona?.codigo == TIPO_PERSONA_JURIDICA) ...[
                 TextFormField(
                   controller: _rucController,
-                  decoration: const InputDecoration(labelText: 'RUC'),
+                  decoration: const InputDecoration(labelText: 'RUC',border: OutlineInputBorder()),
                   onChanged: (_) => setState(() {}),
                   validator: (value) =>
                       (value == null || value.isEmpty)
@@ -290,7 +314,7 @@ class _DatosProveedorMineralPaginaState
                 TextFormField(
                   controller: _razonSocialController,
                   decoration:
-                      const InputDecoration(labelText: 'Razón Social'),
+                      const InputDecoration(labelText: 'Razón Social',border: OutlineInputBorder()),
                   onChanged: (_) => setState(() {}),
                   validator: (value) =>
                       (value == null || value.isEmpty)
@@ -301,7 +325,7 @@ class _DatosProveedorMineralPaginaState
                 TextFormField(
                   controller: _representanteController,
                   decoration: const InputDecoration(
-                      labelText: 'Nombre completo del representante legal'),
+                      labelText: 'Nombre completo del representante legal',border: OutlineInputBorder()),
                   onChanged: (_) => setState(() {}),
                   validator: (value) =>
                       (value == null || value.isEmpty)
@@ -313,12 +337,12 @@ class _DatosProveedorMineralPaginaState
               DropdownButtonFormField<InicioProcesoFormalizacion>(
                 value: _inicioFormalizacion,
                 decoration: const InputDecoration(
-                    labelText: 'Inicio de Proceso de Formalización'),
+                    labelText: 'Inicio de Proceso de Formalización',border: OutlineInputBorder()),
                 items: _iniciosFormalizacion
                     .map(
                       (e) => DropdownMenuItem(
                         value: e,
-                        child: Text(e.descripcion),
+                        child: Text(e.nombre),
                       ),
                     )
                     .toList(),
@@ -330,10 +354,15 @@ class _DatosProveedorMineralPaginaState
                 validator: (value) =>
                     value == null ? 'Seleccione una opción' : null,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 80),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4)
+                    ),
+                  ),
                   onPressed: _isFormValid ? _siguiente : null,
                   child: const Text('Siguiente'),
                 ),

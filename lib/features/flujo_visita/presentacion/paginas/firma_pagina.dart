@@ -56,7 +56,6 @@ class FirmaPagina extends StatelessWidget {
                 style: TextStyle(
                   color: Color(0xFF1D1B20),
                   fontSize: 22,
-                  fontFamily: 'Roboto',
                   fontWeight: FontWeight.w400,
                   height: 1.27,
                 ),
@@ -72,7 +71,7 @@ class FirmaPagina extends StatelessWidget {
             const Text('Jefatura: -'),
           ],
         ),
-      ),
+      )/*,
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
         child: SizedBox(
@@ -143,7 +142,7 @@ class FirmaPagina extends StatelessWidget {
             child: const Text('Firmar'),
           ),
         ),
-      ),
+      ),*/
     );
   }
 }
