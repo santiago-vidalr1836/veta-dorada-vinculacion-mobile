@@ -91,6 +91,7 @@ void main() {
       home: ActividadMineraReinfoPagina(
         repository: repo,
         verificacionRepository: verificacionRepo,
+        idVisita: 0,
       ),
     ));
     await tester.pumpAndSettle();
@@ -119,6 +120,7 @@ void main() {
       home: ActividadMineraReinfoPagina(
         repository: repo,
         verificacionRepository: verificacionRepo,
+        idVisita: 0,
       ),
     ));
     await tester.pumpAndSettle();
@@ -147,6 +149,7 @@ void main() {
       home: ActividadMineraReinfoPagina(
         repository: repo,
         verificacionRepository: verificacionRepo,
+        idVisita: 0,
       ),
     ));
     await tester.pumpAndSettle();
@@ -177,6 +180,7 @@ void main() {
       home: ActividadMineraReinfoPagina(
         repository: repo,
         verificacionRepository: verificacionRepo,
+        idVisita: 0,
       ),
     ));
     await tester.pumpAndSettle();
@@ -215,6 +219,7 @@ void main() {
       home: ActividadMineraReinfoPagina(
         repository: repo,
         verificacionRepository: verificacionRepo,
+        idVisita: 0,
       ),
     ));
     await tester.pumpAndSettle();
@@ -254,6 +259,7 @@ void main() {
           builder: (context, state) => ActividadMineraReinfoPagina(
             repository: repo,
             verificacionRepository: verificacionRepo,
+            idVisita: 0,
           ),
         ),
         GoRoute(
@@ -341,6 +347,7 @@ void main() {
       home: ActividadMineraReinfoPagina(
         repository: repo,
         verificacionRepository: verificacionRepo,
+        idVisita: 0,
       ),
     ));
     await tester.pumpAndSettle();
