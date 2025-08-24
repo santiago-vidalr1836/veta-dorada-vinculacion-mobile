@@ -5,7 +5,6 @@ import '../../../../core/auth/auth_provider.dart';
 import '../../../../core/widgets/protected_scaffold.dart';
 import '../../../../core/widgets/bottom_nav_actions.dart';
 import '../../../actividad/dominio/entidades/actividad.dart';
-import '../../dominio/entidades/descripcion_actividad_verificada.dart';
 import '../../dominio/entidades/descripcion.dart';
 import '../../dominio/repositorios/verificacion_repository.dart';
 import '../../dominio/entidades/realizar_verificacion_dto.dart';
@@ -76,7 +75,7 @@ class _DescripcionActividadMineraVerificadaPaginaState
 
   Future<void> _siguiente() async {
     if (_formKey.currentState!.validate()) {
-      final descripcion = DescripcionActividadVerificada(
+      final descripcion = Descripcion(
         coordenadas: _coordenadasController.text,
         zona: _zonaController.text,
         actividad: _actividadController.text,
@@ -84,27 +83,8 @@ class _DescripcionActividadMineraVerificadaPaginaState
         trabajadores: _trabajadoresController.text,
         condicionesLaborales: _seguridadController.text,
       );
-      final dtoActualizado = RealizarVerificacionDto(
-        idVerificacion: widget.dto.idVerificacion,
-        idVisita: widget.dto.idVisita,
-        idUsuario: widget.dto.idUsuario,
-        fechaInicioMovil: widget.dto.fechaInicioMovil,
-        fechaFinMovil: widget.dto.fechaFinMovil,
-        proveedorSnapshot: widget.dto.proveedorSnapshot,
-        actividades: widget.dto.actividades,
-        descripcion: Descripcion(
-          coordenadas: descripcion.coordenadas,
-          zona: descripcion.zona,
-          actividad: descripcion.actividad,
-          equipos: descripcion.equipos,
-          trabajadores: descripcion.trabajadores,
-          condicionesLaborales: descripcion.condicionesLaborales,
-        ),
-        evaluacion: widget.dto.evaluacion,
-        estimacion: widget.dto.estimacion,
-        fotos: widget.dto.fotos,
-        idempotencyKey: widget.dto.idempotencyKey,
-      );
+      final dtoActualizado =
+          widget.dto.copyWith(descripcion: descripcion);
       await widget.verificacionRepository.guardarVerificacion(dtoActualizado);
       _avance = calcularAvance(dtoActualizado);
       if (!mounted) return;

@@ -65,8 +65,13 @@ class _DatosProveedorMineralPaginaState
   }
 
   Future<void> _inicializar() async {
-    final dto =
+    var dto =
         await widget.verificacionRepository.obtenerVerificacion(widget.visita.id);
+    if (dto != null && dto.fechaInicioMovil == null) {
+      dto =
+          dto.copyWith(fechaInicioMovil: DateTime.now());
+      await widget.verificacionRepository.guardarVerificacion(dto);
+    }
 
     if (dto != null) {
       final proveedor = dto.proveedorSnapshot;
@@ -161,7 +166,6 @@ class _DatosProveedorMineralPaginaState
         idVisita: widget.visita.id,
         idUsuario: widget.visita.geologo.id,
         fechaInicioMovil: DateTime.now(),
-        fechaFinMovil: DateTime.now(),
         proveedorSnapshot: proveedor,
         actividades: const <Actividad>[],
         descripcion: const Descripcion(
@@ -188,20 +192,7 @@ class _DatosProveedorMineralPaginaState
         idempotencyKey: '',
       );
     } else {
-      dto = RealizarVerificacionDto(
-        idVerificacion: dto.idVerificacion,
-        idVisita: dto.idVisita,
-        idUsuario: dto.idUsuario,
-        fechaInicioMovil: dto.fechaInicioMovil,
-        fechaFinMovil: dto.fechaFinMovil,
-        proveedorSnapshot: proveedor,
-        actividades: dto.actividades,
-        descripcion: dto.descripcion,
-        evaluacion: dto.evaluacion,
-        estimacion: dto.estimacion,
-        fotos: dto.fotos,
-        idempotencyKey: dto.idempotencyKey,
-      );
+      dto = dto.copyWith(proveedorSnapshot: proveedor);
     }
     await widget.verificacionRepository.guardarVerificacion(dto);
     _avance = calcularAvance(dto);

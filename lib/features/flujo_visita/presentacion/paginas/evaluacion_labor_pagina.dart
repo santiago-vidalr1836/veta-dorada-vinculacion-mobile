@@ -103,20 +103,7 @@ class _EvaluacionLaborPaginaState extends State<EvaluacionLaborPagina> {
       anotacion:
           _anotacionController.text.isEmpty ? null : _anotacionController.text,
     );
-    final dtoActualizado = RealizarVerificacionDto(
-      idVerificacion: _dto.idVerificacion,
-      idVisita: _dto.idVisita,
-      idUsuario: _dto.idUsuario,
-      fechaInicioMovil: _dto.fechaInicioMovil,
-      fechaFinMovil: _dto.fechaFinMovil,
-      proveedorSnapshot: _dto.proveedorSnapshot,
-      actividades: _dto.actividades,
-      descripcion: _dto.descripcion,
-      evaluacion: evaluacion,
-      estimacion: _dto.estimacion,
-      fotos: _dto.fotos,
-      idempotencyKey: _dto.idempotencyKey,
-    );
+    final dtoActualizado = _dto.copyWith(evaluacion: evaluacion);
     await widget.verificacionRepository.guardarVerificacion(dtoActualizado);
     if (!mounted) return;
     context.push('/flujo-visita/firma', extra: {

@@ -177,28 +177,19 @@ class _RegistroFotograficoVerificacionPaginaState
   }
 
   RealizarVerificacionDto _dtoConFotos(List<RegistroFotografico> fotos) {
-    return RealizarVerificacionDto(
-      idVerificacion: _dto.idVerificacion,
-      idVisita: _dto.idVisita,
-      idUsuario: _dto.idUsuario,
-      fechaInicioMovil: _dto.fechaInicioMovil,
-      fechaFinMovil: _dto.fechaFinMovil,
-      proveedorSnapshot: _dto.proveedorSnapshot,
-      actividades: _dto.actividades,
-      descripcion: _dto.descripcion,
-      evaluacion: _dto.evaluacion,
-      estimacion: _dto.estimacion,
+    return _dto.copyWith(
       fotos: fotos
-          .map((f) => Foto(
-                imagen: f.path,
-                titulo: f.titulo,
-                descripcion: f.descripcion,
-                fecha: f.fecha,
-                latitud: f.latitud,
-                longitud: f.longitud,
-              ))
+          .map(
+            (f) => Foto(
+              imagen: f.path,
+              titulo: f.titulo,
+              descripcion: f.descripcion,
+              fecha: f.fecha,
+              latitud: f.latitud,
+              longitud: f.longitud,
+            ),
+          )
           .toList(),
-      idempotencyKey: _dto.idempotencyKey,
     );
   }
 
