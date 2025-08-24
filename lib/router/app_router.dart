@@ -102,10 +102,14 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           final actividad = extras['actividad'] as Actividad;
           final flag = extras['flagMedicionCapacidad'] as bool;
           final dto = extras['dto'] as RealizarVerificacionDto;
+          final verificacionRepo = VerificacionRepositoryImpl(
+            VerificacionLocalDataSource(ServicioBdLocal()),
+          );
           return DescripcionActividadMineraVerificadaPagina(
             actividad: actividad,
             flagMedicionCapacidad: flag,
             flowRepository: flowRepository,
+            verificacionRepository: verificacionRepo,
             dto: dto,
           );
         },
