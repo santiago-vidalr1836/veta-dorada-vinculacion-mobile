@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/perfil/datos/modelos/oficina.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/perfil/datos/modelos/perfil.dart';
 
 import 'package:veta_dorada_vinculacion_mobile/main.dart';
 import 'package:veta_dorada_vinculacion_mobile/core/auth/auth_notifier.dart';
@@ -30,7 +32,7 @@ class FakeAuthRemoteDataSource {
 class FakePerfilRemoteDataSource {
   Future<RespuestaBase<Usuario>> obtenerPerfil() async {
     final usuario =
-        Usuario(id: '1', nombre: 'Test', correo: 'test@example.com');
+        Usuario(id: 1, nombre: 'Test',apellidos: '', correo: 'test@example.com',oficina: Oficina(id: 1, nombre: ''),perfil: Perfil(id: 1, nombre: ''));
     return RespuestaBase.respuestaCorrecta(usuario);
   }
 }
