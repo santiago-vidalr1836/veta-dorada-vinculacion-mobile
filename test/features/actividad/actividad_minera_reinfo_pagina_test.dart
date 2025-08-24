@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:veta_dorada_vinculacion_mobile/core/red/cliente_http.dart';
 import 'package:veta_dorada_vinculacion_mobile/core/servicios/servicio_bd_local.dart';
@@ -155,6 +156,47 @@ void main() {
     expect(saved!.actividades, hasLength(1));
     expect(saved.actividades.first.idTipoActividad, 1);
     expect(saved.actividades.first.idSubTipoActividad, 1);
+  });
+
+  testWidgets('navega a actividad igafom al guardar', (tester) async {
+    final repo = _FakeRepository([
+      TipoActividad(id: 1, nombre: 'Explotación'),
+    ]);
+    final verificacionRepo = _MockVerificacionRepository();
+
+    final router = GoRouter(
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (context, state) => ActividadMineraReinfoPagina(
+            repository: repo,
+            verificacionRepository: verificacionRepo,
+          ),
+        ),
+        GoRoute(
+          path: '/flujo-visita/actividad-igafom',
+          builder: (context, state) => const Placeholder(),
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(DropdownButtonFormField<TipoActividad>));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Explotación').last);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(DropdownButtonFormField<String>));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Aluvial').last);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Guardar'));
+    await tester.pumpAndSettle();
+
+    expect(router.location, '/flujo-visita/actividad-igafom');
   });
 
   testWidgets('precarga datos si existe actividad previa', (tester) async {

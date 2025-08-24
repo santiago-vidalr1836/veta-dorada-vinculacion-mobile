@@ -221,7 +221,7 @@ class _ActividadMineraReinfoPaginaState
       );
     }
     await widget.verificacionRepository.guardarVerificacion(dto);
-    context.push('/flujo-visita/datos-proveedor', extra: actividad);
+    context.push('/flujo-visita/actividad-igafom', extra: actividad);
   }
 
   @override
