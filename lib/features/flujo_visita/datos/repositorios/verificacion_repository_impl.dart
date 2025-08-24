@@ -18,5 +18,10 @@ class VerificacionRepositoryImpl implements VerificacionRepository {
   Future<RealizarVerificacionDto?> obtenerVerificacion(int idVisita) async {
     return _localDataSource.obtenerVerificacion(idVisita);
   }
+
+  @override
+  Future<List<int>> obtenerVisitasConVerificacion() async {
+    return _localDataSource.obtenerVisitasConVerificacion();
+  }
 }
 

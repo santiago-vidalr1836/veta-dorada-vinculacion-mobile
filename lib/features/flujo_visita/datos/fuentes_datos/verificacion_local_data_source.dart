@@ -44,6 +44,20 @@ class VerificacionLocalDataSource {
           'Error al obtener verificación: $e');
     }
   }
+
+  /// Obtiene los identificadores de visitas que tienen una verificación
+  /// almacenada.
+  Future<List<int>> obtenerVisitasConVerificacion() async {
+    try {
+      final rows = await _bdLocal.query(_tabla, columns: ['idVisita']);
+      return rows
+          .map((row) => int.parse(row['idVisita'] as String))
+          .toList();
+    } on DatabaseException catch (e) {
+      throw VerificacionLocalException(
+          'Error al obtener verificaciones: $e');
+    }
+  }
 }
 
 /// Excepción lanzada para errores de acceso a datos de verificación local.

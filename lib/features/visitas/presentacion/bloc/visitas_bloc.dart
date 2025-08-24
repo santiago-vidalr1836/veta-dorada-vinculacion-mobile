@@ -5,17 +5,20 @@ import '../../datos/fuentes_datos/visits_local_data_source.dart'
 import '../../dominio/entidades/estado_visita.dart';
 import '../../dominio/entidades/visita.dart';
 import '../../dominio/repositorios/visits_repository.dart';
+import '../../../flujo_visita/dominio/repositorios/verificacion_repository.dart';
 
 part 'visitas_event.dart';
 part 'visitas_state.dart';
 
 class VisitasBloc extends Bloc<VisitasEvent, VisitasState> {
-  VisitasBloc(this._repository) : super(VisitasCargando()) {
+  VisitasBloc(this._repository, this._verificacionRepository)
+      : super(VisitasCargando()) {
     on<CargarVisitas>(_onCargarVisitas);
     on<SincronizarVisitas>(_onSincronizarVisitas);
   }
 
   final VisitsRepository _repository;
+  final VerificacionRepository _verificacionRepository;
 
   Future<void> _onCargarVisitas(
     CargarVisitas event,
@@ -25,11 +28,26 @@ class VisitasBloc extends Bloc<VisitasEvent, VisitasState> {
     try {
       final resultado =
           await _repository.obtenerVisitasPorGeologo(event.idGeologo);
-      final programadas =
+
+      final todasProgramadas =
           resultado.visitas[EstadoVisita.programada] ?? [];
-      final borrador = resultado.visitas[EstadoVisita.enProceso] ?? [];
       final completadas =
           resultado.visitas[EstadoVisita.realizada] ?? [];
+
+      final programadas = <Visita>[];
+      final borrador = <Visita>[];
+      final idsConVerificacion =
+          await _verificacionRepository.obtenerVisitasConVerificacion();
+      final idsSet = idsConVerificacion.toSet();
+
+      for (final visita in todasProgramadas) {
+        if (idsSet.contains(visita.id)) {
+          borrador.add(visita);
+        } else {
+          programadas.add(visita);
+        }
+      }
+
       emit(VisitasCargadas(
         programadas: programadas,
         borrador: borrador,
