@@ -37,8 +37,8 @@ class DatosProveedorMineralPagina extends StatefulWidget {
 
 class _DatosProveedorMineralPaginaState
     extends State<DatosProveedorMineralPagina> {
-  static const String TIPO_PERSONA_NATURAL = 'NATURAL';
-  static const String TIPO_PERSONA_JURIDICA = 'JURIDICA';
+  static const String TIPO_PERSONA_NATURAL = 'TIPO_PERSONA_NATURAL';
+  static const String TIPO_PERSONA_JURIDICA = 'TIPO_PERSONA_JURIDICA';
 
   final _formKey = GlobalKey<FormState>();
 

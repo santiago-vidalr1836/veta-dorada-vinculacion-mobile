@@ -117,7 +117,7 @@ void main() {
     await tester.tap(find.text('Guardar'));
     await tester.pumpAndSettle();
 
-    expect(router.location, '/flujo-visita/actividad-igafom');
+    expect(router.routerDelegate.currentConfiguration.last.matchedLocation, '/flujo-visita/actividad-igafom');
     expect(
       find.text('Actividad Minera Declarada por el Proveedor de Mineral en el IGAFOM'),
       findsOneWidget,
@@ -137,13 +137,13 @@ void main() {
     await tester.tap(find.text('Guardar'));
     await tester.pumpAndSettle();
 
-    expect(router.location, '/flujo-visita/actividad-verificada');
+    expect(router.routerDelegate.currentConfiguration.last.matchedLocation, '/flujo-visita/actividad-verificada');
     expect(find.text('Actividad Minera Verificada'), findsOneWidget);
 
     // Back to Igafom
     await tester.pageBack();
     await tester.pumpAndSettle();
-    expect(router.location, '/flujo-visita/actividad-igafom');
+    expect(router.routerDelegate.currentConfiguration.last.matchedLocation, '/flujo-visita/actividad-igafom');
     expect(
       find.text('Actividad Minera Declarada por el Proveedor de Mineral en el IGAFOM'),
       findsOneWidget,
@@ -152,7 +152,7 @@ void main() {
     // Back to Reinfo
     await tester.pageBack();
     await tester.pumpAndSettle();
-    expect(router.location, '/flujo-visita/actividad-reinfo');
+    expect(router.routerDelegate.currentConfiguration.last.matchedLocation, '/flujo-visita/actividad-reinfo');
     expect(
       find.text(
           'Actividad Minera Declarada por el Proveedor de Mineral en el Comprobante de Recepción de Datos para el REINFO'),

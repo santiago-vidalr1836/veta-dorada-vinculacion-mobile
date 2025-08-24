@@ -152,7 +152,7 @@ void main() {
     await tester.tap(find.text('Guardar'));
     await tester.pumpAndSettle();
 
-    expect(router.location, '/flujo-visita/actividad-verificada');
+    expect(router.routerDelegate.currentConfiguration.last.matchedLocation, '/flujo-visita/actividad-verificada');
   });
 }
 

@@ -120,13 +120,7 @@ class _ActividadMineraIgafomPaginaState
         if (tipo.id == actividad.idTipoActividad) {
           _tipoSeleccionado = tipo;
           final desc = tipo.nombre.toLowerCase();
-          if (desc.contains('beneficio')) {
-            _labelSubTipo = 'Tipo de Beneficio';
-          } else if (desc.contains('explot')) {
-            _labelSubTipo = 'Tipo de Explotación';
-          } else {
-            _labelSubTipo = 'Sub Tipo';
-          }
+          _labelSubTipo = 'Tipo de $desc';
           _subTiposDisponibles = _mapaSubTipos[tipo.id] ?? [];
           if (actividad.idSubTipoActividad > 0 &&
               actividad.idSubTipoActividad <= _subTiposDisponibles.length) {

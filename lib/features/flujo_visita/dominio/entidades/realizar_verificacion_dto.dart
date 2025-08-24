@@ -1,4 +1,5 @@
-import '../../actividad/dominio/entidades/actividad.dart';
+
+import '../../../actividad/dominio/entidades/actividad.dart';
 import 'descripcion.dart';
 import 'evaluacion.dart';
 import 'estimacion.dart';
