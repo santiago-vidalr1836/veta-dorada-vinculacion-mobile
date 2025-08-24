@@ -65,6 +65,7 @@ void main() {
             repository: repo,
             verificacionRepository: verificacionRepo,
             idVisita: 1,
+            flagEstimacionProduccion: false,
           ),
         ),
         GoRoute(
@@ -75,6 +76,8 @@ void main() {
               repository: repo,
               verificacionRepository: verificacionRepo,
               idVisita: extras['idVisita'] as int,
+              flagEstimacionProduccion:
+                  extras['flagEstimacionProduccion'] as bool,
               actividadReinfo: extras['actividad'] as Actividad?,
             );
           },
@@ -86,7 +89,10 @@ void main() {
             return ActividadMineraVerificadaPagina(
               repository: repo,
               verificacionRepository: verificacionRepo,
-              flagMedicionCapacidad: extras['flagMedicionCapacidad'] as bool,
+              flagMedicionCapacidad:
+                  extras['flagMedicionCapacidad'] as bool,
+              flagEstimacionProduccion:
+                  extras['flagEstimacionProduccion'] as bool,
               idVisita: extras['idVisita'] as int,
             );
           },

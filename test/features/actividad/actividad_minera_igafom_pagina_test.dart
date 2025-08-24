@@ -61,6 +61,7 @@ void main() {
         repository: repo,
         verificacionRepository: _FakeVerificacionRepository(),
         idVisita: 0,
+        flagEstimacionProduccion: false,
       ),
     ));
     await tester.pumpAndSettle();
@@ -83,6 +84,7 @@ void main() {
         repository: repo,
         verificacionRepository: _FakeVerificacionRepository(),
         idVisita: 0,
+        flagEstimacionProduccion: false,
       ),
     ));
     await tester.pumpAndSettle();
@@ -124,6 +126,7 @@ void main() {
             repository: repo,
             verificacionRepository: _FakeVerificacionRepository(),
             idVisita: 0,
+            flagEstimacionProduccion: false,
           ),
         ),
         GoRoute(

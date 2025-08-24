@@ -25,6 +25,7 @@ class ActividadMineraReinfoPagina extends StatefulWidget {
     required this.repository,
     required this.verificacionRepository,
     required this.idVisita,
+    required this.flagEstimacionProduccion,
   });
 
   /// Repositorio usado para obtener los tipos de actividad.
@@ -35,6 +36,9 @@ class ActividadMineraReinfoPagina extends StatefulWidget {
 
   /// Identificador de la visita asociada a la verificación.
   final int idVisita;
+
+  /// Indica si la visita requiere estimación de producción.
+  final bool flagEstimacionProduccion;
 
   @override
   State<ActividadMineraReinfoPagina> createState() =>
@@ -225,7 +229,11 @@ class _ActividadMineraReinfoPaginaState
     }
     await widget.verificacionRepository.guardarVerificacion(dto);
     context.push('/flujo-visita/actividad-igafom',
-        extra: {'actividad': actividad, 'idVisita': widget.idVisita});
+        extra: {
+          'actividad': actividad,
+          'idVisita': widget.idVisita,
+          'flagEstimacionProduccion': widget.flagEstimacionProduccion,
+        });
   }
 
   @override

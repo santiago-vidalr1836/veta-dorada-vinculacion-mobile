@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import 'package:veta_dorada_vinculacion_mobile/features/actividad/dominio/entidades/actividad.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/actividad/dominio/enums/origen.dart';
-import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/entidades/completar_visita_comando.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/entidades/descripcion.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/entidades/descripcion_actividad_verificada.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/entidades/evaluacion.dart';
@@ -12,48 +11,8 @@ import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/ent
 import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/entidades/foto.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/entidades/proveedor_snapshot.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/entidades/realizar_verificacion_dto.dart';
-import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/entidades/registro_fotografico.dart';
-import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/repositorios/flow_repository.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/repositorios/verificacion_repository.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/presentacion/paginas/descripcion_actividad_minera_verificada_pagina.dart';
-
-class _FakeFlowRepository implements FlowRepository {
-  DescripcionActividadVerificada? descripcion;
-
-  @override
-  Future<void> guardarDescripcionActividadVerificada(
-      DescripcionActividadVerificada descripcion) async {
-    this.descripcion = descripcion;
-  }
-
-  @override
-  Future<DescripcionActividadVerificada?>
-      obtenerDescripcionActividadVerificada() async => descripcion;
-
-  @override
-  Future<void> guardarEvaluacion(Evaluacion evaluacion) async {}
-
-  @override
-  Future<Evaluacion?> obtenerEvaluacion() async => null;
-
-  @override
-  Future<void> guardarEstimacion(Estimacion estimacion) async {}
-
-  @override
-  Future<Estimacion?> obtenerEstimacion() async => null;
-
-  @override
-  Future<void> agregarFotoVerificacion(RegistroFotografico foto) async {}
-
-  @override
-  Future<void> eliminarFotoVerificacion(int index) async {}
-
-  @override
-  Future<List<RegistroFotografico>> obtenerFotosVerificacion() async => [];
-
-  @override
-  Future<void> completarFlujo(CompletarVisitaComando comando) async {}
-}
 
 class _MockVerificacionRepository implements VerificacionRepository {
   RealizarVerificacionDto? savedDto;
@@ -111,7 +70,6 @@ void main() {
       idempotencyKey: '',
     );
 
-    final flowRepo = _FakeFlowRepository();
     final verificacionRepo = _MockVerificacionRepository();
 
     final router = GoRouter(routes: [
@@ -120,7 +78,7 @@ void main() {
         builder: (context, state) => DescripcionActividadMineraVerificadaPagina(
           actividad: actividad,
           flagMedicionCapacidad: false,
-          flowRepository: flowRepo,
+          flagEstimacionProduccion: false,
           verificacionRepository: verificacionRepo,
           dto: dto,
         ),

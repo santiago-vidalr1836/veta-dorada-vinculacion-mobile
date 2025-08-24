@@ -24,12 +24,14 @@ class RegistroFotograficoVerificacionPagina extends StatefulWidget {
     super.key,
     required this.actividad,
     required this.flagMedicionCapacidad,
+    required this.flagEstimacionProduccion,
     required this.verificacionRepository,
     required this.dto,
   });
 
   final Actividad actividad;
   final bool flagMedicionCapacidad;
+  final bool flagEstimacionProduccion;
   final VerificacionRepository verificacionRepository;
   final RealizarVerificacionDto dto;
 
@@ -156,6 +158,7 @@ class _RegistroFotograficoVerificacionPaginaState
     context.push('/flujo-visita/evaluacion-labor', extra: {
       'actividad': widget.actividad,
       'flagMedicionCapacidad': widget.flagMedicionCapacidad,
+      'flagEstimacionProduccion': widget.flagEstimacionProduccion,
       'dto': _dto,
     });
   }

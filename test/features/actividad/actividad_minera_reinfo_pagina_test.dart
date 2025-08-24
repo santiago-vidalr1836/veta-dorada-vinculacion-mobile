@@ -92,6 +92,7 @@ void main() {
         repository: repo,
         verificacionRepository: verificacionRepo,
         idVisita: 0,
+        flagEstimacionProduccion: false,
       ),
     ));
     await tester.pumpAndSettle();
@@ -121,6 +122,7 @@ void main() {
         repository: repo,
         verificacionRepository: verificacionRepo,
         idVisita: 0,
+        flagEstimacionProduccion: false,
       ),
     ));
     await tester.pumpAndSettle();
@@ -150,6 +152,7 @@ void main() {
         repository: repo,
         verificacionRepository: verificacionRepo,
         idVisita: 0,
+        flagEstimacionProduccion: false,
       ),
     ));
     await tester.pumpAndSettle();
@@ -181,6 +184,7 @@ void main() {
         repository: repo,
         verificacionRepository: verificacionRepo,
         idVisita: 0,
+        flagEstimacionProduccion: false,
       ),
     ));
     await tester.pumpAndSettle();
@@ -220,6 +224,7 @@ void main() {
         repository: repo,
         verificacionRepository: verificacionRepo,
         idVisita: 0,
+        flagEstimacionProduccion: false,
       ),
     ));
     await tester.pumpAndSettle();
@@ -260,6 +265,7 @@ void main() {
             repository: repo,
             verificacionRepository: verificacionRepo,
             idVisita: 0,
+            flagEstimacionProduccion: false,
           ),
         ),
         GoRoute(
@@ -355,6 +361,7 @@ void main() {
         repository: repo,
         verificacionRepository: verificacionRepo,
         idVisita: 0,
+        flagEstimacionProduccion: false,
       ),
     ));
     await tester.pumpAndSettle();

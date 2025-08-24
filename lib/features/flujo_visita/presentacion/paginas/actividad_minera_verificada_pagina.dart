@@ -26,6 +26,7 @@ class ActividadMineraVerificadaPagina extends StatefulWidget {
     required this.repository,
     required this.verificacionRepository,
     required this.flagMedicionCapacidad,
+    required this.flagEstimacionProduccion,
     required this.idVisita,
   });
 
@@ -37,6 +38,9 @@ class ActividadMineraVerificadaPagina extends StatefulWidget {
 
   /// Indica si la visita requiere medición de capacidad.
   final bool flagMedicionCapacidad;
+
+  /// Indica si la visita requiere estimación de producción.
+  final bool flagEstimacionProduccion;
 
   /// Identificador de la visita asociada a la verificación.
   final int idVisita;
@@ -252,6 +256,7 @@ class _ActividadMineraVerificadaPaginaState
     context.push('/flujo-visita/descripcion-actividad-verificada', extra: {
       'actividad': actividadGuardada,
       'flagMedicionCapacidad': widget.flagMedicionCapacidad,
+      'flagEstimacionProduccion': widget.flagEstimacionProduccion,
       'dto': dto,
     });
   }

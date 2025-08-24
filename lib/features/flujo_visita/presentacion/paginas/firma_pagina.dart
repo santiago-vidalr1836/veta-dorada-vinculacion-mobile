@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../../core/auth/auth_provider.dart';
 import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../../perfil/datos/modelos/usuario.dart';
+import '../../dominio/entidades/realizar_verificacion_dto.dart';
 
 /// Página para visualizar la información del usuario antes de firmar.
 class FirmaPagina extends StatelessWidget {
@@ -13,6 +14,8 @@ class FirmaPagina extends StatelessWidget {
     required this.actividad,
     required this.usuario,
     required this.flagMedicionCapacidad,
+    required this.flagEstimacionProduccion,
+    required this.dto,
   });
 
   /// Actividad asociada a la firma.
@@ -23,6 +26,12 @@ class FirmaPagina extends StatelessWidget {
 
   /// Indica si la visita requiere medición de capacidad.
   final bool flagMedicionCapacidad;
+
+  /// Indica si la visita requiere estimación de producción.
+  final bool flagEstimacionProduccion;
+
+  /// Datos actuales de la verificación.
+  final RealizarVerificacionDto dto;
 
   @override
   Widget build(BuildContext context) {
@@ -79,16 +88,24 @@ class FirmaPagina extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              if (flagMedicionCapacidad)
+                              if (flagEstimacionProduccion ||
+                                  flagMedicionCapacidad)
                                 TextButton(
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                     context.push(
-                                        '/flujo-visita/estimacion-produccion');
+                                      '/flujo-visita/estimacion-produccion',
+                                      extra: {
+                                        'flagMedicionCapacidad':
+                                            flagMedicionCapacidad,
+                                        'dto': dto,
+                                      },
+                                    );
                                   },
-                                  child:
-                                      const Text('Ir a estimación producción'),
-                                ),
+                                  child: const Text('Estimacion Produccion'),
+                                )
+                              else
+                                const Text('Enviar'),
                               TextButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
