@@ -132,10 +132,12 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           final extras = state.extra! as Map<String, dynamic>;
           final actividad = extras['actividad'] as Actividad;
           final flag = extras['flagMedicionCapacidad'] as bool;
+          final dto = extras['dto'] as RealizarVerificacionDto;
           return RegistroFotograficoVerificacionPagina(
             actividad: actividad,
             flagMedicionCapacidad: flag,
             flowRepository: flowRepository,
+            dto: dto,
           );
         },
       ),

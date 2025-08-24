@@ -13,6 +13,7 @@ import '../../dominio/entidades/proveedor_snapshot.dart';
 import '../../dominio/entidades/realizar_verificacion_dto.dart';
 import '../../dominio/entidades/tipo_proveedor.dart';
 import '../../dominio/repositorios/verificacion_repository.dart';
+import '../../dominio/calcular_avance.dart';
 
 /// Página para registrar los datos del proveedor de mineral.
 ///
@@ -51,8 +52,8 @@ class _DatosProveedorMineralPaginaState
   List<InicioProcesoFormalizacion> _iniciosFormalizacion = [];
   InicioProcesoFormalizacion? _inicioFormalizacion;
 
-  static const int _totalPasos = 9;
-  int _pasosCompletados = 0;
+  static const int _totalPasos = totalPasosVerificacion;
+  double _avance = 0;
 
   @override
   void initState() {
@@ -83,7 +84,7 @@ class _DatosProveedorMineralPaginaState
     }
 
     await _cargarCatalogos(dto);
-    _pasosCompletados = _calcularPasos(dto);
+    _avance = dto != null ? calcularAvance(dto) : 0;
     if (mounted) {
       setState(() {});
     }
@@ -112,32 +113,6 @@ class _DatosProveedorMineralPaginaState
         }
       }
     });
-  }
-
-  int _calcularPasos(RealizarVerificacionDto? dto) {
-    if (dto == null) return 0;
-    var count = 0;
-    if (dto.actividades.isNotEmpty) count++;
-    if (dto.descripcion.coordenadas.isNotEmpty ||
-        dto.descripcion.zona.isNotEmpty ||
-        dto.descripcion.actividad.isNotEmpty ||
-        dto.descripcion.equipos.isNotEmpty ||
-        dto.descripcion.trabajadores.isNotEmpty ||
-        dto.descripcion.condicionesLaborales.isNotEmpty) {
-      count++;
-    }
-    if (dto.evaluacion.idCondicionProspecto.isNotEmpty ||
-        (dto.evaluacion.anotacion?.isNotEmpty ?? false)) {
-      count++;
-    }
-    if (dto.estimacion.capacidadDiaria > 0 ||
-        dto.estimacion.diasOperacion > 0 ||
-        dto.estimacion.produccionEstimada > 0) {
-      count++;
-    }
-    if (dto.fotos.isNotEmpty) count++;
-    if (dto.proveedorSnapshot.nombre.isNotEmpty) count++;
-    return count;
   }
 
   @override
@@ -224,7 +199,7 @@ class _DatosProveedorMineralPaginaState
       );
     }
     await widget.verificacionRepository.guardarVerificacion(dto);
-    _pasosCompletados = _calcularPasos(dto);
+    _avance = calcularAvance(dto);
     if (!mounted) return;
     setState(() {});
     context.push('/flujo-visita/resumen');
@@ -242,9 +217,11 @@ class _DatosProveedorMineralPaginaState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(child: Text('$_pasosCompletados de $_totalPasos')),
+              Center(
+                  child: Text('${(_avance * _totalPasos).round()} de '
+                      '$_totalPasos')),
               const SizedBox(height: 8),
-              LinearProgressIndicator(value: _pasosCompletados / _totalPasos),
+              LinearProgressIndicator(value: _avance),
               const SizedBox(height: 24),
               DropdownButtonFormField<TipoProveedor>(
                 value: _tipoPersona,

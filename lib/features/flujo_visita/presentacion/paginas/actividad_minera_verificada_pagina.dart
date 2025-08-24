@@ -13,6 +13,7 @@ import '../../dominio/entidades/foto.dart';
 import '../../dominio/entidades/proveedor_snapshot.dart';
 import '../../dominio/entidades/realizar_verificacion_dto.dart';
 import '../../dominio/repositorios/verificacion_repository.dart';
+import '../../dominio/calcular_avance.dart';
 
 /// Página para registrar una actividad minera verificada por la autoridad.
 ///
@@ -70,6 +71,9 @@ class _ActividadMineraVerificadaPaginaState
   final TextEditingController _distritoController = TextEditingController();
   final TextEditingController _derechoMineroController =
       TextEditingController();
+
+  static const int _totalPasos = totalPasosVerificacion;
+  double _avance = 0;
 
   @override
   void initState() {
@@ -135,6 +139,8 @@ class _ActividadMineraVerificadaPaginaState
       _comp01NorteController.text = actividad.utmNorte.toString();
       _derechoMineroController.text = actividad.derechoMinero ?? '';
     }
+
+    _avance = dto != null ? calcularAvance(dto) : 0;
 
     if (mounted) {
       setState(() {});
@@ -237,6 +243,7 @@ class _ActividadMineraVerificadaPaginaState
       );
     }
     await widget.verificacionRepository.guardarVerificacion(dto);
+    _avance = calcularAvance(dto);
     final actividadGuardada =
         dto.actividades.firstWhere((a) => a.origen == Origen.verificada);
     if (!mounted) return;
@@ -257,6 +264,12 @@ class _ActividadMineraVerificadaPaginaState
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
+              Center(
+                  child: Text('${(_avance * _totalPasos).round()} de '
+                      '$_totalPasos')),
+              const SizedBox(height: 8),
+              LinearProgressIndicator(value: _avance),
+              const SizedBox(height: 24),
               DropdownButtonFormField<TipoActividad>(
                 decoration: const InputDecoration(
                   labelText: 'Tipo de actividad',
