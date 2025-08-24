@@ -67,7 +67,16 @@ class _DatosProveedorMineralPaginaState
   Future<void> _inicializar() async {
     var dto =
         await widget.verificacionRepository.obtenerVerificacion(widget.visita.id);
-    if (dto != null && dto.fechaInicioMovil == null) {
+    if (dto == null) {
+      dto = RealizarVerificacionDto(
+        idVerificacion: 0,
+        idVisita: widget.visita.id,
+        idUsuario: widget.visita.geologo.id,
+        fechaInicioMovil: DateTime.now(),
+        idempotencyKey: '',
+      );
+      await widget.verificacionRepository.guardarVerificacion(dto);
+    } else if (dto.fechaInicioMovil == null) {
       dto =
           dto.copyWith(fechaInicioMovil: DateTime.now());
       await widget.verificacionRepository.guardarVerificacion(dto);
@@ -111,9 +120,10 @@ class _DatosProveedorMineralPaginaState
           break;
         }
       }
-      if (_inicioFormalizacion != null) {
+      final codigoInicio = dto?.proveedorSnapshot?.inicioFormalizacion;
+      if (codigoInicio != null) {
         for (final inicio in _iniciosFormalizacion) {
-          if (inicio.codigo == _inicioFormalizacion!.codigo) {
+          if (inicio.codigo == codigoInicio) {
             _inicioFormalizacion = inicio;
             break;
           }
