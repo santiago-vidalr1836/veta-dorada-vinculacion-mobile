@@ -201,7 +201,10 @@ class _DatosProveedorMineralPaginaState
     _avance = calcularAvance(dto);
     if (!mounted) return;
     setState(() {});
-    context.push('/flujo-visita/resumen');
+    context.push('/flujo-visita/actividad-reinfo', extra: {
+      'idVisita': widget.visita.id,
+      'flagEstimacionProduccion': widget.visita.flagEstimacionProduccion,
+    });
   }
 
   @override
