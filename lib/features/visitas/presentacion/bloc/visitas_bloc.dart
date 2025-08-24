@@ -37,10 +37,12 @@ class VisitasBloc extends Bloc<VisitasEvent, VisitasState> {
       final programadas = <Visita>[];
       final borrador = <Visita>[];
 
+      final idsConVerificacion =
+          await _verificacionRepository.obtenerVisitasConVerificacion();
+      final idsSet = idsConVerificacion.toSet();
+
       for (final visita in todasProgramadas) {
-        final verificacion =
-            await _verificacionRepository.obtenerVerificacion(visita.id);
-        if (verificacion != null) {
+        if (idsSet.contains(visita.id)) {
           borrador.add(visita);
         } else {
           programadas.add(visita);

@@ -7,5 +7,9 @@ abstract class VerificacionRepository {
 
   /// Obtiene la información de verificación almacenada para [idVisita].
   Future<RealizarVerificacionDto?> obtenerVerificacion(int idVisita);
+
+  /// Obtiene los identificadores de visitas que tienen una verificación
+  /// almacenada localmente.
+  Future<List<int>> obtenerVisitasConVerificacion();
 }
 
