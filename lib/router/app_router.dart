@@ -31,6 +31,7 @@ import '../features/flujo_visita/presentacion/paginas/registro_fotografico_verif
 import '../features/flujo_visita/presentacion/paginas/estimacion_produccion_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/estimacion_produccion_resultado_pagina.dart';
 import '../features/visitas/presentacion/paginas/visitas_tabs_page.dart';
+import '../features/flujo_visita/dominio/entidades/realizar_verificacion_dto.dart';
 
 /// Crea la configuración del enrutador principal de la aplicación.
 GoRouter createRouter(AuthNotifier authNotifier) {
@@ -78,9 +79,13 @@ GoRouter createRouter(AuthNotifier authNotifier) {
             TipoActividadRemoteDataSource(ClienteHttp(token: auth.token!)),
             TipoActividadLocalDataSource(ServicioBdLocal()),
           );
+          final verificacionRepo = VerificacionRepositoryImpl(
+            VerificacionLocalDataSource(ServicioBdLocal()),
+          );
           final flag = state.extra as bool? ?? false;
           return ActividadMineraVerificadaPagina(
             repository: repo,
+            verificacionRepository: verificacionRepo,
             flagMedicionCapacidad: flag,
           );
         },
@@ -91,10 +96,12 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           final extras = state.extra! as Map<String, dynamic>;
           final actividad = extras['actividad'] as Actividad;
           final flag = extras['flagMedicionCapacidad'] as bool;
+          final dto = extras['dto'] as RealizarVerificacionDto;
           return DescripcionActividadMineraVerificadaPagina(
             actividad: actividad,
             flagMedicionCapacidad: flag,
             flowRepository: flowRepository,
+            dto: dto,
           );
         },
       ),

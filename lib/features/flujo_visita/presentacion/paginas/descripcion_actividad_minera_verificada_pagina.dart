@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../dominio/entidades/descripcion_actividad_verificada.dart';
 import '../../dominio/repositorios/flow_repository.dart';
+import '../../dominio/entidades/realizar_verificacion_dto.dart';
 
 /// Página para describir la actividad minera verificada.
 ///
@@ -15,11 +16,13 @@ class DescripcionActividadMineraVerificadaPagina extends StatefulWidget {
     required this.actividad,
     required this.flagMedicionCapacidad,
     required this.flowRepository,
+    required this.dto,
   });
 
   final Actividad actividad;
   final bool flagMedicionCapacidad;
   final FlowRepository flowRepository;
+  final RealizarVerificacionDto dto;
 
   @override
   State<DescripcionActividadMineraVerificadaPagina> createState() =>
@@ -36,6 +39,18 @@ class _DescripcionActividadMineraVerificadaPaginaState
   final _equiposController = TextEditingController();
   final _trabajadoresController = TextEditingController();
   final _seguridadController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    final desc = widget.dto.descripcion;
+    _coordenadasController.text = desc.coordenadas;
+    _zonaController.text = desc.zona;
+    _actividadController.text = desc.actividad;
+    _equiposController.text = desc.equipos;
+    _trabajadoresController.text = desc.trabajadores;
+    _seguridadController.text = desc.condicionesLaborales;
+  }
 
   @override
   void dispose() {

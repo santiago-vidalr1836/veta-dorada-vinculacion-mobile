@@ -10,6 +10,8 @@ import 'package:veta_dorada_vinculacion_mobile/features/actividad/datos/fuentes_
 import 'package:veta_dorada_vinculacion_mobile/features/actividad/datos/repositorios/actividad_repository_impl.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/actividad/dominio/entidades/tipo_actividad.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/presentacion/paginas/actividad_minera_verificada_pagina.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/repositorios/verificacion_repository.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/entidades/realizar_verificacion_dto.dart';
 
 class _FakeRepository extends ActividadRepositoryImpl {
   _FakeRepository(this._tipos)
@@ -29,6 +31,18 @@ class _FakeRepository extends ActividadRepositoryImpl {
   }
 }
 
+class _FakeVerificacionRepository implements VerificacionRepository {
+  @override
+  Future<void> guardarVerificacion(RealizarVerificacionDto dto) async {}
+
+  @override
+  Future<RealizarVerificacionDto?> obtenerVerificacion(int idVisita) async =>
+      null;
+
+  @override
+  Future<List<int>> obtenerVisitasConVerificacion() async => [];
+}
+
 void main() {
   testWidgets('carga inicial de combos', (tester) async {
     final repo = _FakeRepository([
@@ -39,6 +53,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
       home: ActividadMineraVerificadaPagina(
         repository: repo,
+        verificacionRepository: _FakeVerificacionRepository(),
         flagMedicionCapacidad: false,
       ),
     ));
@@ -60,6 +75,7 @@ void main() {
     await tester.pumpWidget(MaterialApp(
       home: ActividadMineraVerificadaPagina(
         repository: repo,
+        verificacionRepository: _FakeVerificacionRepository(),
         flagMedicionCapacidad: false,
       ),
     ));
