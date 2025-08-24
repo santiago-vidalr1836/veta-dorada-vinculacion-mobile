@@ -21,37 +21,49 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('es_ES', null);
   final authNotifier = AuthNotifier();
-  await _initAuth(authNotifier);
+  await initAuth(authNotifier);
   await _sincronizarListas(authNotifier);
   runApp(VinculacionApp(authNotifier: authNotifier));
 }
 
-Future<void> _initAuth(AuthNotifier authNotifier) async {
+Future<void> initAuth(
+  AuthNotifier authNotifier, {
+  dynamic Function(FlutterSecureStorage storage)? authDataSourceBuilder,
+  dynamic Function(String token)? perfilDataSourceBuilder,
+}) async {
   const storage = FlutterSecureStorage();
   final token = await storage.read(key: 'accessToken');
   final refreshToken = await storage.read(key: 'refreshToken');
   final expiryStr = await storage.read(key: 'accessTokenExpiry');
-  if (token == null) return;
   var currentToken = token;
   final expiry = expiryStr != null ? DateTime.tryParse(expiryStr) : null;
-  if (expiry == null ||
-      expiry.isBefore(DateTime.now().add(const Duration(minutes: 1)))) {
+  final shouldRefresh =
+      currentToken == null ||
+      expiry == null ||
+      expiry.isBefore(DateTime.now().add(const Duration(minutes: 1)));
+  if (shouldRefresh) {
     if (refreshToken == null) {
       await _clearSession(storage, authNotifier);
       return;
     }
-    final authRemoteDataSource =
-        AzureAuthRemoteDataSource.create(secureStorage: storage);
-    await authRemoteDataSource.loadFromStorage();
     try {
+      final authRemoteDataSource =
+          (authDataSourceBuilder ??
+              (s) => AzureAuthRemoteDataSource.create(secureStorage: s))(storage);
+      await authRemoteDataSource.loadFromStorage();
       currentToken = await authRemoteDataSource.refreshToken();
     } catch (_) {
       await _clearSession(storage, authNotifier);
       return;
     }
   }
-  var client = ClienteHttp(token: currentToken);
-  var perfilDataSource = PerfilRemoteDataSource(client);
+  if (currentToken == null) {
+    await _clearSession(storage, authNotifier);
+    return;
+  }
+  var perfilDataSource =
+      (perfilDataSourceBuilder ??
+          (t) => PerfilRemoteDataSource(ClienteHttp(token: t)))(currentToken);
   try {
     final respuesta = await perfilDataSource.obtenerPerfil();
     if (respuesta.codigoRespuesta == RespuestaBase.RESPUESTA_CORRECTA &&
@@ -68,13 +80,16 @@ Future<void> _initAuth(AuthNotifier authNotifier) async {
       await _clearSession(storage, authNotifier);
       return;
     }
-    final authRemoteDataSource =
-        AzureAuthRemoteDataSource.create(secureStorage: storage);
-    await authRemoteDataSource.loadFromStorage();
     try {
+      final authRemoteDataSource =
+          (authDataSourceBuilder ??
+              (s) => AzureAuthRemoteDataSource.create(secureStorage: s))(storage);
+      await authRemoteDataSource.loadFromStorage();
       final newToken = await authRemoteDataSource.refreshToken();
-      client = ClienteHttp(token: newToken);
-      perfilDataSource = PerfilRemoteDataSource(client);
+      currentToken = newToken;
+      perfilDataSource =
+          (perfilDataSourceBuilder ??
+              (t) => PerfilRemoteDataSource(ClienteHttp(token: t)))(newToken);
       final respuesta = await perfilDataSource.obtenerPerfil();
       if (respuesta.codigoRespuesta == RespuestaBase.RESPUESTA_CORRECTA &&
           respuesta.respuesta != null) {
