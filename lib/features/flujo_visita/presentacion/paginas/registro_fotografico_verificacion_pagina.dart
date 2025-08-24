@@ -98,11 +98,17 @@ class _RegistroFotograficoVerificacionPaginaState
               ),
               TextFormField(
                 controller: tituloController,
-                decoration: const InputDecoration(labelText: 'Título'),
+                decoration: const InputDecoration(
+                  labelText: 'Título',
+                  border: OutlineInputBorder(),
+                ),
               ),
               TextFormField(
                 controller: descripcionController,
-                decoration: const InputDecoration(labelText: 'Descripción'),
+                decoration: const InputDecoration(
+                  labelText: 'Descripción',
+                  border: OutlineInputBorder(),
+                ),
               ),
             ],
           ),
