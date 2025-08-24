@@ -27,7 +27,7 @@ class ServicioBdLocal {
       'realizar_verificacion';
 
   static const _nombreBd = 'vinculacion.db';
-  static const _versionBd = 3;
+  static const _versionBd = 4;
 
   Database? _db;
 
@@ -61,8 +61,8 @@ class ServicioBdLocal {
         ''');
         await db.execute('''
           CREATE TABLE $nombreTablaTipoActividad(
-            codigo INTEGER PRIMARY KEY,
-            descripcion TEXT
+            id INTEGER PRIMARY KEY,
+            nombre TEXT
           );
         ''');
         await db.execute('''
@@ -95,7 +95,7 @@ class ServicioBdLocal {
           await db.execute('''
             CREATE TABLE IF NOT EXISTS $nombreTablaTipoActividad(
               id INTEGER PRIMARY KEY,
-              descripcion TEXT
+              nombre TEXT
             );
           ''');
           await db.execute('''
@@ -112,6 +112,16 @@ class ServicioBdLocal {
               data TEXT
             );
           ''');
+        }
+        if (oldVersion < 4) {
+          try {
+            await db.execute(
+                'ALTER TABLE $nombreTablaTipoActividad RENAME COLUMN descripcion TO nombre;');
+          } catch (_) {}
+          try {
+            await db.execute(
+                'ALTER TABLE $nombreTablaTipoActividad RENAME COLUMN codigo TO id;');
+          } catch (_) {}
         }
       },
     );

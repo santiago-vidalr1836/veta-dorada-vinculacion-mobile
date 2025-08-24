@@ -36,7 +36,7 @@ void main() {
     test('sincronizarTiposActividad guarda los datos obtenidos', () async {
       final remoto = _FakeRemote(RespuestaBase(
         codigoRespuesta: RespuestaBase.RESPUESTA_CORRECTA,
-        respuesta: [TipoActividad(id: 1, descripcion: 'Exploración')],
+        respuesta: [TipoActividad(id: 1, nombre: 'Exploración')],
       ));
       final local = _FakeLocal();
       final repo = ActividadRepositoryImpl(remoto, local);
@@ -44,7 +44,7 @@ void main() {
       await repo.sincronizarTiposActividad();
 
       expect(local.almacenados.length, 1);
-      expect(local.almacenados.first.descripcion, 'Exploración');
+      expect(local.almacenados.first.nombre, 'Exploración');
     });
 
     test('sincronizarTiposActividad limpia datos cuando hay error', () async {
@@ -53,7 +53,7 @@ void main() {
         mensajeError: 'fallo',
       ));
       final local = _FakeLocal();
-      local.almacenados = [TipoActividad(id: 1, descripcion: 'A')];
+      local.almacenados = [TipoActividad(id: 1, nombre: 'A')];
       final repo = ActividadRepositoryImpl(remoto, local);
 
       await repo.sincronizarTiposActividad();
@@ -64,7 +64,7 @@ void main() {
     test('obtenerTiposActividad retorna datos remotos y sincroniza locales', () async {
       final remoto = _FakeRemote(RespuestaBase(
         codigoRespuesta: RespuestaBase.RESPUESTA_CORRECTA,
-        respuesta: [TipoActividad(id: 1, descripcion: 'Exploración')],
+        respuesta: [TipoActividad(id: 1, nombre: 'Exploración')],
       ));
       final local = _FakeLocal();
       final repo = ActividadRepositoryImpl(remoto, local);
@@ -82,13 +82,13 @@ void main() {
         mensajeError: 'error remoto',
       ));
       final local = _FakeLocal();
-      local.almacenados = [TipoActividad(id: 2, descripcion: 'Beneficio')];
+      local.almacenados = [TipoActividad(id: 2, nombre: 'Beneficio')];
       final repo = ActividadRepositoryImpl(remoto, local);
 
       final result = await repo.obtenerTiposActividad();
 
       expect(result.advertencia, 'error remoto');
-      expect(result.tipos.first.descripcion, 'Beneficio');
+      expect(result.tipos.first.nombre, 'Beneficio');
     });
   });
 }
