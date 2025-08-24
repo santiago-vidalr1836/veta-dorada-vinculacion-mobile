@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/visitas/dominio/entidades/visita.dart';
 
+import '../../../../core/auth/auth_provider.dart';
+import '../../../../core/widgets/protected_scaffold.dart';
 import '../../datos/repositorios/general_repository.dart';
 import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../dominio/entidades/descripcion.dart';
@@ -209,8 +211,11 @@ class _DatosProveedorMineralPaginaState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Datos de proveedor de mineral')),
+    final auth = AuthProvider.of(context);
+    return ProtectedScaffold(
+      usuario: auth.usuario!,
+      token: auth.token!,
+      onNavigate: (ruta) => context.go(ruta),
       body: Form(
         key: _formKey,
         onChanged: () => setState(() {}),
@@ -219,6 +224,20 @@ class _DatosProveedorMineralPaginaState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(
+                width: 378,
+                child: Text(
+                  'Datos del proveedor de mineral',
+                  style: TextStyle(
+                    color: Color(0xFF1D1B20),
+                    fontSize: 22,
+                    fontFamily: 'Roboto',
+                    fontWeight: FontWeight.w400,
+                    height: 1.27,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
               Center(
                   child: Text('${(_avance * _totalPasos).round()} de '
                       '$_totalPasos')),

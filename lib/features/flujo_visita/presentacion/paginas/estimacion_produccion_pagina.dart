@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/auth/auth_provider.dart';
+import '../../../../core/widgets/protected_scaffold.dart';
 import '../../dominio/entidades/estimacion.dart';
 import '../../dominio/entidades/realizar_verificacion_dto.dart';
 import '../../dominio/repositorios/verificacion_repository.dart';
@@ -99,13 +101,30 @@ class _EstimacionProduccionPaginaState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Estimación de Producción')),
+    final auth = AuthProvider.of(context);
+    return ProtectedScaffold(
+      usuario: auth.usuario!,
+      token: auth.token!,
+      onNavigate: (ruta) => context.go(ruta),
       body: Form(
         key: _formKey,
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            const SizedBox(
+              width: 378,
+              child: Text(
+                'Estimación de Producción',
+                style: TextStyle(
+                  color: Color(0xFF1D1B20),
+                  fontSize: 22,
+                  fontFamily: 'Roboto',
+                  fontWeight: FontWeight.w400,
+                  height: 1.27,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
             TextFormField(
               controller: _longitudController,
               keyboardType: TextInputType.number,
