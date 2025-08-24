@@ -71,10 +71,6 @@ class _DatosProveedorMineralPaginaState
       _rucController.text = proveedor.ruc ?? '';
       _razonSocialController.text = proveedor.razonSocial ?? '';
       _representanteController.text = proveedor.representanteLegal ?? '';
-      _inicioFormalizacion = InicioProcesoFormalizacion(
-        id: proveedor.inicioFormalizacion ? '1' : '0',
-        descripcion: proveedor.inicioFormalizacion ? 'Sí' : 'No',
-      );
     } else {
       final proveedor = widget.visita.proveedor;
       _nombreController.text = proveedor.nombreCompleto ?? '';
