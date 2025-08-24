@@ -59,27 +59,67 @@ class RealizarVerificacionDto {
     required this.idempotencyKey,
   });
 
+  /// Retorna una copia del objeto con los campos actualizados.
+  RealizarVerificacionDto copyWith({
+    int? idVerificacion,
+    int? idVisita,
+    int? idUsuario,
+    DateTime? fechaInicioMovil,
+    DateTime? fechaFinMovil,
+    ProveedorSnapshot? proveedorSnapshot,
+    List<Actividad>? actividades,
+    Descripcion? descripcion,
+    Evaluacion? evaluacion,
+    Estimacion? estimacion,
+    List<Foto>? fotos,
+    String? idempotencyKey,
+  }) {
+    return RealizarVerificacionDto(
+      idVerificacion: idVerificacion ?? this.idVerificacion,
+      idVisita: idVisita ?? this.idVisita,
+      idUsuario: idUsuario ?? this.idUsuario,
+      fechaInicioMovil: fechaInicioMovil ?? this.fechaInicioMovil,
+      fechaFinMovil: fechaFinMovil ?? this.fechaFinMovil,
+      proveedorSnapshot: proveedorSnapshot ?? this.proveedorSnapshot,
+      actividades: actividades ?? this.actividades,
+      descripcion: descripcion ?? this.descripcion,
+      evaluacion: evaluacion ?? this.evaluacion,
+      estimacion: estimacion ?? this.estimacion,
+      fotos: fotos ?? this.fotos,
+      idempotencyKey: idempotencyKey ?? this.idempotencyKey,
+    );
+  }
+
   /// Crea una instancia a partir de un mapa JSON.
   factory RealizarVerificacionDto.fromJson(Map<String, dynamic> json) =>
       RealizarVerificacionDto(
         idVerificacion: json['idVerificacion'] as int,
         idVisita: json['idVisita'] as int,
         idUsuario: json['idUsuario'] as int,
-        fechaInicioMovil: DateTime.parse(json['fechaInicioMovil'] as String),
-        fechaFinMovil: DateTime.parse(json['fechaFinMovil'] as String),
-        proveedorSnapshot: ProveedorSnapshot.fromJson(
-            json['proveedorSnapshot'] as Map<String, dynamic>),
-        actividades: (json['actividades'] as List<dynamic>)
-            .map((e) => Actividad.fromJson(e as Map<String, dynamic>))
+        fechaInicioMovil: json['fechaInicioMovil'] != null
+            ? DateTime.parse(json['fechaInicioMovil'] as String)
+            : null,
+        fechaFinMovil: json['fechaFinMovil'] != null
+            ? DateTime.parse(json['fechaFinMovil'] as String)
+            : null,
+        proveedorSnapshot: json['proveedorSnapshot'] != null
+            ? ProveedorSnapshot.fromJson(
+                json['proveedorSnapshot'] as Map<String, dynamic>)
+            : null,
+        actividades: (json['actividades'] as List<dynamic>?)
+            ?.map((e) => Actividad.fromJson(e as Map<String, dynamic>))
             .toList(),
-        descripcion:
-            Descripcion.fromJson(json['descripcion'] as Map<String, dynamic>),
-        evaluacion:
-            Evaluacion.fromJson(json['evaluacion'] as Map<String, dynamic>),
-        estimacion:
-            Estimacion.fromJson(json['estimacion'] as Map<String, dynamic>),
-        fotos: (json['fotos'] as List<dynamic>)
-            .map((e) => Foto.fromJson(e as Map<String, dynamic>))
+        descripcion: json['descripcion'] != null
+            ? Descripcion.fromJson(json['descripcion'] as Map<String, dynamic>)
+            : null,
+        evaluacion: json['evaluacion'] != null
+            ? Evaluacion.fromJson(json['evaluacion'] as Map<String, dynamic>)
+            : null,
+        estimacion: json['estimacion'] != null
+            ? Estimacion.fromJson(json['estimacion'] as Map<String, dynamic>)
+            : null,
+        fotos: (json['fotos'] as List<dynamic>?)
+            ?.map((e) => Foto.fromJson(e as Map<String, dynamic>))
             .toList(),
         idempotencyKey: json['idempotencyKey'] as String,
       );
