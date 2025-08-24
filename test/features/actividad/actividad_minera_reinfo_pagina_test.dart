@@ -9,6 +9,15 @@ import 'package:veta_dorada_vinculacion_mobile/features/actividad/datos/fuentes_
 import 'package:veta_dorada_vinculacion_mobile/features/actividad/datos/fuentes_datos/tipo_actividad_remote_data_source.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/actividad/datos/repositorios/actividad_repository_impl.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/actividad/dominio/entidades/tipo_actividad.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/actividad/dominio/entidades/actividad.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/actividad/dominio/enums/origen.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/entidades/descripcion.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/entidades/evaluacion.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/entidades/estimacion.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/entidades/foto.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/entidades/proveedor_snapshot.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/entidades/realizar_verificacion_dto.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/repositorios/verificacion_repository.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/presentacion/paginas/actividad_minera_reinfo_pagina.dart';
 
 class _FakeRepository extends ActividadRepositoryImpl {
@@ -29,15 +38,41 @@ class _FakeRepository extends ActividadRepositoryImpl {
   }
 }
 
+class _MockVerificacionRepository implements VerificacionRepository {
+  RealizarVerificacionDto? dto;
+  RealizarVerificacionDto? savedDto;
+  int obtenerCalls = 0;
+  int guardarCalls = 0;
+
+  @override
+  Future<RealizarVerificacionDto?> obtenerVerificacion(int idVisita) async {
+    obtenerCalls++;
+    return dto;
+  }
+
+  @override
+  Future<void> guardarVerificacion(RealizarVerificacionDto dto) async {
+    guardarCalls++;
+    savedDto = dto;
+  }
+
+  @override
+  Future<List<int>> obtenerVisitasConVerificacion() async => [];
+}
+
 void main() {
   testWidgets('carga inicial de combos', (tester) async {
     final repo = _FakeRepository([
       TipoActividad(id: 1, nombre: 'Exploración'),
       TipoActividad(id: 2, nombre: 'Beneficio'),
     ]);
+    final verificacionRepo = _MockVerificacionRepository();
 
     await tester.pumpWidget(MaterialApp(
-      home: ActividadMineraReinfoPagina(repository: repo),
+      home: ActividadMineraReinfoPagina(
+        repository: repo,
+        verificacionRepository: verificacionRepo,
+      ),
     ));
     await tester.pumpAndSettle();
 
@@ -53,9 +88,13 @@ void main() {
       TipoActividad(id: 1, nombre: 'Explotación'),
       TipoActividad(id: 2, nombre: 'Beneficio'),
     ]);
+    final verificacionRepo = _MockVerificacionRepository();
 
     await tester.pumpWidget(MaterialApp(
-      home: ActividadMineraReinfoPagina(repository: repo),
+      home: ActividadMineraReinfoPagina(
+        repository: repo,
+        verificacionRepository: verificacionRepo,
+      ),
     ));
     await tester.pumpAndSettle();
 
@@ -81,6 +120,110 @@ void main() {
     expect(find.text('Gravimétrico'), findsOneWidget);
     expect(find.text('Lixiviación'), findsOneWidget);
     expect(find.text('Aluvial'), findsNothing);
+  });
+
+  testWidgets('guarda actividad en verificacionRepository', (tester) async {
+    final repo = _FakeRepository([
+      TipoActividad(id: 1, nombre: 'Explotación'),
+    ]);
+    final verificacionRepo = _MockVerificacionRepository();
+
+    await tester.pumpWidget(MaterialApp(
+      home: ActividadMineraReinfoPagina(
+        repository: repo,
+        verificacionRepository: verificacionRepo,
+      ),
+    ));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(DropdownButtonFormField<TipoActividad>));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Explotación').last);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(DropdownButtonFormField<String>));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Aluvial').last);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Guardar'));
+    await tester.pumpAndSettle();
+
+    expect(verificacionRepo.guardarCalls, 1);
+    final saved = verificacionRepo.savedDto;
+    expect(saved, isNotNull);
+    expect(saved!.actividades, hasLength(1));
+    expect(saved.actividades.first.idTipoActividad, 1);
+    expect(saved.actividades.first.idSubTipoActividad, 1);
+  });
+
+  testWidgets('precarga datos si existe actividad previa', (tester) async {
+    final repo = _FakeRepository([
+      TipoActividad(id: 1, nombre: 'Exploración'),
+    ]);
+    final verificacionRepo = _MockVerificacionRepository();
+    verificacionRepo.dto = RealizarVerificacionDto(
+      idVerificacion: 0,
+      idVisita: 0,
+      idUsuario: 0,
+      fechaInicioMovil: DateTime.now(),
+      fechaFinMovil: DateTime.now(),
+      proveedorSnapshot: const ProveedorSnapshot(
+        tipoPersona: '',
+        nombre: '',
+        inicioFormalizacion: false,
+      ),
+      actividades: const [
+        Actividad(
+          id: '1',
+          origen: Origen.reinfo,
+          idTipoActividad: 1,
+          idSubTipoActividad: 2,
+          sistemaUTM: 18,
+          utmEste: 100,
+          utmNorte: 200,
+          zonaUTM: 19,
+          descripcion: null,
+        ),
+      ],
+      descripcion: const Descripcion(
+        coordenadas: '',
+        zona: '',
+        actividad: '',
+        equipos: '',
+        trabajadores: '',
+        condicionesLaborales: '',
+      ),
+      evaluacion: const Evaluacion(idCondicionProspecto: '', anotacion: ''),
+      estimacion: const Estimacion(
+        capacidadDiaria: 0,
+        diasOperacion: 0,
+        produccionEstimada: 0,
+      ),
+      fotos: const <Foto>[],
+      idempotencyKey: '',
+    );
+
+    await tester.pumpWidget(MaterialApp(
+      home: ActividadMineraReinfoPagina(
+        repository: repo,
+        verificacionRepository: verificacionRepo,
+      ),
+    ));
+    await tester.pumpAndSettle();
+
+    final tipoField = tester.widget<DropdownButtonFormField<TipoActividad>>(
+        find.byType(DropdownButtonFormField<TipoActividad>));
+    expect(tipoField.value?.id, 1);
+
+    final subTipoField =
+        tester.widget<DropdownButtonFormField<String>>(find.byType(
+            DropdownButtonFormField<String>));
+    expect(subTipoField.value, 'Filoniano');
+
+    final sistemaField =
+        tester.widget<TextFormField>(find.bySemanticsLabel('Sistema UTM'));
+    expect(sistemaField.controller?.text, '18');
   });
 }
 
