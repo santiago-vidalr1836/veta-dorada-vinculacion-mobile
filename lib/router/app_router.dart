@@ -17,6 +17,8 @@ import '../features/flujo_visita/datos/fuentes_datos/general_remote_data_source.
 import '../features/flujo_visita/datos/repositorios/general_repository.dart';
 import '../features/flujo_visita/datos/fuentes_datos/verificacion_remote_data_source.dart';
 import '../features/flujo_visita/datos/repositorios/flow_repository_impl.dart';
+import '../features/flujo_visita/datos/fuentes_datos/verificacion_local_data_source.dart';
+import '../features/flujo_visita/datos/repositorios/verificacion_repository_impl.dart';
 import '../features/flujo_visita/presentacion/paginas/actividad_minera_reinfo_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/actividad_minera_igafom_pagina.dart';
 import '../features/flujo_visita/presentacion/paginas/actividad_minera_verificada_pagina.dart';
@@ -176,10 +178,14 @@ GoRouter createRouter(AuthNotifier authNotifier) {
             GeneralRemoteDataSource(ClienteHttp(token: auth.token!)),
             GeneralLocalDataSource(ServicioBdLocal()),
           );
+          final verificacionRepo = VerificacionRepositoryImpl(
+            VerificacionLocalDataSource(ServicioBdLocal()),
+          );
           final visita = state.extra! as Visita;
           return DatosProveedorMineralPagina(
             visita: visita,
             repository: repo,
+            verificacionRepository: verificacionRepo,
           );
         },
       ),
