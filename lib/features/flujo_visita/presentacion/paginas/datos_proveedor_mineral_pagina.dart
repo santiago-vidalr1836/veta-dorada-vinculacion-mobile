@@ -4,6 +4,7 @@ import 'package:veta_dorada_vinculacion_mobile/features/visitas/dominio/entidade
 
 import '../../../../core/auth/auth_provider.dart';
 import '../../../../core/widgets/protected_scaffold.dart';
+import '../../../../core/widgets/bottom_nav_actions.dart';
 import '../../datos/repositorios/general_repository.dart';
 import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../dominio/entidades/descripcion.dart';
@@ -120,21 +121,6 @@ class _DatosProveedorMineralPaginaState
     _razonSocialController.dispose();
     _representanteController.dispose();
     super.dispose();
-  }
-
-  bool get _isFormValid {
-    if (_tipoPersona == null || _inicioFormalizacion == null) {
-      return false;
-    }
-    if (_tipoPersona!.id == TIPO_PERSONA_NATURAL) {
-      return _nombreController.text.isNotEmpty;
-    }
-    if (_tipoPersona!.id == TIPO_PERSONA_JURIDICA) {
-      return _rucController.text.isNotEmpty &&
-          _razonSocialController.text.isNotEmpty &&
-          _representanteController.text.isNotEmpty;
-    }
-    return false;
   }
 
   Future<void> _siguiente() async {
@@ -341,16 +327,13 @@ class _DatosProveedorMineralPaginaState
                     value == null ? 'Seleccione una opción' : null,
               ),
               const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isFormValid ? _siguiente : null,
-                  child: const Text('Siguiente'),
-                ),
-              ),
             ],
           ),
         ),
+      ),
+      bottomBar: BottomNavActions(
+        onNext: _siguiente,
+        showBack: false,
       ),
     );
   }

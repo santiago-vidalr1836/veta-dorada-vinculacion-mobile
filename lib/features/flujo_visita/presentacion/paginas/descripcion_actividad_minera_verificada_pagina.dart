@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/auth/auth_provider.dart';
 import '../../../../core/widgets/protected_scaffold.dart';
+import '../../../../core/widgets/bottom_nav_actions.dart';
 import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../dominio/entidades/descripcion_actividad_verificada.dart';
 import '../../dominio/entidades/descripcion.dart';
@@ -231,16 +232,13 @@ class _DescripcionActividadMineraVerificadaPaginaState
                     (value == null || value.isEmpty) ? 'Campo requerido' : null,
               ),
               const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _siguiente,
-                  child: const Text('Siguiente'),
-                ),
-              ),
             ],
           ),
         ),
+      ),
+      bottomBar: BottomNavActions(
+        onNext: _siguiente,
+        onBack: () => context.pop(),
       ),
     );
   }
