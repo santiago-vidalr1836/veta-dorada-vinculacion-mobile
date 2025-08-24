@@ -51,25 +51,54 @@ class _DatosProveedorMineralPaginaState
   List<InicioProcesoFormalizacion> _iniciosFormalizacion = [];
   InicioProcesoFormalizacion? _inicioFormalizacion;
 
+  static const int _totalPasos = 9;
+  int _pasosCompletados = 0;
+
   @override
   void initState() {
     super.initState();
-    final proveedor = widget.visita.proveedor;
-    _nombreController.text = proveedor.nombreCompleto ?? '';
-    _rucController.text = proveedor.ruc;
-    _razonSocialController.text = proveedor.razonSocial ?? '';
-    _representanteController.text = proveedor.representanteNombre ?? '';
-    _cargarCatalogos();
+    _inicializar();
   }
 
-  Future<void> _cargarCatalogos() async {
+  Future<void> _inicializar() async {
+    final dto =
+        await widget.verificacionRepository.obtenerVerificacion(widget.visita.id);
+
+    if (dto != null) {
+      final proveedor = dto.proveedorSnapshot;
+      _nombreController.text = proveedor.nombre;
+      _rucController.text = proveedor.ruc ?? '';
+      _razonSocialController.text = proveedor.razonSocial ?? '';
+      _representanteController.text = proveedor.representanteLegal ?? '';
+      _inicioFormalizacion = InicioProcesoFormalizacion(
+        id: proveedor.inicioFormalizacion ? '1' : '0',
+        descripcion: proveedor.inicioFormalizacion ? 'Sí' : 'No',
+      );
+    } else {
+      final proveedor = widget.visita.proveedor;
+      _nombreController.text = proveedor.nombreCompleto ?? '';
+      _rucController.text = proveedor.ruc;
+      _razonSocialController.text = proveedor.razonSocial ?? '';
+      _representanteController.text = proveedor.representanteNombre ?? '';
+    }
+
+    await _cargarCatalogos(dto);
+    _pasosCompletados = _calcularPasos(dto);
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  Future<void> _cargarCatalogos(RealizarVerificacionDto? dto) async {
     final tipos = await widget.repository.obtenerTiposProveedor();
     final inicios = await widget.repository.obtenerIniciosFormalizacion();
     setState(() {
       _tiposPersona = tipos.tipos;
       _iniciosFormalizacion = inicios.inicios;
+      final tipoId =
+          dto?.proveedorSnapshot.tipoPersona ?? widget.visita.proveedor.tipo.codigo;
       for (final tipo in _tiposPersona) {
-        if (tipo.id == widget.visita.proveedor.tipo.codigo) {
+        if (tipo.id == tipoId) {
           _tipoPersona = tipo;
           break;
         }
@@ -83,6 +112,32 @@ class _DatosProveedorMineralPaginaState
         }
       }
     });
+  }
+
+  int _calcularPasos(RealizarVerificacionDto? dto) {
+    if (dto == null) return 0;
+    var count = 0;
+    if (dto.actividades.isNotEmpty) count++;
+    if (dto.descripcion.coordenadas.isNotEmpty ||
+        dto.descripcion.zona.isNotEmpty ||
+        dto.descripcion.actividad.isNotEmpty ||
+        dto.descripcion.equipos.isNotEmpty ||
+        dto.descripcion.trabajadores.isNotEmpty ||
+        dto.descripcion.condicionesLaborales.isNotEmpty) {
+      count++;
+    }
+    if (dto.evaluacion.idCondicionProspecto.isNotEmpty ||
+        dto.evaluacion.anotacion.isNotEmpty) {
+      count++;
+    }
+    if (dto.estimacion.capacidadDiaria > 0 ||
+        dto.estimacion.diasOperacion > 0 ||
+        dto.estimacion.produccionEstimada > 0) {
+      count++;
+    }
+    if (dto.fotos.isNotEmpty) count++;
+    if (dto.proveedorSnapshot.nombre.isNotEmpty) count++;
+    return count;
   }
 
   @override
@@ -169,7 +224,9 @@ class _DatosProveedorMineralPaginaState
       );
     }
     await widget.verificacionRepository.guardarVerificacion(dto);
+    _pasosCompletados = _calcularPasos(dto);
     if (!mounted) return;
+    setState(() {});
     context.push('/flujo-visita/resumen');
   }
 
@@ -185,9 +242,9 @@ class _DatosProveedorMineralPaginaState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Center(child: Text('8 de 9')),
+              Center(child: Text('$_pasosCompletados de $_totalPasos')),
               const SizedBox(height: 8),
-              const LinearProgressIndicator(value: 8 / 9),
+              LinearProgressIndicator(value: _pasosCompletados / _totalPasos),
               const SizedBox(height: 24),
               DropdownButtonFormField<TipoProveedor>(
                 value: _tipoPersona,

@@ -126,7 +126,9 @@ class _ActividadMineraReinfoPaginaState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Actividad minera (REINFO)')),
+      appBar: AppBar(
+          title: const Text(
+              'Actividad Minera Declarada por el Proveedor de Mineral en el Comprobante de Recepción de Datos para el REINFO')),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
