@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/visitas/dominio/entidades/visita.dart';
 
 import '../../datos/repositorios/general_repository.dart';
-import '../../dominio/entidades/actividad.dart';
+import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../dominio/entidades/descripcion.dart';
 import '../../dominio/entidades/evaluacion.dart';
 import '../../dominio/entidades/estimacion.dart';
