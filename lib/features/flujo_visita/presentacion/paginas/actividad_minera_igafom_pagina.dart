@@ -61,7 +61,7 @@ class _ActividadMineraIgafomPaginaState
   @override
   void initState() {
     super.initState();
-    _cargarTipos();
+    _inicializar();
   }
 
   @override
@@ -79,11 +79,41 @@ class _ActividadMineraIgafomPaginaState
     super.dispose();
   }
 
-  Future<void> _cargarTipos() async {
+  Future<void> _inicializar() async {
     final resultado = await widget.repository.obtenerTiposActividad();
-    setState(() {
-      _tipos = resultado.tipos;
-    });
+    _tipos = resultado.tipos;
+
+    final actividad = widget.actividadReinfo;
+    if (actividad != null) {
+      for (final tipo in _tipos) {
+        if (tipo.id == actividad.idTipoActividad) {
+          _tipoSeleccionado = tipo;
+          final desc = tipo.nombre.toLowerCase();
+          if (desc.contains('beneficio')) {
+            _labelSubTipo = 'Tipo de Beneficio';
+          } else if (desc.contains('explot')) {
+            _labelSubTipo = 'Tipo de Explotación';
+          } else {
+            _labelSubTipo = 'Sub Tipo';
+          }
+          _subTiposDisponibles = _mapaSubTipos[tipo.id] ?? [];
+          if (actividad.idSubTipoActividad > 0 &&
+              actividad.idSubTipoActividad <= _subTiposDisponibles.length) {
+            _subTipoSeleccionado =
+                _subTiposDisponibles[actividad.idSubTipoActividad - 1];
+          }
+          break;
+        }
+      }
+      _sistemaController.text = actividad.sistemaUTM.toString();
+      _zonaController.text = actividad.zonaUTM?.toString() ?? '';
+      _comp01EsteController.text = actividad.utmEste.toString();
+      _comp01NorteController.text = actividad.utmNorte.toString();
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void _onTipoChanged(TipoActividad? tipo) {
