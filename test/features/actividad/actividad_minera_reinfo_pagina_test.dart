@@ -39,6 +39,23 @@ class _FakeRepository extends ActividadRepositoryImpl {
   }
 }
 
+class _FakeLocalDataSource extends TipoActividadLocalDataSource {
+  _FakeLocalDataSource(this._tipos)
+      : super(ServicioBdLocal());
+
+  final List<TipoActividad> _tipos;
+  int obtenerCalls = 0;
+
+  @override
+  Future<List<TipoActividad>> obtenerTiposActividad() async {
+    obtenerCalls++;
+    return _tipos;
+  }
+
+  @override
+  Future<void> reemplazarTiposActividad(List<TipoActividad> tipos) async {}
+}
+
 class _MockVerificacionRepository implements VerificacionRepository {
   RealizarVerificacionDto? dto;
   RealizarVerificacionDto? savedDto;
@@ -82,6 +99,70 @@ void main() {
 
     expect(find.text('Exploración'), findsOneWidget);
     expect(find.text('Beneficio'), findsOneWidget);
+  });
+
+  testWidgets('obtiene subtipos desde TipoActividadLocalDataSource',
+      (tester) async {
+    final local = _FakeLocalDataSource([
+      TipoActividad(id: 1, nombre: 'Explotación'),
+    ]);
+    final repo = ActividadRepositoryImpl(
+      TipoActividadRemoteDataSource(
+        ClienteHttp(token: '', inner: MockClient((_) async => http.Response('', 500))),
+      ),
+      local,
+    );
+    final verificacionRepo = _MockVerificacionRepository();
+
+    await tester.pumpWidget(MaterialApp(
+      home: ActividadMineraReinfoPagina(
+        repository: repo,
+        verificacionRepository: verificacionRepo,
+      ),
+    ));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(DropdownButtonFormField<TipoActividad>));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Explotación').last);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(DropdownButtonFormField<String>));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Aluvial'), findsOneWidget);
+    expect(local.obtenerCalls, 1);
+  });
+
+  testWidgets('_labelSubTipo proviene del campo dinamico del tipo',
+      (tester) async {
+    final repo = _FakeRepository([
+      TipoActividad(id: 1, nombre: 'Explotación'),
+      TipoActividad(id: 2, nombre: 'Beneficio'),
+    ]);
+    final verificacionRepo = _MockVerificacionRepository();
+
+    await tester.pumpWidget(MaterialApp(
+      home: ActividadMineraReinfoPagina(
+        repository: repo,
+        verificacionRepository: verificacionRepo,
+      ),
+    ));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(DropdownButtonFormField<TipoActividad>));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Explotación').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Tipo de Explotación'), findsOneWidget);
+
+    await tester.tap(find.byType(DropdownButtonFormField<TipoActividad>));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Beneficio').last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Tipo de Beneficio'), findsOneWidget);
   });
 
   testWidgets('cambia combo secundario al seleccionar otro tipo', (tester) async {
