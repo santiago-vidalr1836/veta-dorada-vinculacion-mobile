@@ -239,15 +239,10 @@ class _ActividadMineraIgafomPaginaState
       );
     }
     await widget.verificacionRepository.guardarVerificacion(dto);
-    final actividadGuardada =
-        dto.actividades.firstWhere((a) => a.origen == Origen.igafom);
     if (!mounted) return;
     context.push(
-      '/flujo-visita/registro-fotografico',
-      extra: {
-        'actividad': actividadGuardada,
-        'flagMedicionCapacidad': false,
-      },
+      '/flujo-visita/actividad-verificada',
+      extra: false,
     );
   }
 
