@@ -183,6 +183,7 @@ class _EvaluacionLaborPaginaState extends State<EvaluacionLaborPagina> {
                 decoration: const InputDecoration(
                   labelText: 'Anotación',
                   alignLabelWithHint: true,
+                  border: OutlineInputBorder(),
                 ),
                 maxLines: null,
                 minLines: 3,

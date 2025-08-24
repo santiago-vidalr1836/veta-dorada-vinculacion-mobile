@@ -267,7 +267,10 @@ class _DatosProveedorMineralPaginaState
               if (_tipoPersona?.id == TIPO_PERSONA_NATURAL) ...[
                 TextFormField(
                   controller: _nombreController,
-                  decoration: const InputDecoration(labelText: 'Nombre'),
+                  decoration: const InputDecoration(
+                    labelText: 'Nombre',
+                    border: OutlineInputBorder(),
+                  ),
                   onChanged: (_) => setState(() {}),
                   validator: (value) =>
                       (value == null || value.isEmpty)
@@ -279,7 +282,10 @@ class _DatosProveedorMineralPaginaState
               if (_tipoPersona?.id == TIPO_PERSONA_JURIDICA) ...[
                 TextFormField(
                   controller: _rucController,
-                  decoration: const InputDecoration(labelText: 'RUC'),
+                  decoration: const InputDecoration(
+                    labelText: 'RUC',
+                    border: OutlineInputBorder(),
+                  ),
                   onChanged: (_) => setState(() {}),
                   validator: (value) =>
                       (value == null || value.isEmpty)
@@ -289,8 +295,10 @@ class _DatosProveedorMineralPaginaState
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _razonSocialController,
-                  decoration:
-                      const InputDecoration(labelText: 'Razón Social'),
+                  decoration: const InputDecoration(
+                    labelText: 'Razón Social',
+                    border: OutlineInputBorder(),
+                  ),
                   onChanged: (_) => setState(() {}),
                   validator: (value) =>
                       (value == null || value.isEmpty)
@@ -301,7 +309,9 @@ class _DatosProveedorMineralPaginaState
                 TextFormField(
                   controller: _representanteController,
                   decoration: const InputDecoration(
-                      labelText: 'Nombre completo del representante legal'),
+                      labelText: 'Nombre completo del representante legal',
+                      border: OutlineInputBorder(),
+                    ),
                   onChanged: (_) => setState(() {}),
                   validator: (value) =>
                       (value == null || value.isEmpty)
