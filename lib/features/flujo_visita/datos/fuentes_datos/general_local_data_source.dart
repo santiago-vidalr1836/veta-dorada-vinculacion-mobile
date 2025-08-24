@@ -25,8 +25,8 @@ class GeneralLocalDataSource {
       await _bdLocal.delete(_tablaTiposProveedor);
       for (final tipo in tipos) {
         await _bdLocal.insert(_tablaTiposProveedor, {
-          'id': tipo.id,
-          'descripcion': tipo.descripcion,
+          'codigo': tipo.codigo,
+          'nombre': tipo.nombre,
         });
       }
     } on DatabaseException catch (e) {
@@ -40,7 +40,7 @@ class GeneralLocalDataSource {
       final rows = await _bdLocal.query(_tablaTiposProveedor);
       return rows
           .map((row) =>
-              TipoProveedor(id: row['id'] as String, descripcion: row['descripcion'] as String))
+              TipoProveedor(codigo: row['codigo'] as String, nombre: row['nombre'] as String))
           .toList();
     } on DatabaseException catch (e) {
       throw GeneralLocalException('Error al obtener tipos proveedor: $e');
@@ -54,8 +54,8 @@ class GeneralLocalDataSource {
       await _bdLocal.delete(_tablaIniciosFormalizacion);
       for (final inicio in inicios) {
         await _bdLocal.insert(_tablaIniciosFormalizacion, {
-          'id': inicio.id,
-          'descripcion': inicio.descripcion,
+          'codigo': inicio.codigo,
+          'nombre': inicio.nombre,
         });
       }
     } on DatabaseException catch (e) {
@@ -69,8 +69,8 @@ class GeneralLocalDataSource {
       final rows = await _bdLocal.query(_tablaIniciosFormalizacion);
       return rows
           .map((row) => InicioProcesoFormalizacion(
-                id: row['id'] as String,
-                descripcion: row['descripcion'] as String,
+                codigo: row['codigo'] as String,
+                nombre: row['nombre'] as String,
               ))
           .toList();
     } on DatabaseException catch (e) {
@@ -87,7 +87,7 @@ class GeneralLocalDataSource {
       for (final condicion in condiciones) {
         await _bdLocal.insert(_tablaCondicionesProspecto, {
           'codigo': condicion.codigo,
-          'descripcion': condicion.descripcion,
+          'nombre': condicion.nombre,
         });
       }
     } on DatabaseException catch (e) {
@@ -103,7 +103,7 @@ class GeneralLocalDataSource {
       return rows
           .map((row) => CondicionProspecto(
                 codigo: row['codigo'] as String,
-                descripcion: row['descripcion'] as String,
+                nombre: row['nombre'] as String,
               ))
           .toList();
     } on DatabaseException catch (e) {

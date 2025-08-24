@@ -114,7 +114,7 @@ class _ActividadMineraVerificadaPaginaState
     if (dto != null) {
       try {
         actividad =
-            dto.actividades.firstWhere((a) => a.origen == Origen.verificada);
+            dto.actividades?.firstWhere((a) => a.origen == Origen.verificada);
       } catch (_) {
         actividad = null;
       }
@@ -207,7 +207,7 @@ class _ActividadMineraVerificadaPaginaState
         proveedorSnapshot: const ProveedorSnapshot(
           tipoPersona: '',
           nombre: '',
-          inicioFormalizacion: false,
+          inicioFormalizacion: '',
         ),
         actividades: [actividad],
         descripcion: const Descripcion(
@@ -234,7 +234,7 @@ class _ActividadMineraVerificadaPaginaState
         idempotencyKey: '',
       );
     } else {
-      final actividades = List<Actividad>.from(dto.actividades);
+      final actividades = dto.actividades!=null?List<Actividad>.from(dto.actividades!):<Actividad>[];
       final index = actividades.indexWhere((a) => a.origen == Origen.verificada);
       if (index >= 0) {
         actividades[index] = actividad;
@@ -259,7 +259,7 @@ class _ActividadMineraVerificadaPaginaState
     await widget.verificacionRepository.guardarVerificacion(dto);
     _avance = calcularAvance(dto);
     final actividadGuardada =
-        dto.actividades.firstWhere((a) => a.origen == Origen.verificada);
+        dto.actividades?.firstWhere((a) => a.origen == Origen.verificada);
     if (!mounted) return;
     context.push('/flujo-visita/descripcion-actividad-verificada', extra: {
       'actividad': actividadGuardada,
@@ -289,7 +289,6 @@ class _ActividadMineraVerificadaPaginaState
                   style: TextStyle(
                     color: Color(0xFF1D1B20),
                     fontSize: 22,
-                    fontFamily: 'Roboto',
                     fontWeight: FontWeight.w400,
                     height: 1.27,
                   ),

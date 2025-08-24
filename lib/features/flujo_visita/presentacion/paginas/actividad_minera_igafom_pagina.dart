@@ -110,7 +110,7 @@ class _ActividadMineraIgafomPaginaState
     if (dto != null) {
       try {
         actividad =
-            dto.actividades.firstWhere((a) => a.origen == Origen.igafom);
+            dto.actividades?.firstWhere((a) => a.origen == Origen.igafom);
       } catch (_) {
         actividad = null;
       }
@@ -194,7 +194,7 @@ class _ActividadMineraIgafomPaginaState
         proveedorSnapshot: const ProveedorSnapshot(
           tipoPersona: '',
           nombre: '',
-          inicioFormalizacion: false,
+          inicioFormalizacion: '',
         ),
         actividades: [
           if (widget.actividadReinfo != null) widget.actividadReinfo!,
@@ -224,7 +224,7 @@ class _ActividadMineraIgafomPaginaState
         idempotencyKey: '',
       );
     } else {
-      final actividades = List<Actividad>.from(dto.actividades);
+      final actividades = dto.actividades!=null?List<Actividad>.from(dto.actividades!):<Actividad>[];
       final index = actividades.indexWhere((a) => a.origen == Origen.igafom);
       if (index >= 0) {
         actividades[index] = actividad;
@@ -278,7 +278,6 @@ class _ActividadMineraIgafomPaginaState
                   style: TextStyle(
                     color: Color(0xFF1D1B20),
                     fontSize: 22,
-                    fontFamily: 'Roboto',
                     fontWeight: FontWeight.w400,
                     height: 1.27,
                   ),

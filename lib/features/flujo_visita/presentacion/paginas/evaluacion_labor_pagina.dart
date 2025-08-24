@@ -70,7 +70,7 @@ class _EvaluacionLaborPaginaState extends State<EvaluacionLaborPagina> {
     if (previa != null) {
       _dto = previa;
     }
-    _anotacionController.text = _dto.evaluacion.anotacion ?? '';
+    _anotacionController.text = _dto.evaluacion?.anotacion ?? '';
     await _cargarCondiciones();
   }
 
@@ -80,7 +80,7 @@ class _EvaluacionLaborPaginaState extends State<EvaluacionLaborPagina> {
     setState(() {
       _condiciones = condiciones;
       for (final cond in _condiciones) {
-        if (cond.codigo == _dto.evaluacion.idCondicionProspecto) {
+        if (cond.codigo == _dto.evaluacion?.idCondicionProspecto) {
           _condicionSeleccionada = cond;
           break;
         }
@@ -148,7 +148,6 @@ class _EvaluacionLaborPaginaState extends State<EvaluacionLaborPagina> {
                   style: TextStyle(
                     color: Color(0xFF1D1B20),
                     fontSize: 22,
-                    fontFamily: 'Roboto',
                     fontWeight: FontWeight.w400,
                     height: 1.27,
                   ),
@@ -164,7 +163,7 @@ class _EvaluacionLaborPaginaState extends State<EvaluacionLaborPagina> {
                     .map(
                       (e) => DropdownMenuItem(
                         value: e,
-                        child: Text(e.descripcion),
+                        child: Text(e.nombre),
                       ),
                     )
                     .toList(),

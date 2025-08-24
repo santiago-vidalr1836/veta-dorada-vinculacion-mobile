@@ -246,8 +246,8 @@ void main() {
     final saved = verificacionRepo.savedDto;
     expect(saved, isNotNull);
     expect(saved!.actividades, hasLength(1));
-    expect(saved.actividades.first.idTipoActividad, 1);
-    expect(saved.actividades.first.idSubTipoActividad, 1);
+    expect(saved.actividades?.first.idTipoActividad, 1);
+    expect(saved.actividades?.first.idSubTipoActividad, 1);
   });
 
   testWidgets('navega a actividad igafom al guardar y muestra título esperado',
@@ -324,7 +324,7 @@ void main() {
       proveedorSnapshot: const ProveedorSnapshot(
         tipoPersona: '',
         nombre: '',
-        inicioFormalizacion: false,
+        inicioFormalizacion: '',
       ),
       actividades: const [
         Actividad(

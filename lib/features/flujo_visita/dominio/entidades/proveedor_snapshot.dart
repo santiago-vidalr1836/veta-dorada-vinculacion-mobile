@@ -16,7 +16,7 @@ class ProveedorSnapshot {
   final String? representanteLegal;
 
   /// Indica si inició el proceso de formalización.
-  final bool inicioFormalizacion;
+  final String? inicioFormalizacion;
 
   /// Crea una instancia de [ProveedorSnapshot].
   const ProveedorSnapshot({
@@ -25,7 +25,7 @@ class ProveedorSnapshot {
     this.ruc,
     this.razonSocial,
     this.representanteLegal,
-    required this.inicioFormalizacion,
+    this.inicioFormalizacion,
   });
 
   /// Crea un [ProveedorSnapshot] a partir de un mapa JSON.
@@ -36,7 +36,7 @@ class ProveedorSnapshot {
         ruc: json['ruc'] as String?,
         razonSocial: json['razonSocial'] as String?,
         representanteLegal: json['representanteLegal'] as String?,
-        inicioFormalizacion: json['inicioFormalizacion'] as bool? ?? false,
+        inicioFormalizacion: json['inicioFormalizacion'] as String?
       );
 
   /// Convierte la entidad en un mapa JSON.

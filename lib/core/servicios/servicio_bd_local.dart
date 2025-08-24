@@ -49,14 +49,14 @@ class ServicioBdLocal {
         ''');
         await db.execute('''
           CREATE TABLE $nombreTablaTipoProveedor(
-            id TEXT PRIMARY KEY,
-            descripcion TEXT
+            codigo TEXT PRIMARY KEY,
+            nombre TEXT
           );
         ''');
         await db.execute('''
           CREATE TABLE $nombreTablaInicioProcesoFormalizacion(
             codigo TEXT PRIMARY KEY,
-            descripcion TEXT
+            nombre TEXT
           );
         ''');
         await db.execute('''
@@ -68,7 +68,7 @@ class ServicioBdLocal {
         await db.execute('''
           CREATE TABLE $nombreTablaCondicionProspecto(
             codigo TEXT PRIMARY KEY,
-            descripcion TEXT
+            nombre TEXT
           );
         ''');
         await db.execute('''
@@ -81,27 +81,9 @@ class ServicioBdLocal {
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 2) {
           await db.execute('''
-            CREATE TABLE IF NOT EXISTS $nombreTablaTipoProveedor(
-              id TEXT PRIMARY KEY,
-              descripcion TEXT
-            );
-          ''');
-          await db.execute('''
-            CREATE TABLE IF NOT EXISTS $nombreTablaInicioProcesoFormalizacion(
-              id TEXT PRIMARY KEY,
-              descripcion TEXT
-            );
-          ''');
-          await db.execute('''
             CREATE TABLE IF NOT EXISTS $nombreTablaTipoActividad(
               id INTEGER PRIMARY KEY,
               nombre TEXT
-            );
-          ''');
-          await db.execute('''
-            CREATE TABLE IF NOT EXISTS $nombreTablaCondicionProspecto(
-              id TEXT PRIMARY KEY,
-              descripcion TEXT
             );
           ''');
         }

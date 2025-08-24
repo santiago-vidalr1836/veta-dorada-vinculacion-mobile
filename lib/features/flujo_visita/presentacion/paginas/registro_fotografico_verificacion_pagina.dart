@@ -56,18 +56,21 @@ class _RegistroFotograficoVerificacionPaginaState
   void initState() {
     super.initState();
     _dto = widget.dto;
-    _fotos.addAll(
-      _dto.fotos.map(
-        (f) => RegistroFotografico(
-          path: f.imagen,
-          titulo: f.titulo,
-          descripcion: f.descripcion,
-          fecha: f.fecha,
-          latitud: f.latitud,
-          longitud: f.longitud,
+    if(_dto.fotos!=null) {
+      _fotos.addAll(
+        _dto.fotos!.map(
+              (f) =>
+              RegistroFotografico(
+                path: f.imagen,
+                titulo: f.titulo,
+                descripcion: f.descripcion,
+                fecha: f.fecha,
+                latitud: f.latitud,
+                longitud: f.longitud,
+              ),
         ),
-      ),
-    );
+      );
+    }
     _avance = calcularAvance(_dto);
   }
 
@@ -217,7 +220,6 @@ class _RegistroFotograficoVerificacionPaginaState
                 style: TextStyle(
                   color: Color(0xFF1D1B20),
                   fontSize: 22,
-                  fontFamily: 'Roboto',
                   fontWeight: FontWeight.w400,
                   height: 1.27,
                 ),

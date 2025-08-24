@@ -18,28 +18,28 @@ class RealizarVerificacionDto {
   final int idUsuario;
 
   /// Fecha y hora de inicio registrada en el dispositivo móvil.
-  final DateTime fechaInicioMovil;
+  final DateTime? fechaInicioMovil;
 
   /// Fecha y hora de fin registrada en el dispositivo móvil.
-  final DateTime fechaFinMovil;
+  final DateTime? fechaFinMovil;
 
   /// Información del proveedor al momento de la verificación.
-  final ProveedorSnapshot proveedorSnapshot;
+  final ProveedorSnapshot? proveedorSnapshot;
 
   /// Lista de actividades observadas.
-  final List<Actividad> actividades;
+  final List<Actividad>? actividades;
 
   /// Descripción detallada de la actividad verificada.
-  final Descripcion descripcion;
+  final Descripcion? descripcion;
 
   /// Evaluación realizada durante la visita.
-  final Evaluacion evaluacion;
+  final Evaluacion? evaluacion;
 
   /// Estimación de producción obtenida.
-  final Estimacion estimacion;
+  final Estimacion? estimacion;
 
   /// Registro fotográfico asociado a la verificación.
-  final List<Foto> fotos;
+  final List<Foto>? fotos;
 
   /// Clave de idempotencia para evitar duplicados en el servidor.
   final String idempotencyKey;
@@ -48,14 +48,14 @@ class RealizarVerificacionDto {
     required this.idVerificacion,
     required this.idVisita,
     required this.idUsuario,
-    required this.fechaInicioMovil,
-    required this.fechaFinMovil,
-    required this.proveedorSnapshot,
-    required this.actividades,
-    required this.descripcion,
-    required this.evaluacion,
-    required this.estimacion,
-    required this.fotos,
+    this.fechaInicioMovil,
+    this.fechaFinMovil,
+    this.proveedorSnapshot,
+    this.actividades,
+    this.descripcion,
+    this.evaluacion,
+    this.estimacion,
+    this.fotos,
     required this.idempotencyKey,
   });
 
@@ -89,14 +89,14 @@ class RealizarVerificacionDto {
         'idVerificacion': idVerificacion,
         'idVisita': idVisita,
         'idUsuario': idUsuario,
-        'fechaInicioMovil': fechaInicioMovil.toIso8601String(),
-        'fechaFinMovil': fechaFinMovil.toIso8601String(),
-        'proveedorSnapshot': proveedorSnapshot.toJson(),
-        'actividades': actividades.map((e) => e.toJson()).toList(),
-        'descripcion': descripcion.toJson(),
-        'evaluacion': evaluacion.toJson(),
-        'estimacion': estimacion.toJson(),
-        'fotos': fotos.map((e) => e.toJson()).toList(),
+        'fechaInicioMovil': fechaInicioMovil?.toIso8601String(),
+        'fechaFinMovil': fechaFinMovil?.toIso8601String(),
+        'proveedorSnapshot': proveedorSnapshot?.toJson(),
+        'actividades': actividades?.map((e) => e.toJson()).toList(),
+        'descripcion': descripcion?.toJson(),
+        'evaluacion': evaluacion?.toJson(),
+        'estimacion': estimacion?.toJson(),
+        'fotos': fotos?.map((e) => e.toJson()).toList(),
         'idempotencyKey': idempotencyKey,
       };
 }

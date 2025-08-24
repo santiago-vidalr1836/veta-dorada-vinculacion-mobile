@@ -34,7 +34,6 @@ class EstimacionProduccionResultadoPagina extends StatelessWidget {
                 style: TextStyle(
                   color: Color(0xFF1D1B20),
                   fontSize: 22,
-                  fontFamily: 'Roboto',
                   fontWeight: FontWeight.w400,
                   height: 1.27,
                 ),
