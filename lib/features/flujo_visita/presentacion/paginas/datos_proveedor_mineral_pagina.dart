@@ -73,19 +73,22 @@ class _DatosProveedorMineralPaginaState
       await widget.verificacionRepository.guardarVerificacion(dto);
     }
 
-    if (dto != null) {
-      final proveedor = dto.proveedorSnapshot;
-      _nombreController.text = proveedor?.nombre??'';
-      _rucController.text = proveedor?.ruc ?? '';
-      _razonSocialController.text = proveedor?.razonSocial ?? '';
-      _representanteController.text = proveedor?.representanteLegal ?? '';
-    } else {
-      final proveedor = widget.visita.proveedor;
-      _nombreController.text = proveedor.nombreCompleto ?? '';
-      _rucController.text = proveedor.ruc;
-      _razonSocialController.text = proveedor.razonSocial ?? '';
-      _representanteController.text = proveedor.representanteNombre ?? '';
-    }
+    final proveedorVisita = widget.visita.proveedor;
+    final snapshot = dto?.proveedorSnapshot;
+
+    _nombreController.text = snapshot?.nombre?.isNotEmpty == true
+        ? snapshot!.nombre
+        : proveedorVisita.nombreCompleto ?? '';
+    _rucController.text = snapshot?.ruc?.isNotEmpty == true
+        ? snapshot!.ruc!
+        : proveedorVisita.ruc;
+    _razonSocialController.text = snapshot?.razonSocial?.isNotEmpty == true
+        ? snapshot!.razonSocial!
+        : proveedorVisita.razonSocial ?? '';
+    _representanteController.text =
+        snapshot?.representanteLegal?.isNotEmpty == true
+            ? snapshot!.representanteLegal!
+            : proveedorVisita.representanteNombre ?? '';
 
     await _cargarCatalogos(dto);
     _avance = dto != null ? calcularAvance(dto) : 0;
