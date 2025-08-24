@@ -114,9 +114,9 @@ class _EvaluacionLaborPaginaState extends State<EvaluacionLaborPagina> {
     );
     await widget.verificacionRepository.guardarVerificacion(dtoActualizado);
     if (!mounted) return;
-    context.push('/flujo-visita/estimacion-produccion', extra: {
+    context.push('/flujo-visita/firma', extra: {
+      'actividad': widget.actividad,
       'flagMedicionCapacidad': widget.flagMedicionCapacidad,
-      'dto': dtoActualizado,
     });
   }
 
