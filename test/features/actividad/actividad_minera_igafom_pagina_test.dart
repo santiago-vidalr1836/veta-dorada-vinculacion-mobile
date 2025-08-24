@@ -124,7 +124,7 @@ void main() {
           ),
         ),
         GoRoute(
-          path: '/flujo-visita/registro-fotografico',
+          path: '/flujo-visita/actividad-verificada',
           builder: (context, state) => const Placeholder(),
         ),
       ],
@@ -146,7 +146,7 @@ void main() {
     await tester.tap(find.text('Guardar'));
     await tester.pumpAndSettle();
 
-    expect(router.location, '/flujo-visita/registro-fotografico');
+    expect(router.location, '/flujo-visita/actividad-verificada');
   });
 }
 
