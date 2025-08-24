@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:veta_dorada_vinculacion_mobile/features/perfil/datos/modelos/usuario.dart';
 
+import '../constantes/rutas.dart';
+
 /// Widget que representa el menú lateral de navegación.
 ///
 /// Muestra la información básica del [usuario] y permite navegar a otras
@@ -36,7 +38,7 @@ class SideNav extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.home),
             title: const Text('Inicio'),
-            onTap: () => onNavigate('/'),
+            onTap: () => onNavigate(rutaVisitas),
           ),
         ],
       ),
