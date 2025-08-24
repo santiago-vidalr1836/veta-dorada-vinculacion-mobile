@@ -24,6 +24,7 @@ class ActividadMineraReinfoPagina extends StatefulWidget {
     super.key,
     required this.repository,
     required this.verificacionRepository,
+    required this.idVisita,
   });
 
   /// Repositorio usado para obtener los tipos de actividad.
@@ -31,6 +32,9 @@ class ActividadMineraReinfoPagina extends StatefulWidget {
 
   /// Repositorio para persistir la información de la verificación.
   final VerificacionRepository verificacionRepository;
+
+  /// Identificador de la visita asociada a la verificación.
+  final int idVisita;
 
   @override
   State<ActividadMineraReinfoPagina> createState() =>
@@ -47,7 +51,6 @@ class _ActividadMineraReinfoPaginaState
   List<String> _subTiposDisponibles = [];
   String _labelSubTipo = 'Sub Tipo';
 
-  static const int _idVisita = 0;
 
   final Map<int, List<String>> _mapaSubTipos = {
     // Opciones de ejemplo para los sub tipos dependiendo del tipo.
@@ -90,7 +93,7 @@ class _ActividadMineraReinfoPaginaState
 
   Future<void> _inicializar() async {
     final dto =
-        await widget.verificacionRepository.obtenerVerificacion(_idVisita);
+        await widget.verificacionRepository.obtenerVerificacion(widget.idVisita);
     final resultado = await widget.repository.obtenerTiposActividad();
     _tipos = resultado.tipos;
 
@@ -167,11 +170,11 @@ class _ActividadMineraReinfoPaginaState
     );
 
     var dto =
-        await widget.verificacionRepository.obtenerVerificacion(_idVisita);
+        await widget.verificacionRepository.obtenerVerificacion(widget.idVisita);
     if (dto == null) {
       dto = RealizarVerificacionDto(
         idVerificacion: 0,
-        idVisita: _idVisita,
+        idVisita: widget.idVisita,
         idUsuario: 0,
         fechaInicioMovil: DateTime.now(),
         fechaFinMovil: DateTime.now(),

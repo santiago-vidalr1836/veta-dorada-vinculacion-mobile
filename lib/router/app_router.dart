@@ -65,9 +65,11 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           final verificacionRepo = VerificacionRepositoryImpl(
             VerificacionLocalDataSource(ServicioBdLocal()),
           );
+          final idVisita = state.extra as int;
           return ActividadMineraReinfoPagina(
             repository: repo,
             verificacionRepository: verificacionRepo,
+            idVisita: idVisita,
           );
         },
       ),
