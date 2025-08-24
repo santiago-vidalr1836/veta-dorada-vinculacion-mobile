@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/auth/auth_provider.dart';
 import '../../../actividad/dominio/entidades/actividad.dart';
@@ -15,7 +16,7 @@ class FirmaPagina extends StatelessWidget {
   });
 
   /// Actividad asociada a la firma.
-  final Actividad actividad; // ignore: unused_field
+  final Actividad actividad;
 
   /// Usuario que realizará la firma.
   final Usuario usuario;
@@ -54,35 +55,52 @@ class FirmaPagina extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) {
-                  return AlertDialog(
-                    title: const Text('Informe verificación generado'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Fecha: ${DateTime.now()}'),
-                        Text('Coordenadas: '
-                            '${actividad.utmEste}, ${actividad.utmNorte}'),
-                      ],
-                    ),
-                    actions: [
-                      if (flagMedicionCapacidad)
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            context.push(
-                                '/flujo-visita/estimacion-produccion');
-                          },
-                          child: const Text('Ir a estimación producción'),
-                        ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          context.push('/flujo-visita/firma-digital');
-                        },
-                        child: const Text('Firmar digital'),
+                  final fecha =
+                      DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now());
+                  return Dialog(
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Informe verificación generado'),
+                          const SizedBox(height: 8),
+                          Text('Fecha: $fecha'),
+                          Text(
+                              'Coordenadas: ${actividad.utmEste}, ${actividad.utmNorte}'),
+                          Text(
+                              'Prospecto: ${actividad.descripcion ?? '-'}'),
+                          Text(
+                              'Derecho minero: ${actividad.derechoMinero ?? '-'}'),
+                          const Text('Condición: -'),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              if (flagMedicionCapacidad)
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    context.push(
+                                        '/flujo-visita/estimacion-produccion');
+                                  },
+                                  child:
+                                      const Text('Ir a estimación producción'),
+                                ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  context.push('/flujo-visita/firma-digital');
+                                },
+                                child: const Text('Firmar digital'),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   );
                 },
               );
