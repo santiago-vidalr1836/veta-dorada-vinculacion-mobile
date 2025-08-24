@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/visitas/dominio/entidades/visita.dart';
 
 import '../../datos/repositorios/general_repository.dart';
+import '../../dominio/entidades/actividad.dart';
+import '../../dominio/entidades/descripcion.dart';
+import '../../dominio/entidades/evaluacion.dart';
+import '../../dominio/entidades/estimacion.dart';
+import '../../dominio/entidades/foto.dart';
 import '../../dominio/entidades/inicio_proceso_formalizacion.dart';
+import '../../dominio/entidades/proveedor_snapshot.dart';
+import '../../dominio/entidades/realizar_verificacion_dto.dart';
 import '../../dominio/entidades/tipo_proveedor.dart';
+import '../../dominio/repositorios/verificacion_repository.dart';
 
 /// Página para registrar los datos del proveedor de mineral.
 ///
@@ -13,10 +22,12 @@ class DatosProveedorMineralPagina extends StatefulWidget {
     super.key,
     required this.visita,
     required this.repository,
+    required this.verificacionRepository,
   });
 
   final Visita visita;
   final GeneralRepository repository;
+  final VerificacionRepository verificacionRepository;
 
   @override
   State<DatosProveedorMineralPagina> createState() =>
@@ -98,12 +109,68 @@ class _DatosProveedorMineralPaginaState
     return false;
   }
 
-  void _siguiente() {
-    if (_formKey.currentState!.validate()) {
-      // ignore: avoid_print
-      print('Visita recibida: ${widget.visita.toJson()}');
-      // Navegar al siguiente paso o guardar la información.
+  Future<void> _siguiente() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
     }
+    final proveedor = ProveedorSnapshot(
+      tipoPersona: _tipoPersona!.id,
+      nombre: _nombreController.text,
+      ruc: _rucController.text.isEmpty ? null : _rucController.text,
+      razonSocial:
+          _razonSocialController.text.isEmpty ? null : _razonSocialController.text,
+      representanteLegal: _representanteController.text.isEmpty
+          ? null
+          : _representanteController.text,
+      inicioFormalizacion: _inicioFormalizacion?.id == '1',
+    );
+    var dto =
+        await widget.verificacionRepository.obtenerVerificacion(widget.visita.id);
+    if (dto == null) {
+      dto = RealizarVerificacionDto(
+        idVerificacion: 0,
+        idVisita: widget.visita.id,
+        idUsuario: widget.visita.geologo.id,
+        fechaInicioMovil: DateTime.now(),
+        fechaFinMovil: DateTime.now(),
+        proveedorSnapshot: proveedor,
+        actividades: const <Actividad>[],
+        descripcion: const Descripcion(
+          coordenadas: '',
+          zona: '',
+          actividad: '',
+          equipos: '',
+          trabajadores: '',
+          condicionesLaborales: '',
+        ),
+        evaluacion: const Evaluacion(idCondicionProspecto: '', anotacion: ''),
+        estimacion: const Estimacion(
+          capacidadDiaria: 0,
+          diasOperacion: 0,
+          produccionEstimada: 0,
+        ),
+        fotos: const <Foto>[],
+        idempotencyKey: '',
+      );
+    } else {
+      dto = RealizarVerificacionDto(
+        idVerificacion: dto.idVerificacion,
+        idVisita: dto.idVisita,
+        idUsuario: dto.idUsuario,
+        fechaInicioMovil: dto.fechaInicioMovil,
+        fechaFinMovil: dto.fechaFinMovil,
+        proveedorSnapshot: proveedor,
+        actividades: dto.actividades,
+        descripcion: dto.descripcion,
+        evaluacion: dto.evaluacion,
+        estimacion: dto.estimacion,
+        fotos: dto.fotos,
+        idempotencyKey: dto.idempotencyKey,
+      );
+    }
+    await widget.verificacionRepository.guardarVerificacion(dto);
+    if (!mounted) return;
+    context.push('/flujo-visita/resumen');
   }
 
   @override
