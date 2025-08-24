@@ -20,9 +20,15 @@ double calcularAvance(RealizarVerificacionDto dto) {
       (dto.evaluacion.anotacion?.isNotEmpty ?? false)) {
     count++;
   }
-  if (dto.estimacion.capacidadDiaria > 0 ||
-      dto.estimacion.diasOperacion > 0 ||
-      dto.estimacion.produccionEstimada > 0) {
+  if (dto.estimacion.longitudAvance > 0 ||
+      dto.estimacion.alturaFrente > 0 ||
+      dto.estimacion.espesorVeta > 0 ||
+      dto.estimacion.numeroDisparosDia > 0 ||
+      dto.estimacion.diasTrabajados > 0 ||
+      dto.estimacion.porcentajeRocaCaja > 0 ||
+      dto.estimacion.produccionDiariaEstimada > 0 ||
+      dto.estimacion.produccionMensualEstimada > 0 ||
+      dto.estimacion.produccionMensual > 0) {
     count++;
   }
   if (dto.fotos.isNotEmpty) count++;

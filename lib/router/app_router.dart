@@ -30,6 +30,7 @@ import '../features/flujo_visita/presentacion/paginas/estimacion_produccion_pagi
 import '../features/flujo_visita/presentacion/paginas/estimacion_produccion_resultado_pagina.dart';
 import '../features/visitas/presentacion/paginas/visitas_tabs_page.dart';
 import '../features/flujo_visita/dominio/entidades/realizar_verificacion_dto.dart';
+import '../features/flujo_visita/dominio/entidades/estimacion.dart';
 
 /// Crea la configuración del enrutador principal de la aplicación.
 GoRouter createRouter(AuthNotifier authNotifier) {
@@ -202,7 +203,7 @@ GoRouter createRouter(AuthNotifier authNotifier) {
       GoRoute(
         path: '/flujo-visita/estimacion-produccion/resultado',
         builder: (context, state) {
-          final estimacion = state.extra as double? ?? 0;
+          final estimacion = state.extra as Estimacion;
           return EstimacionProduccionResultadoPagina(estimacion: estimacion);
         },
       ),
