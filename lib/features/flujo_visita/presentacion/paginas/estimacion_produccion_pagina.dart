@@ -30,8 +30,12 @@ class EstimacionProduccionPagina extends StatefulWidget {
 class _EstimacionProduccionPaginaState
     extends State<EstimacionProduccionPagina> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _capacidadController = TextEditingController();
+  final TextEditingController _longitudController = TextEditingController();
+  final TextEditingController _alturaController = TextEditingController();
+  final TextEditingController _espesorController = TextEditingController();
+  final TextEditingController _disparosController = TextEditingController();
   final TextEditingController _diasController = TextEditingController();
+  final TextEditingController _rocaCajaController = TextEditingController();
   late RealizarVerificacionDto _dto;
 
   @override
@@ -42,20 +46,36 @@ class _EstimacionProduccionPaginaState
 
   @override
   void dispose() {
-    _capacidadController.dispose();
+    _longitudController.dispose();
+    _alturaController.dispose();
+    _espesorController.dispose();
+    _disparosController.dispose();
     _diasController.dispose();
+    _rocaCajaController.dispose();
     super.dispose();
   }
 
   Future<void> _calcular() async {
     if (!_formKey.currentState!.validate()) return;
-    final capacidad = double.tryParse(_capacidadController.text) ?? 0;
+    final longitud = double.tryParse(_longitudController.text) ?? 0;
+    final altura = double.tryParse(_alturaController.text) ?? 0;
+    final espesor = double.tryParse(_espesorController.text) ?? 0;
+    final disparos = double.tryParse(_disparosController.text) ?? 0;
     final dias = double.tryParse(_diasController.text) ?? 0;
-    final estimacionValor = capacidad * dias;
+    final rocaCaja = double.tryParse(_rocaCajaController.text) ?? 0;
+    final pd = longitud * altura * espesor * 3.2 * disparos;
+    final pme = pd * dias;
+    final produccionMensual = pme + (pme * rocaCaja / 100);
     final estimacion = Estimacion(
-      capacidadDiaria: capacidad,
-      diasOperacion: dias,
-      produccionEstimada: estimacionValor,
+      longitudAvance: longitud,
+      alturaFrente: altura,
+      espesorVeta: espesor,
+      numeroDisparosDia: disparos,
+      diasTrabajados: dias,
+      porcentajeRocaCaja: rocaCaja,
+      produccionDiariaEstimada: pd,
+      produccionMensualEstimada: pme,
+      produccionMensual: produccionMensual,
     );
     final dtoActualizado = RealizarVerificacionDto(
       idVerificacion: _dto.idVerificacion,
@@ -74,7 +94,7 @@ class _EstimacionProduccionPaginaState
     await widget.verificacionRepository.guardarVerificacion(dtoActualizado);
     if (!mounted) return;
     context.push('/flujo-visita/estimacion-produccion/resultado',
-        extra: estimacionValor);
+        extra: estimacion);
   }
 
   @override
@@ -87,23 +107,68 @@ class _EstimacionProduccionPaginaState
           padding: const EdgeInsets.all(16),
           children: [
             TextFormField(
-              controller: _capacidadController,
+              controller: _longitudController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
-                labelText: 'Capacidad diaria (t)',
+                labelText: 'Longitud de avance (m)',
               ),
-              validator: (value) =>
-                  value == null || value.isEmpty ? 'Ingrese la capacidad' : null,
+              validator: (value) => value == null || value.isEmpty
+                  ? 'Ingrese la longitud'
+                  : null,
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _alturaController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Altura del frente (m)',
+              ),
+              validator: (value) => value == null || value.isEmpty
+                  ? 'Ingrese la altura'
+                  : null,
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _espesorController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Espesor de la veta (m)',
+              ),
+              validator: (value) => value == null || value.isEmpty
+                  ? 'Ingrese el espesor'
+                  : null,
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _disparosController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Número de disparos por día',
+              ),
+              validator: (value) => value == null || value.isEmpty
+                  ? 'Ingrese los disparos'
+                  : null,
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: _diasController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
-                labelText: 'Días de operación',
+                labelText: 'Días trabajados',
               ),
               validator: (value) =>
                   value == null || value.isEmpty ? 'Ingrese los días' : null,
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _rocaCajaController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Porcentaje de roca caja (%)',
+              ),
+              validator: (value) => value == null || value.isEmpty
+                  ? 'Ingrese el porcentaje'
+                  : null,
             ),
             const SizedBox(height: 16),
             Visibility(
