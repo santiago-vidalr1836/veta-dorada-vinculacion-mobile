@@ -16,6 +16,7 @@ import '../../dominio/calcular_avance.dart';
 import '../../dominio/repositorios/verificacion_repository.dart';
 import '../../../../core/auth/auth_provider.dart';
 import '../../../../core/widgets/protected_scaffold.dart';
+import '../../../../core/widgets/bottom_nav_actions.dart';
 
 /// Página para registrar fotografías durante la verificación.
 ///
@@ -164,6 +165,7 @@ class _RegistroFotograficoVerificacionPaginaState
   }
 
   Future<void> _siguiente() async {
+    if (_fotos.isEmpty) return;
     await widget.verificacionRepository.guardarVerificacion(_dto);
     if (!mounted) return;
     context.push('/flujo-visita/evaluacion-labor', extra: {
@@ -258,15 +260,12 @@ class _RegistroFotograficoVerificacionPaginaState
                       },
                     ),
             ),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _fotos.isNotEmpty ? _siguiente : null,
-                child: const Text('Siguiente'),
-              ),
-            )
           ],
         ),
+      ),
+      bottomBar: BottomNavActions(
+        onNext: _siguiente,
+        onBack: () => context.pop(),
       ),
     );
   }

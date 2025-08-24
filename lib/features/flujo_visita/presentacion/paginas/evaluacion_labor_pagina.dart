@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/auth/auth_provider.dart';
 import '../../../../core/widgets/protected_scaffold.dart';
+import '../../../../core/widgets/bottom_nav_actions.dart';
 import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../datos/repositorios/general_repository.dart';
 import '../../dominio/entidades/condicion_prospecto.dart';
@@ -92,8 +93,6 @@ class _EvaluacionLaborPaginaState extends State<EvaluacionLaborPagina> {
     _anotacionController.dispose();
     super.dispose();
   }
-
-  bool get _isFormValid => _condicionSeleccionada != null;
 
   Future<void> _siguiente() async {
     if (!_formKey.currentState!.validate()) {
@@ -188,16 +187,13 @@ class _EvaluacionLaborPaginaState extends State<EvaluacionLaborPagina> {
                 minLines: 3,
               ),
               const SizedBox(height: 24),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  onPressed: _isFormValid ? _siguiente : null,
-                  child: const Text('Siguiente'),
-                ),
-              ),
             ],
           ),
         ),
+      ),
+      bottomBar: BottomNavActions(
+        onNext: _siguiente,
+        onBack: () => context.pop(),
       ),
     );
   }

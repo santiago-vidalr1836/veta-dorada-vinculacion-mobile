@@ -4,6 +4,7 @@ import 'package:veta_dorada_vinculacion_mobile/features/visitas/dominio/entidade
 
 import '../../../../core/auth/auth_provider.dart';
 import '../../../../core/widgets/protected_scaffold.dart';
+import '../../../../core/widgets/bottom_nav_actions.dart';
 import '../../datos/repositorios/general_repository.dart';
 import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../dominio/entidades/descripcion.dart';
@@ -354,22 +355,14 @@ class _DatosProveedorMineralPaginaState
                 validator: (value) =>
                     value == null ? 'Seleccione una opción' : null,
               ),
-              const SizedBox(height: 80),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4)
-                    ),
-                  ),
-                  onPressed: _isFormValid ? _siguiente : null,
-                  child: const Text('Siguiente'),
-                ),
-              ),
+              const SizedBox(height: 24),
             ],
           ),
         ),
+      ),
+      bottomBar: BottomNavActions(
+        onNext: _siguiente,
+        showBack: false,
       ),
     );
   }
