@@ -1,12 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../../../../core/auth/auth_provider.dart';
+import '../../../../core/servicios/servicio_bd_local.dart';
+import '../../../../core/widgets/bottom_nav_actions.dart';
 import '../../../../core/widgets/protected_scaffold.dart';
 import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../../perfil/datos/modelos/usuario.dart';
+import '../../../visitas/dominio/entidades/estado_visita.dart';
+import '../../datos/fuentes_datos/verificacion_local_data_source.dart';
+import '../../datos/repositorios/verificacion_repository_impl.dart';
 import '../../dominio/entidades/realizar_verificacion_dto.dart';
+import '../../dominio/repositorios/verificacion_repository.dart';
 
 /// Página para visualizar la información del usuario antes de firmar.
 class FirmaPagina extends StatelessWidget {
@@ -33,6 +40,37 @@ class FirmaPagina extends StatelessWidget {
 
   /// Datos actuales de la verificación.
   final RealizarVerificacionDto dto;
+
+  Future<void> _marcarVisitaCompletada(int idVisita) async {
+    final bd = ServicioBdLocal();
+    final rows = await bd.query(
+      ServicioBdLocal.nombreTablaVisitas,
+      where: 'id = ?',
+      whereArgs: [idVisita.toString()],
+    );
+    if (rows.isEmpty) return;
+    final data =
+        jsonDecode(rows.first['data'] as String) as Map<String, dynamic>;
+    if (data['Estado'] is Map<String, dynamic>) {
+      final estado = data['Estado'] as Map<String, dynamic>;
+      estado['Codigo'] = EstadoVisita.realizada;
+      estado['Nombre'] = 'Realizada';
+    } else {
+      data['Estado'] = {
+        'Codigo': EstadoVisita.realizada,
+        'Nombre': 'Realizada',
+      };
+    }
+    await bd.update(
+      ServicioBdLocal.nombreTablaVisitas,
+      {
+        'estado': EstadoVisita.realizada,
+        'data': jsonEncode(data),
+      },
+      where: 'id = ?',
+      whereArgs: [idVisita.toString()],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,78 +109,28 @@ class FirmaPagina extends StatelessWidget {
             const Text('Jefatura: -'),
           ],
         ),
-      )/*,
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  final fecha =
-                      DateFormat('dd/MM/yyyy HH:mm').format(DateTime.now());
-                  return Dialog(
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      width: double.infinity,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Informe verificación generado'),
-                          const SizedBox(height: 8),
-                          Text('Fecha: $fecha'),
-                          Text(
-                              'Coordenadas: ${actividad.utmEste}, ${actividad.utmNorte}'),
-                          Text(
-                              'Prospecto: ${actividad.descripcion ?? '-'}'),
-                          Text(
-                              'Derecho minero: ${actividad.derechoMinero ?? '-'}'),
-                          const Text('Condición: -'),
-                          const SizedBox(height: 16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              if (flagEstimacionProduccion ||
-                                  flagMedicionCapacidad)
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    context.push(
-                                      '/flujo-visita/estimacion-produccion',
-                                      extra: {
-                                        'flagMedicionCapacidad':
-                                            flagMedicionCapacidad,
-                                        'dto': dto,
-                                      },
-                                    );
-                                  },
-                                  child: const Text('Estimacion Produccion'),
-                                )
-                              else
-                                const Text('Enviar'),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  context.push('/flujo-visita/firma-digital');
-                                },
-                                child: const Text('Firmar digital'),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-            child: const Text('Firmar'),
-          ),
-        ),
-      ),*/
+      ),
+      bottomBar: BottomNavActions(
+        onNext: () async {
+          final VerificacionRepository repo = VerificacionRepositoryImpl(
+            VerificacionLocalDataSource(ServicioBdLocal()),
+          );
+          final dtoActualizado =
+              dto.copyWith(fechaFinMovil: DateTime.now());
+          await repo.guardarVerificacion(dtoActualizado);
+          await _marcarVisitaCompletada(dto.idVisita);
+          if (flagMedicionCapacidad || flagEstimacionProduccion) {
+            context.push('/flujo-visita/estimacion-produccion', extra: {
+              'flagMedicionCapacidad': flagMedicionCapacidad,
+              'dto': dtoActualizado,
+            });
+          } else {
+            context.go('/visitas');
+          }
+        },
+        onBack: () => context.pop(),
+        nextText: 'Confirmar',
+      ),
     );
   }
 }

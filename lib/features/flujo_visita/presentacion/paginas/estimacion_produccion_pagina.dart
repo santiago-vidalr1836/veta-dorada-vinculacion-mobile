@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/auth/auth_provider.dart';
+import '../../../../core/servicios/servicio_bd_local.dart';
 import '../../../../core/widgets/protected_scaffold.dart';
+import '../../../visitas/dominio/entidades/estado_visita.dart';
 import '../../dominio/entidades/estimacion.dart';
 import '../../dominio/entidades/realizar_verificacion_dto.dart';
 import '../../dominio/repositorios/verificacion_repository.dart';
@@ -57,6 +61,37 @@ class _EstimacionProduccionPaginaState
     super.dispose();
   }
 
+  Future<void> _marcarVisitaCompletada(int idVisita) async {
+    final bd = ServicioBdLocal();
+    final rows = await bd.query(
+      ServicioBdLocal.nombreTablaVisitas,
+      where: 'id = ?',
+      whereArgs: [idVisita.toString()],
+    );
+    if (rows.isEmpty) return;
+    final data =
+        jsonDecode(rows.first['data'] as String) as Map<String, dynamic>;
+    if (data['Estado'] is Map<String, dynamic>) {
+      final estado = data['Estado'] as Map<String, dynamic>;
+      estado['Codigo'] = EstadoVisita.realizada;
+      estado['Nombre'] = 'Realizada';
+    } else {
+      data['Estado'] = {
+        'Codigo': EstadoVisita.realizada,
+        'Nombre': 'Realizada',
+      };
+    }
+    await bd.update(
+      ServicioBdLocal.nombreTablaVisitas,
+      {
+        'estado': EstadoVisita.realizada,
+        'data': jsonEncode(data),
+      },
+      where: 'id = ?',
+      whereArgs: [idVisita.toString()],
+    );
+  }
+
   Future<void> _calcular() async {
     if (!_formKey.currentState!.validate()) return;
     final longitud = double.tryParse(_longitudController.text) ?? 0;
@@ -79,8 +114,10 @@ class _EstimacionProduccionPaginaState
       produccionMensualEstimada: pme,
       produccionMensual: produccionMensual,
     );
-    final dtoActualizado = _dto.copyWith(estimacion: estimacion);
+    var dtoActualizado =
+        _dto.copyWith(estimacion: estimacion, fechaFinMovil: DateTime.now());
     await widget.verificacionRepository.guardarVerificacion(dtoActualizado);
+    await _marcarVisitaCompletada(dtoActualizado.idVisita);
     if (!mounted) return;
     context.push('/flujo-visita/estimacion-produccion/resultado',
         extra: estimacion);
