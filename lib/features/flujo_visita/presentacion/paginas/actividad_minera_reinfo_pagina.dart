@@ -6,6 +6,13 @@ import '../../../actividad/datos/repositorios/actividad_repository_impl.dart';
 import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../../actividad/dominio/entidades/tipo_actividad.dart';
 import '../../../actividad/dominio/enums/origen.dart';
+import '../../dominio/entidades/descripcion.dart';
+import '../../dominio/entidades/evaluacion.dart';
+import '../../dominio/entidades/estimacion.dart';
+import '../../dominio/entidades/foto.dart';
+import '../../dominio/entidades/proveedor_snapshot.dart';
+import '../../dominio/entidades/realizar_verificacion_dto.dart';
+import '../../dominio/repositorios/verificacion_repository.dart';
 
 /// Página para registrar una actividad minera de origen REINFO.
 ///
@@ -16,10 +23,14 @@ class ActividadMineraReinfoPagina extends StatefulWidget {
   const ActividadMineraReinfoPagina({
     super.key,
     required this.repository,
+    required this.verificacionRepository,
   });
 
   /// Repositorio usado para obtener los tipos de actividad.
   final ActividadRepositoryImpl repository;
+
+  /// Repositorio para persistir la información de la verificación.
+  final VerificacionRepository verificacionRepository;
 
   @override
   State<ActividadMineraReinfoPagina> createState() =>
@@ -35,6 +46,8 @@ class _ActividadMineraReinfoPaginaState
   String? _subTipoSeleccionado;
   List<String> _subTiposDisponibles = [];
   String _labelSubTipo = 'Sub Tipo';
+
+  static const int _idVisita = 0;
 
   final Map<int, List<String>> _mapaSubTipos = {
     // Opciones de ejemplo para los sub tipos dependiendo del tipo.
@@ -57,7 +70,7 @@ class _ActividadMineraReinfoPaginaState
   @override
   void initState() {
     super.initState();
-    _cargarTipos();
+    _inicializar();
   }
 
   @override
@@ -75,11 +88,43 @@ class _ActividadMineraReinfoPaginaState
     super.dispose();
   }
 
-  Future<void> _cargarTipos() async {
+  Future<void> _inicializar() async {
+    final dto =
+        await widget.verificacionRepository.obtenerVerificacion(_idVisita);
     final resultado = await widget.repository.obtenerTiposActividad();
-    setState(() {
-      _tipos = resultado.tipos;
-    });
+    _tipos = resultado.tipos;
+
+    if (dto != null && dto.actividades.isNotEmpty) {
+      final actividad = dto.actividades.first;
+      for (final tipo in _tipos) {
+        if (tipo.id == actividad.idTipoActividad) {
+          _tipoSeleccionado = tipo;
+          final desc = tipo.nombre.toLowerCase();
+          if (desc.contains('beneficio')) {
+            _labelSubTipo = 'Tipo de Beneficio';
+          } else if (desc.contains('explot')) {
+            _labelSubTipo = 'Tipo de Explotación';
+          } else {
+            _labelSubTipo = 'Sub Tipo';
+          }
+          _subTiposDisponibles = _mapaSubTipos[tipo.id] ?? [];
+          if (actividad.idSubTipoActividad > 0 &&
+              actividad.idSubTipoActividad <= _subTiposDisponibles.length) {
+            _subTipoSeleccionado =
+                _subTiposDisponibles[actividad.idSubTipoActividad - 1];
+          }
+          break;
+        }
+      }
+      _sistemaController.text = actividad.sistemaUTM.toString();
+      _zonaController.text = actividad.zonaUTM?.toString() ?? '';
+      _comp01EsteController.text = actividad.utmEste.toString();
+      _comp01NorteController.text = actividad.utmNorte.toString();
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void _onTipoChanged(TipoActividad? tipo) {
@@ -102,7 +147,7 @@ class _ActividadMineraReinfoPaginaState
     });
   }
 
-  void _guardar() {
+  Future<void> _guardar() async {
     if (!_formKey.currentState!.validate() ||
         _tipoSeleccionado == null ||
         _subTipoSeleccionado == null) {
@@ -120,6 +165,62 @@ class _ActividadMineraReinfoPaginaState
       zonaUTM: int.tryParse(_zonaController.text),
       descripcion: null,
     );
+
+    var dto =
+        await widget.verificacionRepository.obtenerVerificacion(_idVisita);
+    if (dto == null) {
+      dto = RealizarVerificacionDto(
+        idVerificacion: 0,
+        idVisita: _idVisita,
+        idUsuario: 0,
+        fechaInicioMovil: DateTime.now(),
+        fechaFinMovil: DateTime.now(),
+        proveedorSnapshot: const ProveedorSnapshot(
+          tipoPersona: '',
+          nombre: '',
+          inicioFormalizacion: false,
+        ),
+        actividades: [actividad],
+        descripcion: const Descripcion(
+          coordenadas: '',
+          zona: '',
+          actividad: '',
+          equipos: '',
+          trabajadores: '',
+          condicionesLaborales: '',
+        ),
+        evaluacion: const Evaluacion(idCondicionProspecto: '', anotacion: ''),
+        estimacion: const Estimacion(
+          capacidadDiaria: 0,
+          diasOperacion: 0,
+          produccionEstimada: 0,
+        ),
+        fotos: const <Foto>[],
+        idempotencyKey: '',
+      );
+    } else {
+      final actividades = List<Actividad>.from(dto.actividades);
+      if (actividades.isNotEmpty) {
+        actividades[0] = actividad;
+      } else {
+        actividades.add(actividad);
+      }
+      dto = RealizarVerificacionDto(
+        idVerificacion: dto.idVerificacion,
+        idVisita: dto.idVisita,
+        idUsuario: dto.idUsuario,
+        fechaInicioMovil: dto.fechaInicioMovil,
+        fechaFinMovil: dto.fechaFinMovil,
+        proveedorSnapshot: dto.proveedorSnapshot,
+        actividades: actividades,
+        descripcion: dto.descripcion,
+        evaluacion: dto.evaluacion,
+        estimacion: dto.estimacion,
+        fotos: dto.fotos,
+        idempotencyKey: dto.idempotencyKey,
+      );
+    }
+    await widget.verificacionRepository.guardarVerificacion(dto);
     context.push('/flujo-visita/datos-proveedor', extra: actividad);
   }
 

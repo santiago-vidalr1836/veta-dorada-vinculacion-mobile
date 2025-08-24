@@ -61,7 +61,13 @@ GoRouter createRouter(AuthNotifier authNotifier) {
             TipoActividadRemoteDataSource(ClienteHttp(token: auth.token!)),
             TipoActividadLocalDataSource(ServicioBdLocal()),
           );
-          return ActividadMineraReinfoPagina(repository: repo);
+          final verificacionRepo = VerificacionRepositoryImpl(
+            VerificacionLocalDataSource(ServicioBdLocal()),
+          );
+          return ActividadMineraReinfoPagina(
+            repository: repo,
+            verificacionRepository: verificacionRepo,
+          );
         },
       ),
       GoRoute(
