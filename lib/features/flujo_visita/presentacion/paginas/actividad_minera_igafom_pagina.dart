@@ -16,10 +16,14 @@ class ActividadMineraIgafomPagina extends StatefulWidget {
   const ActividadMineraIgafomPagina({
     super.key,
     required this.repository,
+    this.actividadReinfo,
   });
 
   /// Repositorio usado para obtener los tipos de actividad.
   final ActividadRepositoryImpl repository;
+
+  /// Actividad registrada en el REINFO que se pasa al flujo.
+  final Actividad? actividadReinfo;
 
   @override
   State<ActividadMineraIgafomPagina> createState() =>
@@ -120,7 +124,10 @@ class _ActividadMineraIgafomPaginaState
       zonaUTM: int.tryParse(_zonaController.text),
       descripcion: null,
     );
-    context.push('/flujo-visita/datos-proveedor', extra: actividad);
+    context.push(
+      '/flujo-visita/registro-fotografico',
+      extra: {'actividad': actividad, 'flagMedicionCapacidad': false},
+    );
   }
 
   @override

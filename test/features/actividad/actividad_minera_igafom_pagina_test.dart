@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:veta_dorada_vinculacion_mobile/core/red/cliente_http.dart';
 import 'package:veta_dorada_vinculacion_mobile/core/servicios/servicio_bd_local.dart';
@@ -81,6 +82,45 @@ void main() {
     expect(find.text('Gravimétrico'), findsOneWidget);
     expect(find.text('Lixiviación'), findsOneWidget);
     expect(find.text('Aluvial'), findsNothing);
+  });
+
+  testWidgets('navega a registro fotografico al guardar', (tester) async {
+    final repo = _FakeRepository([
+      TipoActividad(id: 1, nombre: 'Explotación'),
+    ]);
+
+    final router = GoRouter(
+      routes: [
+        GoRoute(
+          path: '/',
+          builder: (context, state) => ActividadMineraIgafomPagina(
+            repository: repo,
+          ),
+        ),
+        GoRoute(
+          path: '/flujo-visita/registro-fotografico',
+          builder: (context, state) => const Placeholder(),
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(DropdownButtonFormField<TipoActividad>));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Explotación').last);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(DropdownButtonFormField<String>));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Aluvial').last);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Guardar'));
+    await tester.pumpAndSettle();
+
+    expect(router.location, '/flujo-visita/registro-fotografico');
   });
 }
 
