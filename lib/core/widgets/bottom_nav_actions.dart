@@ -36,11 +36,19 @@ class BottomNavActions extends StatelessWidget {
               icon: const Icon(Icons.arrow_back),
               label: const Text('Atrás'),
             ),
-          const Spacer(),
-          ElevatedButton(
-            onPressed: onNext,
-            child: Text(nextText),
-          ),
+          if (mostrarAtras) const Spacer(),
+          if (mostrarAtras)
+            ElevatedButton(
+              onPressed: onNext,
+              child: Text(nextText),
+            )
+          else
+            Expanded(
+              child: ElevatedButton(
+                onPressed: onNext,
+                child: Text(nextText),
+              ),
+            ),
         ],
       ),
     );
