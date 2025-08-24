@@ -43,6 +43,11 @@ class _DatosProveedorMineralPaginaState
   @override
   void initState() {
     super.initState();
+    final proveedor = widget.visita.proveedor;
+    _nombreController.text = proveedor.nombreCompleto ?? '';
+    _rucController.text = proveedor.ruc;
+    _razonSocialController.text = proveedor.razonSocial ?? '';
+    _representanteController.text = proveedor.representanteNombre ?? '';
     _cargarCatalogos();
   }
 
