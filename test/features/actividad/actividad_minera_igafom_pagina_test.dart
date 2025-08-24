@@ -60,6 +60,7 @@ void main() {
       home: ActividadMineraIgafomPagina(
         repository: repo,
         verificacionRepository: _FakeVerificacionRepository(),
+        idVisita: 0,
       ),
     ));
     await tester.pumpAndSettle();
@@ -81,6 +82,7 @@ void main() {
       home: ActividadMineraIgafomPagina(
         repository: repo,
         verificacionRepository: _FakeVerificacionRepository(),
+        idVisita: 0,
       ),
     ));
     await tester.pumpAndSettle();
@@ -121,6 +123,7 @@ void main() {
           builder: (context, state) => ActividadMineraIgafomPagina(
             repository: repo,
             verificacionRepository: _FakeVerificacionRepository(),
+            idVisita: 0,
           ),
         ),
         GoRoute(

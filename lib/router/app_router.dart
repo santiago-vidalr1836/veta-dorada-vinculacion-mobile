@@ -84,11 +84,14 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           final verificacionRepo = VerificacionRepositoryImpl(
             VerificacionLocalDataSource(ServicioBdLocal()),
           );
-          final flag = state.extra as bool? ?? false;
+          final extras = state.extra! as Map<String, dynamic>;
+          final flag = extras['flagMedicionCapacidad'] as bool? ?? false;
+          final idVisita = extras['idVisita'] as int;
           return ActividadMineraVerificadaPagina(
             repository: repo,
             verificacionRepository: verificacionRepo,
             flagMedicionCapacidad: flag,
+            idVisita: idVisita,
           );
         },
       ),
@@ -118,10 +121,13 @@ GoRouter createRouter(AuthNotifier authNotifier) {
           final verificacionRepo = VerificacionRepositoryImpl(
             VerificacionLocalDataSource(ServicioBdLocal()),
           );
-          final actividad = state.extra as Actividad?;
+          final extras = state.extra! as Map<String, dynamic>;
+          final actividad = extras['actividad'] as Actividad?;
+          final idVisita = extras['idVisita'] as int;
           return ActividadMineraIgafomPagina(
             repository: repo,
             verificacionRepository: verificacionRepo,
+            idVisita: idVisita,
             actividadReinfo: actividad,
           );
         },
