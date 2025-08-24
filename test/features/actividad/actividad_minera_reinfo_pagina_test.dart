@@ -264,10 +264,17 @@ void main() {
         ),
         GoRoute(
           path: '/flujo-visita/actividad-igafom',
-          builder: (context, state) => ActividadMineraIgafomPagina(
-            repository: repo,
-            actividadReinfo: state.extra as Actividad?,
-          ),
+          builder: (context, state) {
+            final extras = state.extra! as Map<String, dynamic>;
+            final actividad = extras['actividad'] as Actividad?;
+            final idVisita = extras['idVisita'] as int;
+            return ActividadMineraIgafomPagina(
+              repository: repo,
+              verificacionRepository: verificacionRepo,
+              idVisita: idVisita,
+              actividadReinfo: actividad,
+            );
+          },
         ),
       ],
     );

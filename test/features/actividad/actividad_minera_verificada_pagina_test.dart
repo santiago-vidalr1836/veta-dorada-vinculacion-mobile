@@ -55,6 +55,7 @@ void main() {
         repository: repo,
         verificacionRepository: _FakeVerificacionRepository(),
         flagMedicionCapacidad: false,
+        idVisita: 0,
       ),
     ));
     await tester.pumpAndSettle();
@@ -77,6 +78,7 @@ void main() {
         repository: repo,
         verificacionRepository: _FakeVerificacionRepository(),
         flagMedicionCapacidad: false,
+        idVisita: 0,
       ),
     ));
     await tester.pumpAndSettle();

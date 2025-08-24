@@ -224,7 +224,8 @@ class _ActividadMineraReinfoPaginaState
       );
     }
     await widget.verificacionRepository.guardarVerificacion(dto);
-    context.push('/flujo-visita/actividad-igafom', extra: actividad);
+    context.push('/flujo-visita/actividad-igafom',
+        extra: {'actividad': actividad, 'idVisita': widget.idVisita});
   }
 
   @override
