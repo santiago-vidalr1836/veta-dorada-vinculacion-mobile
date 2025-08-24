@@ -23,9 +23,11 @@ class ServicioBdLocal {
   static const String nombreTablaTipoActividad = 'tipo_actividad';
   static const String nombreTablaCondicionProspecto =
       'condicion_prospecto';
+  static const String nombreTablaRealizarVerificacion =
+      'realizar_verificacion';
 
   static const _nombreBd = 'vinculacion.db';
-  static const _versionBd = 2;
+  static const _versionBd = 3;
 
   Database? _db;
 
@@ -69,6 +71,12 @@ class ServicioBdLocal {
             descripcion TEXT
           );
         ''');
+        await db.execute('''
+          CREATE TABLE $nombreTablaRealizarVerificacion(
+            idVisita TEXT PRIMARY KEY,
+            data TEXT
+          );
+        ''');
       },
       onUpgrade: (db, oldVersion, newVersion) async {
         if (oldVersion < 2) {
@@ -94,6 +102,14 @@ class ServicioBdLocal {
             CREATE TABLE IF NOT EXISTS $nombreTablaCondicionProspecto(
               id TEXT PRIMARY KEY,
               descripcion TEXT
+            );
+          ''');
+        }
+        if (oldVersion < 3) {
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS $nombreTablaRealizarVerificacion(
+              idVisita TEXT PRIMARY KEY,
+              data TEXT
             );
           ''');
         }
