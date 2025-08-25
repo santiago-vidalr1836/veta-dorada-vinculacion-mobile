@@ -182,10 +182,10 @@ class _ActividadMineraReinfoPaginaState
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(24),
           child: Column(
+            spacing: 24,
             children: [
-              const SizedBox(height: 34),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -212,11 +212,8 @@ class _ActividadMineraReinfoPaginaState
                   ),
                 ],
               ),
-              const SizedBox(height: 32),
               LinearProgressIndicator(value: _avance),
-              const SizedBox(height: 32),
               const SizedBox(
-                width: 378,
                 child: Text(
                   'Actividad Minera Declarada por el Proveedor de Mineral en el Comprobante de Recepción de Datos para el REINFO',
                   style: TextStyle(
@@ -227,21 +224,21 @@ class _ActividadMineraReinfoPaginaState
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 8),
               SizedBox(
                 width: 378,
                 child: Text(
                   'Características de la activdad minero',
                   style: TextStyle(
                     color: const Color(0xFF1D1B20) /* Schemes-On-Surface */,
-                    fontSize: 16,
+                    fontSize: 24,
                     fontFamily: 'Arial',
                     fontWeight: FontWeight.w400,
                     height: 1.50,
                   ),
                 ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 8),
               DropdownButtonFormField<TipoActividad>(
                 decoration: const InputDecoration(
                   labelText: 'Tipo de actividad',
@@ -258,7 +255,6 @@ class _ActividadMineraReinfoPaginaState
                 validator: (value) =>
                     value == null ? 'Seleccione el tipo de actividad' : null,
               ),
-              const SizedBox(height: 16),
               if (_subTiposDisponibles.isNotEmpty)
                 DropdownButtonFormField<SubTipoActividad>(
                   decoration: InputDecoration(labelText: _labelSubTipo,border: OutlineInputBorder()),
@@ -272,14 +268,13 @@ class _ActividadMineraReinfoPaginaState
                   validator: (value) =>
                       value == null ? 'Seleccione una opción' : null,
                 ),
-              const SizedBox(height: 16),
               SizedBox(
                 width: 378,
                 child: Text(
                   'Ubicación Geográfica UTM',
                   style: TextStyle(
                     color: const Color(0xFF1D1B20) /* Schemes-On-Surface */,
-                    fontSize: 16,
+                    fontSize: 24,
                     fontFamily: 'Arial',
                     fontWeight: FontWeight.w400,
                     height: 1.50,
@@ -299,15 +294,13 @@ class _ActividadMineraReinfoPaginaState
                 onChanged: (value) =>
                     setState(() => _sistemaSeleccionado = value ?? 'WGS84'),
               ),
-              const SizedBox(height: 16),
               TextFormField(
                 controller: _zonaController,
                 decoration: const InputDecoration(
-                  labelText: 'Zona',
+                  labelText: 'Zona UTM',
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 16),
               const Text('Coordenadas Componente 01'),
               TextFormField(
                 controller: _comp01EsteController,
@@ -323,7 +316,6 @@ class _ActividadMineraReinfoPaginaState
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 16),
               const Text('Coordenadas Componente 02'),
               TextFormField(
                 controller: _comp02EsteController,
@@ -339,7 +331,6 @@ class _ActividadMineraReinfoPaginaState
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 16),
               TextFormField(
                 controller: _departamentoController,
                 decoration: const InputDecoration(
@@ -361,7 +352,6 @@ class _ActividadMineraReinfoPaginaState
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 16),
               TextFormField(
                 controller: _derechoMineroController,
                 decoration: const InputDecoration(
@@ -369,7 +359,6 @@ class _ActividadMineraReinfoPaginaState
                   border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
