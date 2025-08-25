@@ -53,16 +53,9 @@ class _ActividadMineraReinfoPaginaState
 
   List<TipoActividad> _tipos = [];
   TipoActividad? _tipoSeleccionado;
-  String? _subTipoSeleccionado;
-  List<String> _subTiposDisponibles = [];
+  SubTipoActividad? _subTipoSeleccionado;
+  List<SubTipoActividad> _subTiposDisponibles = [];
   String _labelSubTipo = 'Sub Tipo';
-
-
-  final Map<int, List<String>> _mapaSubTipos = {
-    // Opciones de ejemplo para los sub tipos dependiendo del tipo.
-    1: ['Aluvial', 'Filoniano'],
-    2: ['Gravimétrico', 'Lixiviación'],
-  };
 
   final TextEditingController _sistemaController = TextEditingController();
   final TextEditingController _zonaController = TextEditingController();
@@ -103,18 +96,18 @@ class _ActividadMineraReinfoPaginaState
     final resultado = await widget.repository.obtenerTiposActividad();
     _tipos = resultado.tipos;
 
-    if (dto != null && dto.actividades!=null && dto.actividades!.isNotEmpty) {
+    if (dto != null && dto.actividades != null && dto.actividades!.isNotEmpty) {
       final actividad = dto.actividades!.first;
       for (final tipo in _tipos) {
         if (tipo.id == actividad.idTipoActividad) {
           _tipoSeleccionado = tipo;
-          final desc = tipo.nombre.toLowerCase();
-          _labelSubTipo = 'Tipo de $desc';
-          _subTiposDisponibles = _mapaSubTipos[tipo.id] ?? [];
-          if (actividad.idSubTipoActividad > 0 &&
-              actividad.idSubTipoActividad <= _subTiposDisponibles.length) {
-            _subTipoSeleccionado =
-                _subTiposDisponibles[actividad.idSubTipoActividad - 1];
+          _labelSubTipo = 'Tipo de ${tipo.nombre}';
+          _subTiposDisponibles = tipo.subTipos;
+          for (final sub in tipo.subTipos) {
+            if (sub.id == actividad.idSubTipoActividad) {
+              _subTipoSeleccionado = sub;
+              break;
+            }
           }
           break;
         }
@@ -134,19 +127,8 @@ class _ActividadMineraReinfoPaginaState
     setState(() {
       _tipoSeleccionado = tipo;
       _subTipoSeleccionado = null;
-      _subTiposDisponibles = _mapaSubTipos[tipo?.id] ?? [];
-      if (tipo != null) {
-        final desc = tipo.nombre.toLowerCase();
-        if (desc.contains('beneficio')) {
-          _labelSubTipo = 'Tipo de Beneficio';
-        } else if (desc.contains('explot')) {
-          _labelSubTipo = 'Tipo de Explotación';
-        } else {
-          _labelSubTipo = 'Sub Tipo';
-        }
-      } else {
-        _labelSubTipo = 'Sub Tipo';
-      }
+      _subTiposDisponibles = tipo?.subTipos ?? [];
+      _labelSubTipo = tipo != null ? 'Tipo de ${tipo.nombre}' : 'Sub Tipo';
     });
   }
 
@@ -160,8 +142,7 @@ class _ActividadMineraReinfoPaginaState
       id: '',
       origen: Origen.reinfo,
       idTipoActividad: _tipoSeleccionado!.id,
-      idSubTipoActividad:
-          _subTiposDisponibles.indexOf(_subTipoSeleccionado!) + 1,
+      idSubTipoActividad: _subTipoSeleccionado!.id,
       sistemaUTM: int.tryParse(_sistemaController.text) ?? 0,
       utmEste: double.tryParse(_comp01EsteController.text) ?? 0,
       utmNorte: double.tryParse(_comp01NorteController.text) ?? 0,
@@ -265,11 +246,12 @@ class _ActividadMineraReinfoPaginaState
               ),
               const SizedBox(height: 16),
               if (_subTiposDisponibles.isNotEmpty)
-                DropdownButtonFormField<String>(
+                DropdownButtonFormField<SubTipoActividad>(
                   decoration: InputDecoration(labelText: _labelSubTipo),
                   value: _subTipoSeleccionado,
                   items: _subTiposDisponibles
-                      .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                      .map((e) =>
+                          DropdownMenuItem(value: e, child: Text(e.nombre)))
                       .toList(),
                   onChanged: (value) =>
                       setState(() => _subTipoSeleccionado = value),
