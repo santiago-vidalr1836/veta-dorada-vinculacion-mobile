@@ -6,6 +6,8 @@ import '../../dominio/entidades/visita.dart';
 import '../../../../core/auth/auth_provider.dart';
 import '../../../flujo_visita/dominio/entidades/realizar_verificacion_dto.dart';
 import '../../../flujo_visita/dominio/repositorios/verificacion_repository.dart';
+import '../bloc/visitas_bloc.dart';
+import '../bloc/visitas_event.dart';
 
 /// Tarjeta que muestra la información principal de una [Visita].
 class VisitaCard extends StatelessWidget {
@@ -13,6 +15,7 @@ class VisitaCard extends StatelessWidget {
     super.key,
     required this.visita,
     required this.verificacionRepository,
+    this.visitasBloc,
   });
 
   /// Visita que se va a mostrar.
@@ -20,6 +23,9 @@ class VisitaCard extends StatelessWidget {
 
   /// Repositorio para persistir la verificación.
   final VerificacionRepository verificacionRepository;
+
+  /// Bloc para gestionar las visitas.
+  final VisitasBloc? visitasBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +47,8 @@ class VisitaCard extends StatelessWidget {
                 '${DateTime.now().microsecondsSinceEpoch}-${visita.id}',
           );
           await verificacionRepository.guardarVerificacion(dto);
-          context.push('/flujo-visita/datos-proveedor', extra: visita);
+          await context.push('/flujo-visita/datos-proveedor', extra: visita);
+          visitasBloc?.add(SincronizarVisitas(auth.usuario!.id));
         },
         child: Padding(
           padding: const EdgeInsets.all(10),

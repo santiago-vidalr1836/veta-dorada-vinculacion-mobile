@@ -7,8 +7,8 @@ import '../../dominio/entidades/visita.dart';
 import '../../dominio/repositorios/visits_repository.dart';
 import '../../../flujo_visita/dominio/repositorios/verificacion_repository.dart';
 
-part 'visitas_event.dart';
-part 'visitas_state.dart';
+import 'visitas_event.dart';
+import 'visitas_state.dart';
 
 class VisitasBloc extends Bloc<VisitasEvent, VisitasState> {
   VisitasBloc(this._repository, this._verificacionRepository)

@@ -8,6 +8,8 @@ import '../../datos/fuentes_datos/visits_remote_data_source.dart';
 import '../../datos/repositorios/visits_repository_impl.dart';
 import '../../dominio/entidades/visita.dart';
 import '../bloc/visitas_bloc.dart';
+import '../bloc/visitas_event.dart';
+import '../bloc/visitas_state.dart';
 import '../componentes/pestana_personalizada.dart';
 import '../componentes/visita_card.dart';
 import '../../../flujo_visita/datos/fuentes_datos/verificacion_local_data_source.dart';
@@ -119,6 +121,7 @@ class _VisitasTabsPageState extends State<VisitasTabsPage> {
         return VisitaCard(
           visita: visita,
           verificacionRepository: _verificacionRepository,
+          visitasBloc: _bloc,
         );
       },
     );
