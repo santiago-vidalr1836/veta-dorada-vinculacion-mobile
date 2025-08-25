@@ -119,7 +119,7 @@ class _ActividadMineraIgafomPaginaState
           _subTiposDisponibles = tipo.subTipos;
           try {
             _subTipoSeleccionado = tipo.subTipos
-                .firstWhere((s) => s.id == actividad.idSubTipoActividad);
+                .firstWhere((s) => s.id == actividad?.idSubTipoActividad);
           } catch (_) {
             _subTipoSeleccionado = null;
           }

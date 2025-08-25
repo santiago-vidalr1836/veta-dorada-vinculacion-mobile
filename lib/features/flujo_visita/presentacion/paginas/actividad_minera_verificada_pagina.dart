@@ -123,7 +123,7 @@ class _ActividadMineraVerificadaPaginaState
           if (actividad.idSubTipoActividad > 0) {
             try {
               _subTipoSeleccionado = tipo.subTipos.firstWhere(
-                (st) => st.id == actividad.idSubTipoActividad,
+                (st) => st.id == actividad?.idSubTipoActividad,
               );
             } catch (_) {
               _subTipoSeleccionado = null;
