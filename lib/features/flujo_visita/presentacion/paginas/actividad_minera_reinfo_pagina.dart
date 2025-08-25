@@ -301,7 +301,19 @@ class _ActividadMineraReinfoPaginaState
                   border: OutlineInputBorder(),
                 ),
               ),
-              const Text('Coordenadas Componente 01'),
+              SizedBox(
+                width: 378,
+                child: Text(
+                  'Coordenadas Componente 01',
+                  style: TextStyle(
+                    color: const Color(0xFF1D1B20) /* Schemes-On-Surface */,
+                    fontSize: 24,
+                    fontFamily: 'Arial',
+                    fontWeight: FontWeight.w400,
+                    height: 1.50,
+                  ),
+                ),
+              ),
               TextFormField(
                 controller: _comp01EsteController,
                 decoration: const InputDecoration(
@@ -316,7 +328,19 @@ class _ActividadMineraReinfoPaginaState
                   border: OutlineInputBorder(),
                 ),
               ),
-              const Text('Coordenadas Componente 02'),
+              SizedBox(
+                width: 378,
+                child: Text(
+                  'Coordenadas Componente 02',
+                  style: TextStyle(
+                    color: const Color(0xFF1D1B20) /* Schemes-On-Surface */,
+                    fontSize: 24,
+                    fontFamily: 'Arial',
+                    fontWeight: FontWeight.w400,
+                    height: 1.50,
+                  ),
+                ),
+              ),
               TextFormField(
                 controller: _comp02EsteController,
                 decoration: const InputDecoration(
@@ -329,6 +353,19 @@ class _ActividadMineraReinfoPaginaState
                 decoration: const InputDecoration(
                   labelText: 'Norte',
                   border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(
+                width: 378,
+                child: Text(
+                  'Ubicacion Politica',
+                  style: TextStyle(
+                    color: const Color(0xFF1D1B20) /* Schemes-On-Surface */,
+                    fontSize: 24,
+                    fontFamily: 'Arial',
+                    fontWeight: FontWeight.w400,
+                    height: 1.50,
+                  ),
                 ),
               ),
               TextFormField(
@@ -350,6 +387,19 @@ class _ActividadMineraReinfoPaginaState
                 decoration: const InputDecoration(
                   labelText: 'Distrito',
                   border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(
+                width: 378,
+                child: Text(
+                  'Derecho minero',
+                  style: TextStyle(
+                    color: const Color(0xFF1D1B20) /* Schemes-On-Surface */,
+                    fontSize: 24,
+                    fontFamily: 'Arial',
+                    fontWeight: FontWeight.w400,
+                    height: 1.50,
+                  ),
                 ),
               ),
               TextFormField(
