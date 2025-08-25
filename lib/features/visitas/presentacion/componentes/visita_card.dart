@@ -39,21 +39,19 @@ class VisitaCard extends StatelessWidget {
       child: InkWell(
         onTap: () async {
           final auth = AuthProvider.of(context);
-          if(await verificacionRepository.obtenerVerificacion(visita.id)==null) {
+          if (await verificacionRepository.obtenerVerificacion(visita.id) ==
+              null) {
             final dto = RealizarVerificacionDto(
-              idVerificacion: DateTime
-                  .now()
-                  .millisecondsSinceEpoch,
+              idVerificacion: DateTime.now().millisecondsSinceEpoch,
               idVisita: visita.id,
               idUsuario: auth.usuario!.id,
               idempotencyKey:
-              '${DateTime
-                  .now()
-                  .microsecondsSinceEpoch}-${visita.id}',
+                  '${DateTime.now().microsecondsSinceEpoch}-${visita.id}',
             );
             await verificacionRepository.guardarVerificacion(dto);
           }
-          context.push('/flujo-visita/datos-proveedor', extra: visita);
+          await context.push('/flujo-visita/datos-proveedor', extra: visita);
+          visitasBloc?.add(SincronizarVisitas(auth.usuario!.id));
         },
         child: Padding(
           padding: const EdgeInsets.all(10),
