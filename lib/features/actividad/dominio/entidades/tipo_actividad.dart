@@ -6,19 +6,30 @@ class TipoActividad {
   /// Nombre legible del tipo.
   final String nombre;
 
+  /// Colección de sub tipos asociados a este tipo de actividad.
+  final List<SubTipoActividad> subTipos;
+
   /// Crea una instancia de [TipoActividad].
-  const TipoActividad({required this.id, required this.nombre});
+  const TipoActividad({
+    required this.id,
+    required this.nombre,
+    this.subTipos = const [],
+  });
 
   /// Construye un [TipoActividad] a partir de un mapa JSON.
   factory TipoActividad.fromJson(Map<String, dynamic> json) => TipoActividad(
         id: json['Id'] as int,
         nombre: json['Nombre'] as String,
+        subTipos: (json['SubTipos'] as List<dynamic>? ?? [])
+            .map((e) => SubTipoActividad.fromJson(e as Map<String, dynamic>))
+            .toList(),
       );
 
   /// Convierte el [TipoActividad] en un mapa JSON.
   Map<String, dynamic> toJson() => {
         'Id': id,
         'Nombre': nombre,
+        'SubTipos': subTipos.map((e) => e.toJson()).toList(),
       };
 }
 
