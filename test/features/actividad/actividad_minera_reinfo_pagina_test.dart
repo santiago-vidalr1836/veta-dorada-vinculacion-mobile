@@ -138,7 +138,7 @@ void main() {
     await tester.tap(find.text('Explotación').last);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(DropdownButtonFormField<String>));
+    await tester.tap(find.bySemanticsLabel('Tipo de Explotación'));
     await tester.pumpAndSettle();
 
     expect(find.text('Aluvial'), findsOneWidget);
@@ -198,7 +198,7 @@ void main() {
     await tester.tap(find.text('Explotación').last);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(DropdownButtonFormField<String>));
+    await tester.tap(find.bySemanticsLabel('Tipo de Explotación'));
     await tester.pumpAndSettle();
     expect(find.text('Aluvial'), findsOneWidget);
     expect(find.text('Filoniano'), findsOneWidget);
@@ -210,7 +210,7 @@ void main() {
     await tester.tap(find.text('Beneficio').last);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(DropdownButtonFormField<String>));
+    await tester.tap(find.bySemanticsLabel('Tipo de Beneficio'));
     await tester.pumpAndSettle();
     expect(find.text('Gravimétrico'), findsOneWidget);
     expect(find.text('Lixiviación'), findsOneWidget);
@@ -237,7 +237,7 @@ void main() {
     await tester.tap(find.text('Explotación').last);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(DropdownButtonFormField<String>));
+    await tester.tap(find.bySemanticsLabel('Tipo de Explotación'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Aluvial').last);
     await tester.pumpAndSettle();
@@ -296,7 +296,7 @@ void main() {
     await tester.tap(find.text('Explotación').last);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(DropdownButtonFormField<String>));
+    await tester.tap(find.bySemanticsLabel('Tipo de Explotación'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Aluvial').last);
     await tester.pumpAndSettle();
@@ -334,7 +334,7 @@ void main() {
           origen: Origen.reinfo,
           idTipoActividad: 1,
           idSubTipoActividad: 2,
-          sistemaUTM: 18,
+          sistemaUTM: 1,
           utmEste: 100,
           utmNorte: 200,
           zonaUTM: 19,
@@ -378,14 +378,13 @@ void main() {
         find.byType(DropdownButtonFormField<TipoActividad>));
     //expect(tipoField.value?.id, 1);
 
-    final subTipoField =
-        tester.widget<DropdownButtonFormField<String>>(find.byType(
-            DropdownButtonFormField<String>));
-    //expect(subTipoField.value, 'Filoniano');
+    final subTipoField = tester.widget<DropdownButtonFormField<SubTipoActividad>>(
+        find.bySemanticsLabel('Tipo de Explotación'));
+    //expect(subTipoField.value?.id, 2);
 
-    final sistemaField =
-        tester.widget<TextFormField>(find.bySemanticsLabel('Sistema UTM'));
-    expect(sistemaField.controller?.text, '18');
+    final sistemaField = tester
+        .widget<DropdownButtonFormField<String>>(find.bySemanticsLabel('WGS84/PSAD56'));
+    expect(sistemaField.value, 'WGS84');
   });
 }
 

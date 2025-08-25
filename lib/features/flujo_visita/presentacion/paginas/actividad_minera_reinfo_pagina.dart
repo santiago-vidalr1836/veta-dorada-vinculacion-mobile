@@ -57,7 +57,7 @@ class _ActividadMineraReinfoPaginaState
   static const int _totalPasos = totalPasosVerificacion;
   double _avance = 0;
 
-  final TextEditingController _sistemaController = TextEditingController();
+  String _sistemaSeleccionado = 'WGS84';
   final TextEditingController _zonaController = TextEditingController();
   final TextEditingController _comp01EsteController = TextEditingController();
   final TextEditingController _comp01NorteController = TextEditingController();
@@ -77,7 +77,6 @@ class _ActividadMineraReinfoPaginaState
 
   @override
   void dispose() {
-    _sistemaController.dispose();
     _zonaController.dispose();
     _comp01EsteController.dispose();
     _comp01NorteController.dispose();
@@ -112,7 +111,9 @@ class _ActividadMineraReinfoPaginaState
           break;
         }
       }
-      _sistemaController.text = actividad.sistemaUTM.toString();
+      if (actividad.sistemaUTM != null) {
+        _sistemaSeleccionado = actividad.sistemaUTM == 2 ? 'PSAD56' : 'WGS84';
+      }
       _zonaController.text = actividad.zonaUTM?.toString() ?? '';
       _comp01EsteController.text = actividad.utmEste.toString();
       _comp01NorteController.text = actividad.utmNorte.toString();
@@ -143,7 +144,8 @@ class _ActividadMineraReinfoPaginaState
       origen: Origen.reinfo,
       idTipoActividad: _tipoSeleccionado!.id,
       idSubTipoActividad: _subTipoSeleccionado!.id,
-      sistemaUTM: int.tryParse(_sistemaController.text) ?? 0,
+      sistemaUTM:
+          _sistemaSeleccionado == 'PSAD56' ? 2 : 1,
       utmEste: double.tryParse(_comp01EsteController.text) ?? 0,
       utmNorte: double.tryParse(_comp01NorteController.text) ?? 0,
       zonaUTM: int.tryParse(_zonaController.text),
@@ -284,12 +286,18 @@ class _ActividadMineraReinfoPaginaState
                   ),
                 ),
               ),
-              TextFormField(
-                controller: _sistemaController,
+              DropdownButtonFormField<String>(
+                value: _sistemaSeleccionado,
                 decoration: const InputDecoration(
-                  labelText: 'Sistema UTM',
+                  labelText: 'WGS84/PSAD56',
                   border: OutlineInputBorder(),
                 ),
+                items: const [
+                  DropdownMenuItem(value: 'WGS84', child: Text('WGS84')),
+                  DropdownMenuItem(value: 'PSAD56', child: Text('PSAD56')),
+                ],
+                onChanged: (value) =>
+                    setState(() => _sistemaSeleccionado = value ?? 'WGS84'),
               ),
               const SizedBox(height: 16),
               TextFormField(
