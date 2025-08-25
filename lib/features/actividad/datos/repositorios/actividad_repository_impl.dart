@@ -12,19 +12,18 @@ class ActividadRepositoryImpl {
   final TipoActividadRemoteDataSource _remoteDataSource;
   final TipoActividadLocalDataSource _localDataSource;
 
-  /// Sincroniza los tipos de actividad descargándolos desde la API y
-  /// almacenándolos localmente.
+  /// Sincroniza los tipos de actividad y sus subtipos descargándolos desde la
+  /// API y almacenándolos localmente.
   Future<void> sincronizarTiposActividad() async {
     final respuesta = await _remoteDataSource.obtenerTiposActividad();
     if (respuesta.codigoRespuesta == RespuestaBase.RESPUESTA_CORRECTA &&
         respuesta.respuesta != null) {
       await _localDataSource.reemplazarTiposActividad(respuesta.respuesta!);
-    } else {
-      await _localDataSource.reemplazarTiposActividad(const []);
     }
   }
 
-  /// Obtiene los tipos de actividad, intentando primero desde la API.
+  /// Obtiene los tipos de actividad y sus subtipos, intentando primero desde la
+  /// API.
   ///
   /// Si la solicitud remota falla, devuelve los datos locales y un mensaje
   /// de advertencia con la causa del fallo.

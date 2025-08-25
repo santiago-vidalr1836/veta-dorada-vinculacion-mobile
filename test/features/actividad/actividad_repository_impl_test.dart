@@ -47,7 +47,7 @@ void main() {
       expect(local.almacenados.first.nombre, 'Exploración');
     });
 
-    test('sincronizarTiposActividad limpia datos cuando hay error', () async {
+    test('sincronizarTiposActividad mantiene datos cuando hay error', () async {
       final remoto = _FakeRemote(RespuestaBase(
         codigoRespuesta: RespuestaBase.RESPUESTA_ERROR,
         mensajeError: 'fallo',
@@ -58,7 +58,8 @@ void main() {
 
       await repo.sincronizarTiposActividad();
 
-      expect(local.almacenados, isEmpty);
+      expect(local.almacenados, isNotEmpty);
+      expect(local.almacenados.first.nombre, 'A');
     });
 
     test('obtenerTiposActividad retorna datos remotos y sincroniza locales', () async {

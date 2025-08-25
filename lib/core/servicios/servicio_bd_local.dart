@@ -21,13 +21,14 @@ class ServicioBdLocal {
   static const String nombreTablaInicioProcesoFormalizacion =
       'inicio_proceso_formalizacion';
   static const String nombreTablaTipoActividad = 'tipo_actividad';
+  static const String nombreTablaSubTipoActividad = 'sub_tipo_actividad';
   static const String nombreTablaCondicionProspecto =
       'condicion_prospecto';
   static const String nombreTablaRealizarVerificacion =
       'realizar_verificacion';
 
   static const _nombreBd = 'vinculacion.db';
-  static const _versionBd = 4;
+  static const _versionBd = 5;
 
   Database? _db;
 
@@ -63,6 +64,13 @@ class ServicioBdLocal {
           CREATE TABLE $nombreTablaTipoActividad(
             id INTEGER PRIMARY KEY,
             nombre TEXT
+          );
+        ''');
+        await db.execute('''
+          CREATE TABLE $nombreTablaSubTipoActividad(
+            id INTEGER PRIMARY KEY,
+            nombre TEXT,
+            tipoActividadId INTEGER
           );
         ''');
         await db.execute('''
@@ -104,6 +112,15 @@ class ServicioBdLocal {
             await db.execute(
                 'ALTER TABLE $nombreTablaTipoActividad RENAME COLUMN codigo TO id;');
           } catch (_) {}
+        }
+        if (oldVersion < 5) {
+          await db.execute('''
+            CREATE TABLE IF NOT EXISTS $nombreTablaSubTipoActividad(
+              id INTEGER PRIMARY KEY,
+              nombre TEXT,
+              tipoActividadId INTEGER
+            );
+          ''');
         }
       },
     );

@@ -25,9 +25,18 @@ class TipoActividadRemoteDataSource {
           data['CodigoRespuesta'] as int? ?? RespuestaBase.RESPUESTA_ERROR;
       if (codigo == RespuestaBase.RESPUESTA_CORRECTA &&
           data['Respuesta'] is List) {
-        final tipos = (data['Respuesta'] as List<dynamic>)
-            .map((e) => TipoActividad.fromJson(e as Map<String, dynamic>))
-            .toList();
+        final tipos = (data['Respuesta'] as List<dynamic>).map((e) {
+          final json = e as Map<String, dynamic>;
+          final subTipos = (json['SubTipos'] as List<dynamic>? ?? [])
+              .map(
+                  (st) => SubTipoActividad.fromJson(st as Map<String, dynamic>))
+              .toList();
+          return TipoActividad(
+            id: json['Id'] as int,
+            nombre: json['Nombre'] as String,
+            subTipos: subTipos,
+          );
+        }).toList();
         return RespuestaBase(codigoRespuesta: codigo, respuesta: tipos);
       } else {
         return RespuestaBase(
