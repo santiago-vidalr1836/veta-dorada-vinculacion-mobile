@@ -8,6 +8,8 @@ import '../../../actividad/datos/repositorios/actividad_repository_impl.dart';
 import '../../../actividad/dominio/entidades/actividad.dart';
 import '../../../actividad/dominio/entidades/tipo_actividad.dart';
 import '../../../actividad/dominio/enums/origen.dart';
+import '../../../visitas/dominio/entidades/visita.dart';
+import '../../dominio/calcular_avance.dart';
 import '../../dominio/entidades/descripcion.dart';
 import '../../dominio/entidades/evaluacion.dart';
 import '../../dominio/entidades/estimacion.dart';
@@ -26,8 +28,7 @@ class ActividadMineraReinfoPagina extends StatefulWidget {
     super.key,
     required this.repository,
     required this.verificacionRepository,
-    required this.idVisita,
-    required this.flagEstimacionProduccion,
+    required this.visita
   });
 
   /// Repositorio usado para obtener los tipos de actividad.
@@ -36,11 +37,8 @@ class ActividadMineraReinfoPagina extends StatefulWidget {
   /// Repositorio para persistir la información de la verificación.
   final VerificacionRepository verificacionRepository;
 
-  /// Identificador de la visita asociada a la verificación.
-  final int idVisita;
-
-  /// Indica si la visita requiere estimación de producción.
-  final bool flagEstimacionProduccion;
+  /// Visita asociada a la verificación.
+  final Visita visita;
 
   @override
   State<ActividadMineraReinfoPagina> createState() =>
@@ -56,6 +54,8 @@ class _ActividadMineraReinfoPaginaState
   SubTipoActividad? _subTipoSeleccionado;
   List<SubTipoActividad> _subTiposDisponibles = [];
   String _labelSubTipo = 'Sub Tipo';
+  static const int _totalPasos = totalPasosVerificacion;
+  double _avance = 0;
 
   final TextEditingController _sistemaController = TextEditingController();
   final TextEditingController _zonaController = TextEditingController();
@@ -92,7 +92,7 @@ class _ActividadMineraReinfoPaginaState
 
   Future<void> _inicializar() async {
     final dto =
-        await widget.verificacionRepository.obtenerVerificacion(widget.idVisita);
+        await widget.verificacionRepository.obtenerVerificacion(widget.visita.id);
     final resultado = await widget.repository.obtenerTiposActividad();
     _tipos = resultado.tipos;
 
@@ -117,7 +117,7 @@ class _ActividadMineraReinfoPaginaState
       _comp01EsteController.text = actividad.utmEste.toString();
       _comp01NorteController.text = actividad.utmNorte.toString();
     }
-
+    _avance = dto != null ? calcularAvance(dto) : 0;
     if (mounted) {
       setState(() {});
     }
@@ -151,42 +151,10 @@ class _ActividadMineraReinfoPaginaState
     );
 
     var dto =
-        await widget.verificacionRepository.obtenerVerificacion(widget.idVisita);
-    dto ??= RealizarVerificacionDto(
-      idVerificacion: 0,
-      idVisita: widget.idVisita,
-      idUsuario: 0,
-      proveedorSnapshot: const ProveedorSnapshot(
-        tipoPersona: '',
-        nombre: '',
-        inicioFormalizacion: '',
-      ),
-      actividades: const <Actividad>[],
-      descripcion: const Descripcion(
-        coordenadas: '',
-        zona: '',
-        actividad: '',
-        equipos: '',
-        trabajadores: '',
-        condicionesLaborales: '',
-      ),
-      evaluacion: const Evaluacion(idCondicionProspecto: '', anotacion: ''),
-      estimacion: const Estimacion(
-        longitudAvance: 0,
-        alturaFrente: 0,
-        espesorVeta: 0,
-        numeroDisparosDia: 0,
-        diasTrabajados: 0,
-        porcentajeRocaCaja: 0,
-        produccionDiariaEstimada: 0,
-        produccionMensualEstimada: 0,
-        produccionMensual: 0,
-      ),
-      fotos: const <Foto>[],
-      idempotencyKey: '',
-    );
+        await widget.verificacionRepository.obtenerVerificacion(widget.visita.id);
+
     final actividades =
-        List<Actividad>.from(dto.actividades ?? <Actividad>[]);
+        List<Actividad>.from(dto!.actividades ?? <Actividad>[]);
     final index = actividades.indexWhere((a) => a.origen == Origen.reinfo);
     if (index >= 0) {
       actividades[index] = actividad;
@@ -198,8 +166,7 @@ class _ActividadMineraReinfoPaginaState
     context.push('/flujo-visita/actividad-igafom',
         extra: {
           'actividad': actividad,
-          'idVisita': widget.idVisita,
-          'flagEstimacionProduccion': widget.flagEstimacionProduccion,
+          'visita': widget.visita,
         });
   }
 
@@ -216,6 +183,36 @@ class _ActividadMineraReinfoPaginaState
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
+              const SizedBox(height: 34),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${widget.visita.id}'.padLeft(4, '0'),
+                    style: TextStyle(
+                      color: const Color(0xFF1D1B20) /* Schemes-On-Surface */,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w400,
+                      height: 1.33,
+                      letterSpacing: 0.50,
+                    ),
+                  ),
+                  Text(
+                    '2 de ''$_totalPasos',
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      height: 1.50,
+                      letterSpacing: 0.15,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 32),
+              LinearProgressIndicator(value: _avance),
+              const SizedBox(height: 32),
               const SizedBox(
                 width: 378,
                 child: Text(
@@ -228,10 +225,25 @@ class _ActividadMineraReinfoPaginaState
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 40),
+              SizedBox(
+                width: 378,
+                child: Text(
+                  'Características de la activdad minero',
+                  style: TextStyle(
+                    color: const Color(0xFF1D1B20) /* Schemes-On-Surface */,
+                    fontSize: 16,
+                    fontFamily: 'Arial',
+                    fontWeight: FontWeight.w400,
+                    height: 1.50,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 40),
               DropdownButtonFormField<TipoActividad>(
                 decoration: const InputDecoration(
                   labelText: 'Tipo de actividad',
+                  border: OutlineInputBorder()
                 ),
                 value: _tipoSeleccionado,
                 items: _tipos
@@ -247,7 +259,7 @@ class _ActividadMineraReinfoPaginaState
               const SizedBox(height: 16),
               if (_subTiposDisponibles.isNotEmpty)
                 DropdownButtonFormField<SubTipoActividad>(
-                  decoration: InputDecoration(labelText: _labelSubTipo),
+                  decoration: InputDecoration(labelText: _labelSubTipo,border: OutlineInputBorder()),
                   value: _subTipoSeleccionado,
                   items: _subTiposDisponibles
                       .map((e) =>
@@ -259,6 +271,19 @@ class _ActividadMineraReinfoPaginaState
                       value == null ? 'Seleccione una opción' : null,
                 ),
               const SizedBox(height: 16),
+              SizedBox(
+                width: 378,
+                child: Text(
+                  'Ubicación Geográfica UTM',
+                  style: TextStyle(
+                    color: const Color(0xFF1D1B20) /* Schemes-On-Surface */,
+                    fontSize: 16,
+                    fontFamily: 'Arial',
+                    fontWeight: FontWeight.w400,
+                    height: 1.50,
+                  ),
+                ),
+              ),
               TextFormField(
                 controller: _sistemaController,
                 decoration: const InputDecoration(

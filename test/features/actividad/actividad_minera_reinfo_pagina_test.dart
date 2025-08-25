@@ -21,6 +21,14 @@ import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/ent
 import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/dominio/repositorios/verificacion_repository.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/presentacion/paginas/actividad_minera_reinfo_pagina.dart';
 import 'package:veta_dorada_vinculacion_mobile/features/flujo_visita/presentacion/paginas/actividad_minera_igafom_pagina.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/perfil/datos/modelos/oficina.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/perfil/datos/modelos/perfil.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/perfil/datos/modelos/usuario.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/visitas/dominio/entidades/derecho_minero.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/visitas/dominio/entidades/general.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/visitas/dominio/entidades/proveedor.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/visitas/dominio/entidades/tipo_visita.dart';
+import 'package:veta_dorada_vinculacion_mobile/features/visitas/dominio/entidades/visita.dart';
 
 class _FakeRepository extends ActividadRepositoryImpl {
   _FakeRepository(this._tipos)
@@ -46,7 +54,6 @@ class _FakeLocalDataSource extends TipoActividadLocalDataSource {
 
   final List<TipoActividad> _tipos;
   int obtenerCalls = 0;
-
   @override
   Future<List<TipoActividad>> obtenerTiposActividad() async {
     obtenerCalls++;
@@ -80,6 +87,7 @@ class _MockVerificacionRepository implements VerificacionRepository {
 }
 
 void main() {
+  Visita visita = Visita(id: 0, estado: General(codigo: '', nombre: ''), proveedor: Proveedor(id: 0, tipo: General(codigo: '', nombre: ''), ruc: '', estado: General(codigo: '', nombre: '')), tipoVisita: TipoVisita(id: 0, codigo: '', nombre: ''), derechoMinero: DerechoMinero(id: 0, codigo: '', denominacion: ''), fechaProgramada: DateTime(2025), geologo: Usuario(id: 0, nombre: '', apellidos: '', correo: '', oficina: Oficina(id: 0, nombre: ''), perfil: Perfil(id: 0, nombre: '')), acopiador: Usuario(id: 0, nombre: '', apellidos: '', correo: '', oficina: Oficina(id: 0,nombre: ''), perfil: Perfil(id: 0, nombre: '')), flagEstimacionProduccion: true);
   testWidgets('carga inicial de combos', (tester) async {
     final repo = _FakeRepository([
       TipoActividad(id: 1, nombre: 'Exploración'),
@@ -91,8 +99,7 @@ void main() {
       home: ActividadMineraReinfoPagina(
         repository: repo,
         verificacionRepository: verificacionRepo,
-        idVisita: 0,
-        flagEstimacionProduccion: false,
+        visita:visita
       ),
     ));
     await tester.pumpAndSettle();
@@ -121,8 +128,7 @@ void main() {
       home: ActividadMineraReinfoPagina(
         repository: repo,
         verificacionRepository: verificacionRepo,
-        idVisita: 0,
-        flagEstimacionProduccion: false,
+        visita:visita
       ),
     ));
     await tester.pumpAndSettle();
@@ -151,8 +157,7 @@ void main() {
       home: ActividadMineraReinfoPagina(
         repository: repo,
         verificacionRepository: verificacionRepo,
-        idVisita: 0,
-        flagEstimacionProduccion: false,
+        visita:visita
       ),
     ));
     await tester.pumpAndSettle();
@@ -183,8 +188,7 @@ void main() {
       home: ActividadMineraReinfoPagina(
         repository: repo,
         verificacionRepository: verificacionRepo,
-        idVisita: 0,
-        flagEstimacionProduccion: false,
+        visita :visita
       ),
     ));
     await tester.pumpAndSettle();
@@ -223,8 +227,7 @@ void main() {
       home: ActividadMineraReinfoPagina(
         repository: repo,
         verificacionRepository: verificacionRepo,
-        idVisita: 0,
-        flagEstimacionProduccion: false,
+        visita :visita
       ),
     ));
     await tester.pumpAndSettle();
@@ -264,8 +267,7 @@ void main() {
           builder: (context, state) => ActividadMineraReinfoPagina(
             repository: repo,
             verificacionRepository: verificacionRepo,
-            idVisita: 0,
-            flagEstimacionProduccion: false,
+            visita :visita
           ),
         ),
         GoRoute(
@@ -367,8 +369,7 @@ void main() {
       home: ActividadMineraReinfoPagina(
         repository: repo,
         verificacionRepository: verificacionRepo,
-        idVisita: 0,
-        flagEstimacionProduccion: false,
+        visita : visita
       ),
     ));
     await tester.pumpAndSettle();

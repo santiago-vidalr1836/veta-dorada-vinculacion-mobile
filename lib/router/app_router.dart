@@ -60,13 +60,11 @@ GoRouter createRouter(AuthNotifier authNotifier) {
             VerificacionLocalDataSource(ServicioBdLocal()),
           );
           final extras = state.extra! as Map<String, dynamic>;
-          final idVisita = extras['idVisita'] as int;
-          final flagEstimacion = extras['flagEstimacionProduccion'] as bool;
+          final visita = extras['visita'] as Visita;
           return ActividadMineraReinfoPagina(
             repository: repo,
             verificacionRepository: verificacionRepo,
-            idVisita: idVisita,
-            flagEstimacionProduccion: flagEstimacion,
+            visita: visita
           );
         },
       ),

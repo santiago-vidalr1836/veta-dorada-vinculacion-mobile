@@ -190,8 +190,7 @@ class _DatosProveedorMineralPaginaState
     if (!mounted) return;
     setState(() {});
     context.push('/flujo-visita/actividad-reinfo', extra: {
-      'idVisita': widget.visita.id,
-      'flagEstimacionProduccion': widget.visita.flagEstimacionProduccion,
+      'visita': widget.visita
     });
   }
 
