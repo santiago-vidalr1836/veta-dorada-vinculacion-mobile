@@ -57,15 +57,9 @@ class _ActividadMineraIgafomPaginaState
 
   List<TipoActividad> _tipos = [];
   TipoActividad? _tipoSeleccionado;
-  String? _subTipoSeleccionado;
-  List<String> _subTiposDisponibles = [];
+  SubTipoActividad? _subTipoSeleccionado;
+  List<SubTipoActividad> _subTiposDisponibles = [];
   String _labelSubTipo = 'Sub Tipo';
-
-  final Map<int, List<String>> _mapaSubTipos = {
-    // Opciones de ejemplo para los sub tipos dependiendo del tipo.
-    1: ['Aluvial', 'Filoniano'],
-    2: ['Gravimétrico', 'Lixiviación'],
-  };
 
   final TextEditingController _sistemaController = TextEditingController();
   final TextEditingController _zonaController = TextEditingController();
@@ -121,13 +115,13 @@ class _ActividadMineraIgafomPaginaState
       for (final tipo in _tipos) {
         if (tipo.id == actividad.idTipoActividad) {
           _tipoSeleccionado = tipo;
-          final desc = tipo.nombre.toLowerCase();
-          _labelSubTipo = 'Tipo de $desc';
-          _subTiposDisponibles = _mapaSubTipos[tipo.id] ?? [];
-          if (actividad.idSubTipoActividad > 0 &&
-              actividad.idSubTipoActividad <= _subTiposDisponibles.length) {
-            _subTipoSeleccionado =
-                _subTiposDisponibles[actividad.idSubTipoActividad - 1];
+          _labelSubTipo = 'Tipo de ${tipo.nombre}';
+          _subTiposDisponibles = tipo.subTipos;
+          try {
+            _subTipoSeleccionado = tipo.subTipos
+                .firstWhere((s) => s.id == actividad.idSubTipoActividad);
+          } catch (_) {
+            _subTipoSeleccionado = null;
           }
           break;
         }
@@ -147,19 +141,8 @@ class _ActividadMineraIgafomPaginaState
     setState(() {
       _tipoSeleccionado = tipo;
       _subTipoSeleccionado = null;
-      _subTiposDisponibles = _mapaSubTipos[tipo?.id] ?? [];
-      if (tipo != null) {
-        final desc = tipo.nombre.toLowerCase();
-        if (desc.contains('beneficio')) {
-          _labelSubTipo = 'Tipo de Beneficio';
-        } else if (desc.contains('explot')) {
-          _labelSubTipo = 'Tipo de Explotación';
-        } else {
-          _labelSubTipo = 'Sub Tipo';
-        }
-      } else {
-        _labelSubTipo = 'Sub Tipo';
-      }
+      _subTiposDisponibles = tipo?.subTipos ?? [];
+      _labelSubTipo = tipo != null ? 'Tipo de ${tipo.nombre}' : 'Sub Tipo';
     });
   }
 
@@ -173,8 +156,7 @@ class _ActividadMineraIgafomPaginaState
       id: '',
       origen: Origen.igafom,
       idTipoActividad: _tipoSeleccionado!.id,
-      idSubTipoActividad:
-          _subTiposDisponibles.indexOf(_subTipoSeleccionado!) + 1,
+      idSubTipoActividad: _subTipoSeleccionado!.id,
       sistemaUTM: int.tryParse(_sistemaController.text) ?? 0,
       utmEste: double.tryParse(_comp01EsteController.text) ?? 0,
       utmNorte: double.tryParse(_comp01NorteController.text) ?? 0,
@@ -283,11 +265,16 @@ class _ActividadMineraIgafomPaginaState
               ),
               const SizedBox(height: 16),
               if (_subTiposDisponibles.isNotEmpty)
-                DropdownButtonFormField<String>(
+                DropdownButtonFormField<SubTipoActividad>(
                   decoration: InputDecoration(labelText: _labelSubTipo),
                   value: _subTipoSeleccionado,
                   items: _subTiposDisponibles
-                      .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                      .map(
+                        (e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e.nombre),
+                        ),
+                      )
                       .toList(),
                   onChanged: (value) =>
                       setState(() => _subTipoSeleccionado = value),
