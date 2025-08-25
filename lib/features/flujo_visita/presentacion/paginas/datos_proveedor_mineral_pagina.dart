@@ -180,28 +180,6 @@ class _DatosProveedorMineralPaginaState
         idUsuario: widget.visita.geologo.id,
         fechaInicioMovil: DateTime.now(),
         proveedorSnapshot: proveedor,
-        actividades: const <Actividad>[],
-        descripcion: const Descripcion(
-          coordenadas: '',
-          zona: '',
-          actividad: '',
-          equipos: '',
-          trabajadores: '',
-          condicionesLaborales: '',
-        ),
-        evaluacion: const Evaluacion(idCondicionProspecto: '', anotacion: ''),
-        estimacion: const Estimacion(
-          longitudAvance: 0,
-          alturaFrente: 0,
-          espesorVeta: 0,
-          numeroDisparosDia: 0,
-          diasTrabajados: 0,
-          porcentajeRocaCaja: 0,
-          produccionDiariaEstimada: 0,
-          produccionMensualEstimada: 0,
-          produccionMensual: 0,
-        ),
-        fotos: const <Foto>[],
         idempotencyKey: '',
       );
     } else {
@@ -247,7 +225,7 @@ class _DatosProveedorMineralPaginaState
                     ),
                   ),
                   Text(
-                      '${(_avance * _totalPasos).round()} de ''$_totalPasos',
+                      '1 de ''$_totalPasos',
                     textAlign: TextAlign.right,
                     style: TextStyle(
                       color: Colors.black,
