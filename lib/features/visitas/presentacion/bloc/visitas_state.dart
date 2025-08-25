@@ -1,4 +1,4 @@
-part of 'visitas_bloc.dart';
+import '../../dominio/entidades/visita.dart';
 
 abstract class VisitasState {}
 

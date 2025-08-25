@@ -1,5 +1,3 @@
-part of 'visitas_bloc.dart';
-
 abstract class VisitasEvent {}
 
 class CargarVisitas extends VisitasEvent {
