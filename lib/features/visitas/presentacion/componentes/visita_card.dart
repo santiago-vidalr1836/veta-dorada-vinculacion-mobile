@@ -50,8 +50,8 @@ class VisitaCard extends StatelessWidget {
             );
             await verificacionRepository.guardarVerificacion(dto);
           }
-          await context.push('/flujo-visita/datos-proveedor', extra: visita);
           visitasBloc?.add(SincronizarVisitas(auth.usuario!.id));
+          await context.push('/flujo-visita/datos-proveedor', extra: visita);
         },
         child: Padding(
           padding: const EdgeInsets.all(10),
